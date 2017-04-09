@@ -63,7 +63,7 @@ config.hostname = urlinfo.hostname || config.host;
 var app = express();
 
 // configuration in all env
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'picviews'));
 app.set('view engine', 'html');
 app.engine('html', require('ejs-mate'));
 app.locals._layoutFile = 'layout.html';

@@ -14,6 +14,7 @@ var site = require('./controllers/site');
 var user = require('./controllers/user');
 var message = require('./controllers/message');
 var topic = require('./controllers/topic');
+var image = require('./controllers/image');
 var reply = require('./controllers/reply');
 var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
@@ -90,6 +91,9 @@ router.post('/topic/create', auth.userRequired, limit.peruserperday('create_topi
 router.post('/topic/:tid/edit', auth.userRequired, topic.update);
 router.post('/topic/collect', auth.userRequired, topic.collect); // 关注某话题
 router.post('/topic/de_collect', auth.userRequired, topic.de_collect); // 取消关注某话题
+
+// 新建图片界面
+router.get('/image/create', auth.userRequired, image.create);
 
 // reply controller
 router.post('/:topic_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复

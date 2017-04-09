@@ -22,6 +22,10 @@ var TopicSchema = new Schema({
   content_is_html: { type: Boolean },
   tab: {type: String},
   deleted: {type: Boolean, default: false},
+  type: {type: String, default: 'text', enum: ['text', 'image']},
+  image: {type: String, default: false},
+  image_hash: {type: String, default: false},
+  profile_source: {type: String, default: false}
 });
 
 TopicSchema.plugin(BaseModel);
