@@ -45,6 +45,8 @@
   .js('/public/libs/bootstrap/js/bootstrap.js')
   .js('/public/libs/jquery.caret.js')
   .js('/public/libs/jquery.atwho.js')
+  .js('/public/libs/jquery.lazyloadxt.min.js')
+  .js('/public/libs/jquery.nicescroll.min.js')
   .js('/public/libs/markdownit.js')
   .js('/public/libs/code-prettify/prettify.js')
   .js('/public/libs/qrcode.js')
@@ -121,18 +123,18 @@
   <%- body %>
 </div>
 <div id='backtotop'>回到顶部</div>
-<div id='footer'>
-  <div id='footer_main'>
-    <div class="links">
-      <a class='dark' href='/rss'>RSS</a>
-      |
-      <a class='dark' href='https://github.com/cnodejs/nodeclub/'>源码地址</a>
-    </div>
+<!--<div id='footer'>-->
+  <!--<div id='footer_main'>-->
+    <!--<div class="links">-->
+      <!--<a class='dark' href='/rss'>RSS</a>-->
+      <!--|-->
+      <!--<a class='dark' href='https://github.com/cnodejs/nodeclub/'>源码地址</a>-->
+    <!--</div>-->
 
-    <%- partial('./_sponsors') %>
+    <!--<%- partial('./_sponsors') %>-->
 
-  </div>
-</div>
+  <!--</div>-->
+<!--</div>-->
 <div id="sidebar-mask"></div>
 
 <%- partial('./_tongji') %>

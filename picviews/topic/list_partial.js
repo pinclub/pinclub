@@ -1,0 +1,1 @@
+<%- partial('../topic/abstract', {collection:topics, as:'topic'}) %>

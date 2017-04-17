@@ -1,57 +1,124 @@
 <div id="topic_list">
-  <%- partial('../topic/abstract', {collection:topics, as:'topic'}) %>
+    <% if (!config.lazyload) { %>
+    <%- partial('../topic/abstract', {collection:topics, as:'topic'}) %>
+    <% } %>
 </div>
+<% if (!config.lazyload) { %>
+<% var base_url = base + (base.indexOf('?') < 0 ? '?' : '&')
++ 'tab=' + (typeof tab !== 'undefined' ? tab : '') + '&page='; %>
 <div class='pagination' current_page='<%= current_page %>'>
-  <ul>
-    <% var base_url = base + (base.indexOf('?') < 0 ? '?' : '&')
-      + 'tab=' + (typeof tab !== 'undefined' ? tab : '') + '&page='; %>
-    <% if (current_page == 1) { %>
-    <li class='disabled'><a>«</a></li>
-    <% } else { %>
-    <li><a href="<%= base_url %>1">«</a></li>
-    <% } %>
+    <ul>
+        <% if (current_page == 1) { %>
+        <li class='disabled'><a>«</a></li>
+        <% } else { %>
+        <li><a href="<%= base_url %>1">«</a></li>
+        <% } %>
 
-    <%
-    var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
-    var page_end = page_start + 4 >= pages ? pages : page_start + 4;
-    %>
+        <%
+        var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
+        var page_end = page_start + 4 >= pages ? pages : page_start + 4;
+        %>
 
-    <% if (page_start > 1) { %>
-    <li><a>...</a></li>
-    <% } %>
+        <% if (page_start > 1) { %>
+        <li><a>...</a></li>
+        <% } %>
 
-    <% for(var i = page_start; i <= page_end; i++) { %>
-    <% if (i === current_page) { %>
-    <li class='disabled'><a><%= i %></a></li>
-    <% } else { %>
-    <li><a href='<%= base_url + i %>'><%= i %></a></li>
-    <% } %>
-    <% } %>
+        <% for(var i = page_start; i <= page_end; i++) { %>
+        <% if (i === current_page) { %>
+        <li class='disabled'><a><%= i %></a></li>
+        <% } else { %>
+        <li><a href='<%= base_url + i %>'><%= i %></a></li>
+        <% } %>
+        <% } %>
 
-    <% if (page_end < pages ) { %>
-    <li><a>...</a></li>
-    <% } %>
+        <% if (page_end < pages ) { %>
+        <li><a>...</a></li>
+        <% } %>
 
-    <% if (current_page == pages) { %>
-    <li class='disabled'><a>»</a></li>
-    <% } else { %>
-    <li><a href='<%= base_url + pages %>'>»</a></li>
-    <% } %>
-  </ul>
+        <% if (current_page == pages) { %>
+        <li class='disabled'><a>»</a></li>
+        <% } else { %>
+        <li><a href='<%= base_url + pages %>'>»</a></li>
+        <% } %>
+    </ul>
 </div>
 <script>
-  $(document).ready(function () {
-    var $nav = $('.pagination');
-    var current_page = $nav.attr('current_page');
-    if (current_page) {
-      $nav.find('li').each(function () {
-        var $li = $(this);
-        var $a = $li.find('a');
-        if ($a.html() == current_page) {
-          $li.addClass('active');
-          $a.removeAttr('href');
+    $(document).ready(function () {
+        var $nav = $('.pagination');
+        var current_page = $nav.attr('current_page');
+        if (current_page) {
+            $nav.find('li').each(function () {
+                var $li = $(this);
+                var $a = $li.find('a');
+                if ($a.html() == current_page) {
+                    $li.addClass('active');
+                    $a.removeAttr('href');
+                }
+            });
         }
-      });
-    }
-  });
+    });
 </script>
+<% } else { %>
+<div id="page-marker"></div>
+<script>
+    $(document).ready(function () {
+        var topic_page = 1;
+        var pic_page = 1;
+        $('#page-marker').on('lazyshow', function () {
+            $.ajax({
+                url: "api/v1/topics?page="+topic_page
+            }).done(function (responseText) {
+                console.info(responseText);
+                let itemLength = responseText.data.length;
+                let elements = [];
+                responseText.data.forEach(function(item) {
+                    elements.push($('<div class="cell">' + item.title + '</div>'));
+                });
+                $('#topic_list').append(elements);
+                if (itemLength >= 10) {
+                    $(window).lazyLoadXT();
+                    $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
+                } else {
+                    $("#page-marker").remove();
+                }
+                topic_page++;
+
+            });
+
+        }).lazyLoadXT({visibleOnly: false});
+
+        $('#pic-page-marker').on('lazyshow', function () {
+            $.ajax({
+                url: "api/v1/topics?page="+pic_page+"&limit=5"
+            }).done(function (responseText) {
+                let itemLength = responseText.data.length;
+                let picelements = '';
+                responseText.data.forEach(function(item) {
+                    picelements += '<div class="grid-item"><div class="grid-item-content">' + item.title + '</div></div>';
+                });
+                // 添加
+                let jpicelements = $(picelements);
+                gridMasonry.append(jpicelements)
+                        .masonry( 'appended', jpicelements);
+                if (itemLength >= 5) {
+                    $(window).lazyLoadXT();
+                    $('#pic-page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
+                } else {
+                    $("#pic-page-marker").remove();
+                }
+                pic_page++;
+            });
+        }).lazyLoadXT({visibleOnly: false});
+
+//        $("#content_pic").niceScroll();
+
+    });
+</script>
+<% } %>
+<% if (config.pic_inner_scroll) { %>
+<script>
+    $(document).ready(function () {
+        $("#content_pic").niceScroll();
+    });
+</script>
+<% } %>

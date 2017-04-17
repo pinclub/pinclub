@@ -30,6 +30,11 @@ var router = express.Router();
 
 // home page
 router.get('/', site.index);
+
+// pic home page
+router.get('/pics', site.index_pic);
+router.get('/pics/partial', site.pic_list_partial);
+
 // sitemap
 router.get('/sitemap.xml', site.sitemap);
 // mobile app download
