@@ -10,11 +10,12 @@ var eventproxy = require('eventproxy');
 var _ = require('lodash');
 var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
+var structureHelper = require('../../common/structure_helper');
 var validator = require('validator');
 
 
 /**
- * @api {get} /v1/topics 主题列表
+ * @api {get} /v2/topics 主题列表
  * @apiDescription
  * 获取本站主题列表
  * @apiName getTopics
@@ -26,9 +27,9 @@ var validator = require('validator');
  * @apiParam {String} mdrender 当为 false 时，不渲染。默认为 true，渲染出现的所有 markdown 格式文本
  *
  * @apiPermission none
- * @apiSampleRequest /v1/topics
+ * @apiSampleRequest /v2/topics
  *
- * @apiVersion 1.0.0
+ * @apiVersion 2.0.0
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -50,6 +51,15 @@ var validator = require('validator');
                   "author": {
                       "loginname": "admin",
                       "avatar_url": "//gravatar.com/avatar/80579ac37c768d5dffa97b46bb4754f2?size=48"
+                  },
+                  "reply": {
+                      "author": {
+                          "loginname": "admin",
+                          "avatar_url": "//gravatar.com/avatar/80579ac37c768d5dffa97b46bb4754f2?size=48"
+                      },
+                      "content": "回复内容",
+                      "create_at_ago", "几秒前",
+                      "id": ""
                   }
               }
           ]
@@ -60,7 +70,6 @@ var index = function (req, res, next) {
     page = page > 0 ? page : 1;
     var tab = req.query.tab || 'all';
     var limit = Number(req.query.limit) || config.list_topic_count;
-    var mdrender = req.query.mdrender === 'false' ? false : true;
 
     var query = {};
     if (tab && tab !== 'all') {
@@ -76,28 +85,16 @@ var index = function (req, res, next) {
     var ep = new eventproxy();
     ep.fail(next);
 
-    TopicModel.find(query, '', options, ep.done('topics'));
+    TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
+        return topics;
+    }));
 
     ep.all('topics', function (topics) {
-        topics.forEach(function (topic) {
-            UserModel.findById(topic.author_id, ep.done(function (author) {
-                if (mdrender) {
-                    topic.content = renderHelper.markdown(at.linkUsers(topic.content));
-                }
-                topic.author = _.pick(author, ['loginname', 'avatar_url']);
-                ep.emit('author');
-            }));
-
+        topics = topics.map(function (topic) {
+            return structureHelper.topic(topic);
         });
 
-        ep.after('author', topics.length, function () {
-            topics = topics.map(function (topic) {
-                return _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
-                    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'replay']);
-            });
-
-            res.send({success: true, data: topics});
-        });
+        res.send({success: true, data: topics});
     });
 };
 

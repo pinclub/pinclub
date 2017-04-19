@@ -60,19 +60,22 @@
 </script>
 <% } else { %>
 <div id="page-marker"></div>
+<script id="topicListTmp" type="text/x-jquery-tmpl">
+<%- partial('../topic/_abstract') %>
+</script>
 <script>
     $(document).ready(function () {
         var topic_page = 1;
         var pic_page = 1;
         $('#page-marker').on('lazyshow', function () {
             $.ajax({
-                url: "api/v1/topics?page="+topic_page
+                url: "api/v2/topics?page="+topic_page
             }).done(function (responseText) {
                 console.info(responseText);
                 let itemLength = responseText.data.length;
                 let elements = [];
                 responseText.data.forEach(function(item) {
-                    elements.push($('<div class="cell">' + item.title + '</div>'));
+                    elements.push($("#topicListTmp").tmpl({topic:item}));
                 });
                 $('#topic_list').append(elements);
                 if (itemLength >= 10) {
@@ -89,7 +92,7 @@
 
         $('#pic-page-marker').on('lazyshow', function () {
             $.ajax({
-                url: "api/v1/topics?page="+pic_page+"&limit=5"
+                url: "api/v1/topics?page="+pic_page
             }).done(function (responseText) {
                 let itemLength = responseText.data.length;
                 let picelements = '';

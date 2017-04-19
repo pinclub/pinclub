@@ -25,6 +25,7 @@ var GitHubStrategy = require('passport-github').Strategy;
 var githubStrategyMiddleware = require('./middlewares/github_strategy');
 var webRouter = require('./web_router');
 var apiRouterV1 = require('./api_router_v1');
+var apiRouterV2 = require('./api_router_v2');
 var auth = require('./middlewares/auth');
 var errorPageMiddleware = require('./middlewares/error_page');
 var proxyMiddleware = require('./middlewares/proxy');
@@ -158,6 +159,7 @@ app.use(busboy({
 
 // routes
 app.use('/api/v1', cors(), apiRouterV1);
+app.use('/api/v2', cors(), apiRouterV2);
 app.use('/', webRouter);
 
 // error handler
