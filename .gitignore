@@ -25,3 +25,5 @@ public/apidoc/*
 *.sublime-project
 *.sublime-workspace
 *.swp
+
+todo.json

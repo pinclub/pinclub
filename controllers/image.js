@@ -20,7 +20,8 @@ var store = require('../common/store');
 var config = require('../config');
 var _ = require('lodash');
 var cache = require('../common/cache');
-var logger = require('../common/logger')
+var logger = require('../common/logger');
+var structureHelper = require('../common/structure_helper');
 
 /**
  * Image page
@@ -493,21 +494,17 @@ exports.upload = function (req, res, next) {
 
                     var proxy = new EventProxy();
 
-                    proxy.all('score_saved', function () {
-                        res.json({
-                            success: true,
-                            id: image._id,
-                            title: image.title,
-                            url: uploadResult.url
-                        });
-                    });
                     proxy.fail(next);
                     User.getUserById(req.session.user._id, proxy.done(function (user) {
                         user.score += 5;
                         user.image_count += 1;
                         user.save();
                         req.session.user = user;
-                        proxy.emit('score_saved');
+                        image.author = user;
+                        res.json({
+                            success: true,
+                            data: [structureHelper.topic(image)]
+                        });
                     }));
 
                     //发送at消息
