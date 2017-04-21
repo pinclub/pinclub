@@ -11,5 +11,5 @@ exports.topic = function (topic) {
         topic.reply.create_at_ago = topic.reply.create_at_ago();
     }
     return _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
-        'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply']);
+        'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply', 'image']);
 };

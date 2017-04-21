@@ -21,6 +21,7 @@ var validator = require('validator');
  * @apiName getTopics
  * @apiGroup topic
  *
+ * @apiParam {String} type 类型, image 图片 text 文字(默认)
  * @apiParam {Number} page 页数
  * @apiParam {String} tab 主题分类。目前有 ask share job good
  * @apiParam {Number} limit 每一页的主题数量
@@ -66,6 +67,7 @@ var validator = require('validator');
       }
  */
 var index = function (req, res, next) {
+    var type = req.query.type || 'text';
     var page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;
     var tab = req.query.tab || 'all';
@@ -80,6 +82,7 @@ var index = function (req, res, next) {
         }
     }
     query.deleted = false;
+    query.type = type;
     var options = {skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at'};
 
     var ep = new eventproxy();
@@ -119,7 +122,7 @@ var show = function (req, res, next) {
             return res.send({success: false, error_msg: '话题不存在'});
         }
         topic = _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply', 'last_reply_at',
-            'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author']);
+            'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'image']);
 
         if (mdrender) {
             topic.content = renderHelper.markdown(at.linkUsers(topic.content));
@@ -278,3 +281,44 @@ exports.update = function (req, res, next) {
     });
 };
 
+/**
+ * @api {get} /v2/topics/sim 相似图片列表
+ * @apiDescription
+ * 获取本站相似图片列表, 根据hamming距离算法计算.
+ *
+ */
+exports.sim = function (req, res, next) {
+    if (!req.query.id) {
+        return res.status(500).send({success: false, error_msg: "必要参数id未传."});
+    }
+    // 需从哪个id开始继续向下找
+    if (!req.query.sid) {
+        return res.status(500).send({success: false, error_msg: "必要参数sid未传."});
+    }
+    var topicId = req.query.id;
+    var sId = req.query.sid;
+    var ep = new eventproxy();
+    ep.fail(next);
+
+    TopicProxy.getTopicById(topicId, function (err, topic, tags) {
+        if (err) {
+            return next(err);
+        }
+        if (!topic) {
+            res.status(404);
+            return res.send({success: false, error_msg: '话题不存在'});
+        }
+        var options = {limit: 3, sort: '-_id'};
+        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 10"}, options, ep.done('topics', function (topics) {
+            return topics;
+        }));
+
+    });
+    ep.all('topics', function (topics) {
+        topics = topics.map(function (topic) {
+            return structureHelper.topic(topic);
+        });
+
+        res.send({success: true, data: topics});
+    });
+};

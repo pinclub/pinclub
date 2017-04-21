@@ -5,16 +5,26 @@
 <div id="content_pic">
     <div class="panel">
         <div id="pic_list" class="grid">
-            <div class="grid-item grid-item-nb">
+            <div class="grid-sizer"></div>
+            <!-- TODO(hhdem) 用户信息显示的样式调整, 参考花瓣网 -->
+            <div id="loginDiv" class="grid-item grid-item-nb">
                     <% if (typeof(user) !== 'undefined' || current_user) { %>
                     <div class='header'>
                         <span class='col_fade'>个人信息</span>
                     </div>
-                    <div class='inner'>
+                    <div class='innerBox'>
                         <%- partial('user/card',{ object: typeof(user) === 'undefined' ? current_user : user, as: 'user' }) %>
                     </div>
+                    <div class="grid-item-content">
+                        <a href='/topic/create' id='create_topic_btn'>
+                            <span class='span-success'>发布话题</span>
+                        </a>
+                        <a id='create_pic_btn' data-toggle="modal" data-target="#image_upload" >
+                            <span class='span-success'>发布图片</span>
+                        </a>
+                    </div>
                     <% } else { %>
-                    <div class='inner'>
+                    <div class='innerBox'>
                         <p><%= config.description %></p>
 
                         <div>
@@ -31,23 +41,13 @@
                         </div>
                     </div>
                     <% } %>
-            </div>
-            <div class="grid-item">
-                <div class="grid-item-content">
-                    <a href='/topic/create' id='create_topic_btn'>
-                        <span class='span-success'>发布话题</span>
-                    </a>
-                    <a href='/image/create' id='create_topic_btn'>
-                        <span class='span-success'>发布图片</span>
-                    </a>
-                </div>
-            </div>
 
+            </div>
         </div>
         <div id="pic-page-marker"></div>
     </div>
 </div>
-<div id="content">
+<div id="content_text">
     <div class="panel">
         <div class="header">
             <% [['all', '全部'], ['good', '精华']].concat(tabs).forEach(function (pair) {
@@ -74,8 +74,67 @@
         <% } %>
     </div>
 </div>
-<%- Loader('/public/masonry.pkgd.min.js')
-.js('/public/javascripts/masonry.pkgd.js')
+
+<!-- Modal -->
+<!-- FIXME(hhdem) modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口 -->
+<!-- TODO(hhdem) chrome 插件直接采集 -->
+<!-- DONE 弹出层上传文件, 文件只能单选, 默认描述是文件名 -->
+<div class="modal fade" id="image_upload" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">上传图片</h5>
+            </div>
+            <div class="modal-body">
+                <div id="upload_area"  class="upload-area" >
+                    <div class="normal">
+                        <a href="#" onclick="return false;" class="upload-btn btn btn18" for="img_input2">
+                            <span class="text"> 上传采集</span>
+                        </a>
+                        <div style="margin-top: 25px" class="note">也可以拖拽图片到该区域，完成上传</div>
+                        <div style="margin: 10px 0 25px" class="sub">支持单张 10m 以内图片上传</div>
+                        <div style="margin-top: 20px; font-size: 12px" class="sub">[提示]请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息</div>
+
+                    </div>
+                    <div style="display: none" class="draging">
+                        <div class="note">释放鼠标以上传</div>
+                    </div>
+                    <div style="display: none" class="uploading">
+                        <div class="animate">上传中...</div>
+                    </div>
+                    <div class="dropzone dz-clickable">
+                        <div class="dz-default dz-message"><span>拖动文件到这里上传</span></div>
+                    </div>
+                </div>
+                <div id="upload_view" style="display: none">
+                    <div class="pin-create">
+                        <div class="preview">
+                            <div id="preview" class="image">
+                            </div>
+                            <textarea id="preview-desc" placeholder="点击添加描述..." class="description"></textarea>
+                        </div>
+                        <div class="right-part">
+                            board
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="upload-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="upload-submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- Loader('/public/pics.min.js')
+.js('/public/libs/masonry.pkgd.js')
+.js('/public/libs/imagesloaded.pkgd.min.js')
 .js('/public/javascripts/pics.js')
+.js('/public/libs/Q.Uploader.all.js')
+.js('/public/libs/Q.Uploader.image.all.js')
+.js('/public/javascripts/upload.js')
+
 .done(assets, config.site_static_host, config.mini_assets)
 %>

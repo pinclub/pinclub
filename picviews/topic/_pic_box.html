@@ -1,0 +1,40 @@
+
+<!-- TODO(hhdem) 点击图片Box, 弹出浏览图片的modal, 查看图片详情 -->
+<!-- TODO 采集图片功能按钮实现 -->
+<!-- TODO 喜欢图片功能按钮实现 -->
+<!-- TODO 图片发布人信息显示, 目前为写死 -->
+<!-- TODO 图片Board功能 -->
+
+<div class="grid-item{{if highlight}} highlight{{/if}}" id="${item.id}">
+    <div class="actions">
+        <div class="right">
+            <a data-id="1097979718" title="喜欢" href="#" class="like btn-with-icon btn btn14"><i class="heart"></i><span class="text"> 2</span></a>
+            </div>
+        <div class="left">
+            <a  href="#" class="repin btn btn14 rbtn"><span class="text"> 采集</span></a>
+            </div>
+        </div>
+    <a href="#">
+        <img src="${item.image}" title="${item.title}" alt="${item.title}"/>
+        </a>
+    <p class="stats less">
+        <span title="转采" class="repin"><i></i>5</span>
+        <span title="喜欢" class="like"><i></i>1</span>
+        <a onclick="javascript:similarPics('${item.id}');" href="#${item.id}">More similar.
+            </a>
+        </p>
+    <div class="convo attribution clearfix">
+        <a href="#" title="hhdem" rel="nofollow" class="img x">
+            <img src="https://avatars0.githubusercontent.com/u/27474293?v=3&s=40" data-baiduimageplus-ignore="1" class="avt">
+            </a>
+        <div class="text">
+            <div class="inner">
+                <div class="line">
+                    <a href="#" rel="" class="author x">hhdem</a>&nbsp;采集到
+                    </div>
+                <div class="line"><a href="#" rel="" class="x">appliances（家电，生活电器）</a></div>
+                <a title="评论" class="replyButton"></a>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -13,7 +13,7 @@ body {
   width: 90%;
   max-width: 1496px;
   min-width: 960px;
-  margin: 15px auto;
+  margin: 50px auto 15px;
   min-height: 400px;
   position: relative;
 }
@@ -32,6 +32,15 @@ body {
   margin-bottom: 100px;
 }
 
+#content_text {
+  padding: 0;
+  margin-right: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+}
+
 #content_pic {
   float: right;
   width: 50%;
@@ -44,6 +53,8 @@ body {
   float: right;
   margin-bottom: 20px;
 }
+
+// FIXME(hhdem) 文章详情查看的时候底色没了
 
 #content .panel {
 }
@@ -217,19 +228,19 @@ a.light:hover {
   padding-left: 10px;
 }
 
-.panel .inner .unstyled li div {
+.panel .innerBox .unstyled li div {
   text-overflow: ellipsis;
 }
 
-.panel .inner.topic,
-.panel .inner.reply,
-.panel .inner.userinfo,
-.panel .inner.post {
+.panel .innerBox.topic,
+.panel .innerBox.reply,
+.panel .innerBox.userinfo,
+.panel .innerBox.post {
   padding: 10px;
   border-top: 1px solid #e5e5e5;
 }
 
-.panel .inner {
+.panel .innerBox {
   line-height: 2em;
   padding: 10px;
   background-color: white;
@@ -239,15 +250,15 @@ a.light:hover {
   }
 }
 
-.panel .inner > form.form-horizontal {
+.panel .innerBox > form.form-horizontal {
   margin-top: 40px;
 }
 
-.panel .inner.no-padding {
+.panel .innerBox.no-padding {
   padding: 0;
 }
 
-.panel .inner li {
+.panel .innerBox li {
   line-height: 2em;
 }
 
@@ -812,19 +823,21 @@ textarea#title {
   margin-bottom: 0px;
   z-index: 9;
   width: 100%;
-  position: relative;
+  position: fixed;
   background: @node_black;
   font-size: 13px;
+  top: 0;
+  right: 0;
+  height: 40px;
+  box-shadow: 0 0 4px rgba(0,0,0,.2);
 }
 
 .navbar-inner {
-  background: none;
-  border-radius: 0px;
-  border: none;
-  box-shadow: none;
-  width: 90%;
-  margin: auto;
-  padding: 5px;
+  background: @node_black;
+  position: relative;
+  margin: 0 auto;
+  height: 40px;
+  border: 0;
 }
 
 .navbar .container {

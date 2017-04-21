@@ -1993,6 +1993,23 @@ proto.addItems = function( elems ) {
   return items;
 };
 
+  /**
+   * add items to Outlayer instance
+   * @param {Array or NodeList or Element} elems
+   * @returns {Array} items - Outlayer.Items
+   **/
+  proto.insertItems = function(index, elems ) {
+    var items = this._itemize( elems );
+    // add items to collection
+    if ( items.length ) {
+      this.items.splice(index, 0 , items[0]);
+      //this.items = this.items.concat( items );
+    }
+    // layout and reveal just the new items
+    this.layoutItems( items, true );
+    this.reveal( items );
+  };
+
 /**
  * Layout newly-appended item elements
  * @param {Array or NodeList or Element} elems

@@ -63,6 +63,9 @@
 <script id="topicListTmp" type="text/x-jquery-tmpl">
 <%- partial('../topic/_abstract') %>
 </script>
+<script id="picBoxTmp" type="text/x-jquery-tmpl">
+<%- partial('../topic/_pic_box') %>
+</script>
 <script>
     $(document).ready(function () {
         var topic_page = 1;
@@ -92,27 +95,35 @@
 
         $('#pic-page-marker').on('lazyshow', function () {
             $.ajax({
-                url: "api/v1/topics?page="+pic_page
+                url: "api/v2/topics?type=image&limit=5&page="+pic_page
             }).done(function (responseText) {
                 let itemLength = responseText.data.length;
                 let picelements = '';
                 responseText.data.forEach(function(item) {
-                    picelements += '<div class="grid-item"><div class="grid-item-content">' + item.title + '</div></div>';
-                });
-                // 添加
-                let jpicelements = $(picelements);
-                gridMasonry.append(jpicelements)
+                    let itemHtml = $("#picBoxTmp").tmpl({item:item});
+                    lastItemId['all'] = item.id;
+                    let jpicelements = $(itemHtml);
+                    gridMasonry.append(jpicelements)
                         .masonry( 'appended', jpicelements);
+                });
+                gridMasonry.imagesLoaded().progress( function() {
+                    gridMasonry.masonry('layout');
+                });
                 if (itemLength >= 5) {
+                    gridMasonry.masonry('layout');
                     $(window).lazyLoadXT();
                     $('#pic-page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
                 } else {
+                    gridMasonry.masonry('layout');
                     $("#pic-page-marker").remove();
                 }
                 pic_page++;
             });
         }).lazyLoadXT({visibleOnly: false});
 
+//        var gridItem = document.getElementById('loginDiv');
+//        bricklayer.prepend(gridItem);
+//        bricklayer.redraw();
 //        $("#content_pic").niceScroll();
 
     });

@@ -106,7 +106,10 @@ router.get('/reply/:reply_id/edit', auth.userRequired, reply.showEdit); // 修�
 router.post('/reply/:reply_id/edit', auth.userRequired, reply.update); // 修改某评论
 router.post('/reply/:reply_id/delete', auth.userRequired, reply.delete); // 删除某评论
 router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点赞
+
+// upload
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
+router.post('/imageupload', auth.userRequired, image.upload); //上传图片
 
 // static
 router.get('/about', staticController.about);

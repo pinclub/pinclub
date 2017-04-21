@@ -224,3 +224,9 @@ exports.newAndSave = function (title, content, tab, authorId, callback) {
 
   topic.save(callback);
 };
+
+exports.newAndSaveImage = function (image, callback) {
+  var topic       = new Topic(image);
+
+  topic.save(callback);
+};

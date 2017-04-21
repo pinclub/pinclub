@@ -25,7 +25,9 @@ var TopicSchema = new Schema({
   type: {type: String, default: 'text', enum: ['text', 'image']},
   image: {type: String, default: false},
   image_hash: {type: String, default: false},
-  profile_source: {type: String, default: false}
+  profile_source: {type: String, default: false},
+  //标签
+  tags: [String]
 });
 
 TopicSchema.plugin(BaseModel);
