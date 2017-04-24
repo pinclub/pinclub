@@ -8,6 +8,7 @@
 
 var validator = require('validator');
 var imghash = require('imghash');
+var getColors = require('get-image-colors');
 var path = require('path');
 var inspect = require('util').inspect;
 var at = require('../common/at');
@@ -483,36 +484,42 @@ exports.upload = function (req, res, next) {
         imghash
             .hash(path.resolve(__dirname, '..'+uploadResult.url), null, 'binary')
             .then((hash) => {
-                topicImage.image_hash = hash;
-                topicImage.image = uploadResult.url;
-                topicImage.type = 'image';
-                topicImage.author_id = req.session.user;
-                Image.newAndSaveImage(topicImage, function (err, image) {
-                    if (err) {
-                        return next(err);
-                    }
+                getColors(path.resolve(__dirname, '..'+uploadResult.url)).then(colors => {
+                    topicImage.image_colors = colors;
+                    let rgbColor = [];
+                    colors.forEach(function(color) {
+                        rgbColor.push(color.rgb());
+                    });
+                    topicImage.image_colors_rgb = rgbColor;
+                    topicImage.image_hash = hash;
+                    topicImage.image = uploadResult.url;
+                    topicImage.type = 'image';
+                    topicImage.author_id = req.session.user;
+                    Image.newAndSaveImage(topicImage, function (err, image) {
+                        if (err) {
+                            return next(err);
+                        }
 
-                    var proxy = new EventProxy();
+                        var proxy = new EventProxy();
 
-                    proxy.fail(next);
-                    User.getUserById(req.session.user._id, proxy.done(function (user) {
-                        user.score += 5;
-                        user.image_count += 1;
-                        user.save();
-                        req.session.user = user;
-                        image.author = user;
-                        res.json({
-                            success: true,
-                            data: [structureHelper.topic(image)]
-                        });
-                    }));
+                        proxy.fail(next);
+                        User.getUserById(req.session.user._id, proxy.done(function (user) {
+                            user.score += 5;
+                            user.image_count += 1;
+                            user.save();
+                            req.session.user = user;
+                            image.author = user;
+                            res.json({
+                                success: true,
+                                data: [structureHelper.topic(image)]
+                            });
+                        }));
 
-                    //发送at消息
-                    at.sendMessageToMentionUsers(topicImage.title, image._id, req.session.user._id);
+                        //发送at消息
+                        at.sendMessageToMentionUsers(topicImage.title, image._id, req.session.user._id);
+                    });
                 });
-
             });
-
     });
 
     req.pipe(req.busboy);

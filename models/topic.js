@@ -15,6 +15,7 @@ var TopicSchema = new Schema({
   reply_count: { type: Number, default: 0 },
   visit_count: { type: Number, default: 0 },
   collect_count: { type: Number, default: 0 },
+  like_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
   last_reply: { type: ObjectId },
@@ -25,6 +26,8 @@ var TopicSchema = new Schema({
   type: {type: String, default: 'text', enum: ['text', 'image']},
   image: {type: String, default: false},
   image_hash: {type: String, default: false},
+  image_colors: {type: [String]},
+  image_colors_rgb: [],
   profile_source: {type: String, default: false},
   board_id: { type:ObjectId},
   //标签

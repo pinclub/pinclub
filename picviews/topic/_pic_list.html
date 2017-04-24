@@ -6,7 +6,7 @@
 <%- partial('../topic/_pic_box') %>
 </script>
 
-<!-- Modal -->
+<!-- Upload 图片的 Modal 层 -->
 <!-- FIXME(hhdem) modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口 -->
 <!-- FIXME(hhdem) 点击上传图片后弹出的模态框中确认上传按钮样式错误 -->
 <!-- TODO(hhdem) chrome 插件直接采集 -->
@@ -55,6 +55,34 @@
             <div class="modal-footer">
                 <button type="button" id="upload-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" id="upload-submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Get 图片的modal层-->
+<div class="modal fade" id="get_image_modal" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Get图片</h5>
+            </div>
+            <div class="modal-body">
+                <div id="get_image_view">
+                    <div class="pin-create">
+                        <div class="preview">
+                            <div id="get-preview-image" class="image">
+                            </div>
+                            <textarea id="get-preview-image-desc" placeholder="点击添加描述..." class="description"></textarea>
+                        </div>
+                        <div class="right-part">
+                            board
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="get-image-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="get-image-submit" class="btn btn-primary">Get Image</button>
             </div>
         </div>
     </div>

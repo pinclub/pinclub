@@ -29,6 +29,7 @@ var UserSchema = new Schema({
   following_count: { type: Number, default: 0 },
   collect_tag_count: { type: Number, default: 0 },
   collect_topic_count: { type: Number, default: 0 },
+  like_image_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
   is_star: { type: Boolean },

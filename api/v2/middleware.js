@@ -40,8 +40,11 @@ var auth = function (req, res, next) {
                 next();
             }));
         });
+    } else if (req.session.user) {
+        // session 中有用户信息
+        next();
     } else {
-        return res.send({success: false, error_msg: '无权限操作'});
+        return res.send({success: false, error_msg: '无权限操作, 请确定是否登录或token是否正确. '});
     }
     // JWT End
 

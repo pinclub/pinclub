@@ -2,6 +2,7 @@ var models = require('../../models');
 var TopicModel = models.Topic;
 var TopicProxy = require('../../proxy').Topic;
 var TopicCollect = require('../../proxy').TopicCollect;
+var TopicLike = require('../../proxy').TopicLike;
 var UserProxy = require('../../proxy').User;
 var UserModel = models.User;
 var ReplyProxy = require('../../proxy').Reply;
@@ -92,9 +93,25 @@ var index = function (req, res, next) {
         return topics;
     }));
 
-    ep.all('topics', function (topics) {
+    if (!!req.session.user) {
+        // TODO 此处需要优化,不要每次都获得全部喜欢的图片列表
+        TopicLike.getTopicLikesByUserId(req.session.user._id, {}, ep.done('liked_topics'));
+    } else {
+        ep.emit('liked_topics', []);
+    }
+
+    ep.all('topics', 'liked_topics', function (topics, liked_topics) {
+        let liked_t_ids = _.map(liked_topics, 'topic_id');
         topics = topics.map(function (topic) {
-            return structureHelper.topic(topic);
+            let structedTopic = structureHelper.image(topic);
+            liked_t_ids.forEach(function(lti){
+                let tid = lti.toString();
+                if (topic.id === tid) {
+                    structedTopic.liked = true;
+                }
+            });
+
+            return structedTopic
         });
 
         res.send({success: true, data: topics});

@@ -195,6 +195,7 @@ $(document).on('click', '.like-btn', function (event) {
         return;
     }
     console.log(event.currentTarget.dataset.id);
+    likePic (event.currentTarget.dataset.id);
 });
 
 // 绑定更多相似图片按钮点击事件
@@ -205,6 +206,16 @@ $(document).on('click', '.more-similar-btn', function (event) {
     similarPics(event.currentTarget.dataset.id);
 });
 
+// Get 图片到自己的 Board
+$(document).on('click', '.get-pic-btn', function (event) {
+    if (!event.currentTarget.dataset.id || !event.currentTarget.dataset.src) {
+        return;
+    }
+    console.log(event.currentTarget.dataset.id);
+    console.log(event.currentTarget.dataset.src);
+    $('#get-preview-image').html('<img src="'+event.currentTarget.dataset.src+'">');
+    $('#get-preview-image-desc').html(event.currentTarget.dataset.name);
+});
 
 function similarPics(picid) {
     let sid = lastItemId['all'];
@@ -245,5 +256,30 @@ function similarPics(picid) {
         gridMasonry.imagesLoaded().progress(function () {
             gridMasonry.masonry('layout');
         });
+    });
+}
+
+function likePic(picid) {
+    if (!picid) {
+        return;
+    }
+    var data = {
+        id: picid
+    };
+    $.ajax({
+        type: "POST",
+        url: "api/v2/images/like",
+        data: data
+    }).done(function (response) {
+        if(!response.success) {
+            return console.error("Error：", response);
+        }
+        let likeA = $('#'+picid + ' .actions .right a');
+        if (likeA.hasClass('unlike')) {
+            $('#'+picid + ' .actions .right a').removeClass('unlike');
+        } else {
+            $('#'+picid + ' .actions .right a').addClass('unlike');
+        }
+
     });
 }
