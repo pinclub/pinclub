@@ -67,3 +67,7 @@ exports.sim = function (req, res, next) {
         res.send({success: true, data: topics});
     });
 };
+
+exports.like = function (req, res, next) {
+
+};

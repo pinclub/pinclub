@@ -14,12 +14,16 @@ mongoose.connect(config.db, {
 // models
 require('./user');
 require('./topic');
+require('./board');
 require('./reply');
 require('./topic_collect');
+require('./topic_like');
 require('./message');
 
 exports.User         = mongoose.model('User');
 exports.Topic        = mongoose.model('Topic');
+exports.Board        = mongoose.model('Board');
 exports.Reply        = mongoose.model('Reply');
 exports.TopicCollect = mongoose.model('TopicCollect');
+exports.TopicLike    = mongoose.model('TopicLike');
 exports.Message      = mongoose.model('Message');

@@ -8,7 +8,7 @@
 <div class="grid-item{{if highlight}} highlight{{/if}}" id="${item.id}">
     <div class="actions">
         <div class="right">
-            <a data-id="${item.id}" title="喜欢" href="#" class="like btn-with-icon btn btn14"><i class="heart"></i><span class="text"> 2</span></a>
+            <a data-id="${item.id}" title="喜欢" href="#${item.id}" class="like btn-with-icon btn btn14 like-btn"><i class="heart"></i><span class="text"> 2</span></a>
             </div>
         <div class="left">
             <a  href="#" class="repin btn btn14 rbtn"><span class="text"> 采集</span></a>
@@ -20,7 +20,7 @@
     <p class="stats less">
         <span title="转采" class="repin"><i></i>5</span>
         <span title="喜欢" class="like"><i></i>1</span>
-        <a onclick="javascript:similarPics('${item.id}');" href="#${item.id}">More similar.
+        <a href="#${item.id}" data-id="${item.id}" class="more-similar-btn">More similar.
             </a>
         </p>
     <div class="convo attribution clearfix">

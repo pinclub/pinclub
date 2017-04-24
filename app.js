@@ -39,6 +39,7 @@ var errorhandler = require('errorhandler');
 var cors = require('cors');
 var requestLog = require('./middlewares/request_log');
 var renderMiddleware = require('./middlewares/render');
+var validator = require('./middlewares/validator');
 var logger = require('./common/logger');
 var helmet = require('helmet');
 var bytes = require('bytes')
@@ -90,6 +91,7 @@ app.use(require('response-time')());
 app.use(helmet.frameguard('sameorigin'));
 app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
+app.use(validator());
 app.use(require('method-override')());
 app.use(require('cookie-parser')(config.session_secret));
 app.use(compress());

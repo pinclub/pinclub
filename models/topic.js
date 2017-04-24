@@ -26,6 +26,7 @@ var TopicSchema = new Schema({
   image: {type: String, default: false},
   image_hash: {type: String, default: false},
   profile_source: {type: String, default: false},
+  board_id: { type:ObjectId},
   //标签
   tags: [String]
 });
