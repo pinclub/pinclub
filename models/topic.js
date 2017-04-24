@@ -29,7 +29,6 @@ var TopicSchema = new Schema({
   image_colors: {type: [String]},
   image_colors_rgb: [],
   profile_source: {type: String, default: false},
-  board_id: { type:ObjectId},
   //标签
   tags: [String]
 });
