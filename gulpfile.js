@@ -22,7 +22,7 @@ gulp.task('todo', function() {
                     text = '~~' +text+ '~~';
                 }
                 if (ref) {
-                    ref = '[@'+ref+'](https://github.com/'+ref+')';
+                    ref = '[@'+ref+'](/'+ref+')';
                 }
                 return ['| ' + file + ' | ' + line + ' | '+ ref + ' ' + text];
             }
