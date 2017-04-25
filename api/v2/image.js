@@ -2,6 +2,7 @@ var models = require('../../models');
 var TopicModel = models.Topic;
 var TopicProxy = require('../../proxy').Topic;
 var TopicLike = require('../../proxy').TopicLike;
+var TopicBoard = require('../../proxy').TopicBoard;
 var UserProxy = require('../../proxy').User;
 var UserModel = models.User;
 var ReplyProxy = require('../../proxy').Reply;
@@ -174,6 +175,113 @@ exports.like = function (req, res, next) {
 
             res.json({success: true});
         });
+    });
+
+};
+
+/**
+ *
+ * @api {post} /v2/images/get Get图片
+ * @apiDescription
+ * Get某图片
+ * @apiName getImage
+ * @apiGroup images
+ *
+ * @apiUse ApiHeaderType
+ * @apiParam {String} topic_id 要 Get 的图片 id
+ * @apiParam {String} board_id 放入 Board 的 id
+ * @apiParam {String} [desc] 描述
+ * @apiParam {String[]} [tags] 标签
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/images/get
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
+exports.getImage = function (req, res, next) {
+    req.checkBody({
+        'topic_id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'topic_id 不能为空'
+            }
+        },
+        'board_id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'board_id 不能为空'
+            }
+        }
+    });
+    var ep = new eventproxy();
+    var topic_id = req.body.topic_id;
+    var board_id = req.body.board_id;
+    var desc = req.body.desc;
+    var currentUser = req.session.user;
+    if (req.validationErrors()) {
+        return res.status(400).json({success: false, err_message: '参数验证失败', err: req.validationErrors()}).end();
+    }
+
+    TopicBoard.getTopicBoard(currentUser.id, topic_id, function (err, topicBoard) {
+        if (err) {
+            return next(err);
+        }
+        if (topicBoard && topicBoard.id === board_id) {
+            res.json({success: false});
+            return;
+        }
+
+        if (topicBoard) {
+            topicBoard.board_id = board_id;
+            topicBoard.desc = desc || null;
+            topicBoard.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                //res.send({
+                //    success: true,
+                //    topic_id: topicBoard.id
+                //});
+                ep.emit('get_image_success',topicBoard );
+            });
+            ep.on('get_image_success', function(topicBoard){
+                res.send({
+                    success: true,
+                    topic_id: topicBoard.id
+                });
+            });
+        } else {
+            TopicBoard.newAndSave(currentUser.id, topic_id, board_id, desc || null, null, function (err, topicBoard) {
+                if (err) {
+                    return next(err);
+                }
+
+                ep.emit('get_image_success', topicBoard);
+                //res.json({success: true});
+            });
+            UserProxy.getUserById(currentUser.id, function (err, user) {
+                // TODO 增加 err 的错误校验, 返回对应的错误信息
+                user.get_image_count += 1;
+                user.save();
+                ep.emit('user_count');
+            });
+            TopicProxy.getTopicById(topic_id, function (err, topic) {
+                // TODO 增加 err 的错误校验, 返回对应的错误信息
+                topic.geted_count += 1;
+                topic.save();
+                ep.emit('topic_count');
+            });
+            ep.all('get_image_success', 'user_count', 'topic_count', function(topicBoard){
+                res.send({
+                    success: true,
+                    topic_id: topicBoard.id
+                });
+            });
+        }
     });
 
 };

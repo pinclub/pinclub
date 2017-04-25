@@ -11,10 +11,10 @@
             <a data-id="${item.id}" title="喜欢" href="javascript:void(0);" class="like btn-with-icon btn btn14 like-btn{{if item.liked}} unlike{{/if}}"><i class="heart"></i><span class="text"> 2</span></a>
         </div>
         <div class="left">
-            <a href="javascript:void(0);" data-id="${item.id}" data-name="${item.title}" data-src="${item.image}" data-toggle="modal" data-target="#get_image_modal" class="repin btn btn14 rbtn get-pic-btn"><span class="text">Get</span></a>
+            <a href="#${item.id}" data-id="${item.id}" data-name="${item.title}" data-src="${item.image}" data-toggle="modal" data-target="#get_image_modal" class="repin btn btn14 rbtn get-pic-btn"><span class="text">Get</span></a>
         </div>
     </div>
-    <a href="#">
+    <a href="javascript: void(0);" data-id="${item.id}" data-name="${item.title}" data-src="${item.image}" class="preview-image" data-target="#preview_modal" data-toggle="modal">
         <img src="${item.image}" title="${item.title}" alt="${item.title}"/>
     </a>
     <p class="stats less">

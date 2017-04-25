@@ -1,9 +1,11 @@
 var models = require('../../models');
 var BoardModel = models.Board;
 var BoardProxy = require('../../proxy').Board;
+var UserProxy = require('../../proxy').User;
 var config = require('../../config');
 var eventproxy = require('eventproxy');
 var _ = require('lodash');
+var validator = require('validator');
 
 /**
  * @api {get} /v2/boards 获得Board列表
@@ -44,7 +46,10 @@ var index = function (req, res, next) {
     var ep = new eventproxy();
     ep.fail(next);
 
-    BoardProxy.getBoardsByQuery(query, options, function (boards) {
+    BoardProxy.getBoardsByQuery(query, options, function (err, boards) {
+        if (err) {
+            return res.status(500).send({success: false});
+        }
         res.send({success: true, data: boards});
     });
 };
@@ -71,9 +76,7 @@ var index = function (req, res, next) {
 var create = function (req, res, next) {
 
     var title = validator.trim(req.body.title || '');
-    var tab = validator.trim(req.body.tab || '');
-    var content = validator.trim(req.body.content || '');
-
+    var type = validator.trim(req.body.type || '');
     // 得到所有的 tab, e.g. ['ask', 'share', ..]
     var allTabs = config.tabs.map(function (tPair) {
         return tPair[0];
@@ -83,12 +86,8 @@ var create = function (req, res, next) {
     var editError;
     if (title === '') {
         editError = '标题不能为空';
-    } else if (title.length < 5 || title.length > 100) {
-        editError = '标题字数太多或太少';
-    } else if (!tab || !_.includes(allTabs, tab)) {
-        editError = '必须选择一个版块';
-    } else if (content === '') {
-        editError = '内容不可为空';
+    } else if (title.length > 20) {
+        title = title.substr(0, 20);
     }
     // END 验证
 
@@ -97,7 +96,7 @@ var create = function (req, res, next) {
         return res.send({success: false, error_msg: editError});
     }
 
-    TopicProxy.newAndSave(title, content, tab, req.user.id, function (err, topic) {
+    BoardProxy.newAndSave(title, type, req.session.user.id, function (err, board) {
         if (err) {
             return next(err);
         }
@@ -108,19 +107,17 @@ var create = function (req, res, next) {
         proxy.all('score_saved', function () {
             res.send({
                 success: true,
-                topic_id: topic.id
+                board_id: board.id,
+                title: board.title
             });
         });
-        UserProxy.getUserById(req.user.id, proxy.done(function (user) {
+        UserProxy.getUserById(req.session.user.id, proxy.done(function (user) {
             user.score += 5;
-            user.topic_count += 1;
+            user.board_count += 1;
             user.save();
             req.user = user;
             proxy.emit('score_saved');
         }));
-
-        //发送at消息
-        at.sendMessageToMentionUsers(content, topic.id, req.user.id);
     });
 };
 

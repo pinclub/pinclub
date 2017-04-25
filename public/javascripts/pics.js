@@ -3,6 +3,9 @@
  * [{all:'object id'},{ 'request object id': 'response object id'}]
   */
 var lastItemId = [];
+
+var getImageObject = {};
+
 var gridMasonry = $('.grid').masonry({
     // options...
     itemSelector: '.grid-item',
@@ -206,15 +209,60 @@ $(document).on('click', '.more-similar-btn', function (event) {
     similarPics(event.currentTarget.dataset.id);
 });
 
-// Get 图片到自己的 Board
-$(document).on('click', '.get-pic-btn', function (event) {
+// 点击 Get 图片到自己的 Board, 弹出 Modal 层
+$(document).on('click', '#pic_list .get-pic-btn', function (event) {
     if (!event.currentTarget.dataset.id || !event.currentTarget.dataset.src) {
         return;
     }
     console.log(event.currentTarget.dataset.id);
     console.log(event.currentTarget.dataset.src);
+    getImageObject.topic_id = event.currentTarget.dataset.id;
+    $('#get-preview-image-desc').val('');
     $('#get-preview-image').html('<img src="'+event.currentTarget.dataset.src+'">');
-    $('#get-preview-image-desc').html(event.currentTarget.dataset.name);
+});
+
+// 保存要Get的图片信息
+$(document).on('click', '#get-image-submit', function (event) {
+    console.log(event.currentTarget.dataset);
+    getImageObject.desc = $('#get-preview-image-desc').val();
+    console.log('getImageObject:', getImageObject);
+    $.ajax({
+        type: "POST",
+        url: "api/v2/images/get",
+        data: getImageObject
+    }).done(function (response) {
+        console.log(response);
+        if (response.success) {
+            $('#get_image_modal').modal('hide');
+        }
+    });
+});
+
+// 绑定Board 查询事件
+$(document).on('keyup', '.pin-create .right-part .search-input', function (event) {
+    if (!event.currentTarget) {
+        return;
+    }
+    // TODO 根据输入的关键词模糊查询Board列表,并刷新 boardlist 的显示列表
+    searchBoard ($(this), event.currentTarget.value);
+});
+
+// 绑定添加Board按钮
+$(document).on('click', '.pin-create .right-part .createboard', function (event) {
+    if (!event.currentTarget) {
+        return;
+    }
+    $(this).parent().prev().prev().css({"height":"220px"});
+    $(this).hide();
+    createBoard (event.currentTarget.dataset.text);
+});
+
+// 绑定预览图片的查看
+$(document).on('click', '#pic_list .preview-image', function (event) {
+    console.log(event.currentTarget.dataset.id);
+    console.log(event.currentTarget.dataset.src);
+    $('#get-preview-image-desc').val('');
+    $('#preview_modal .main-image').html('<img src="'+event.currentTarget.dataset.src+'">');
 });
 
 function similarPics(picid) {
@@ -283,3 +331,108 @@ function likePic(picid) {
 
     });
 }
+
+function selectBoard (boardid) {
+    if (!boardid) {
+        return;
+    }
+    let boardE = $('#'+boardid);
+    let selectedE = $('.boardlist .selected');
+    getImageObject.board_id = boardid;
+    if (!boardE.hasClass('selected')) {
+        selectedE.removeClass('selected');
+        boardE.addClass('selected');
+    }
+}
+
+function searchBoard (obj, searchText) {
+    if (!obj) {
+        return;
+    }
+    let refreshListTarget = obj.next().next();
+    let createTextTarget = obj.next().next().next().next();
+    if (searchText) {
+        refreshListTarget.css({"height":"180px"});
+        createTextTarget.find('.createboard').show();
+        createTextTarget.find('.createboard').attr("data-text", searchText);
+        createTextTarget.find('.text').html(searchText);
+    } else {
+        refreshListTarget.css({"height":"220px"});
+        createTextTarget.find('.createboard').hide();
+        createTextTarget.find('.text').html('');
+    }
+
+}
+
+function createBoard (boardName) {
+    if (!boardName) {
+        return;
+    }
+    let boardItem = {
+        title: boardName
+    };
+    $.ajax({
+        type: "POST",
+        url: "api/v2/boards",
+        data: {
+            title: boardName
+        }
+    }).done(function (responseText) {
+        if (!responseText.success) {
+            return ;
+        }
+        boardItem._id = responseText.board_id;
+        boardItem.title = responseText.title;
+        boardList.splice(0, 0, boardItem);
+        showBoardList($('.pin-create .right-part .boardlist .scrollable .recent'), boardList);
+    });
+}
+
+function showBoardList (target, boards) {
+    if (!target || !boards) {
+        return;
+    }
+    target.html('');
+    var markup = '{{each boards}}<div class="item {{if $index == 0}}selected{{/if}}" data-id="${boards[$index]._id}" id="${boards[$index]._id}" data-title="${boards[$index].title}">' +
+                    '<i class="icon history"></i>${boards[$index].title}<div class="controller"></div>' +
+                 '</div>{{/each}}';
+    if (boards.length) {
+        getImageObject.board_id = boards[0]._id;
+    }
+    $("#boardTemplate").tmpl({boards: boards}).appendTo(target);
+
+    //$.template( "boardTemplate", markup );
+    //$.tmpl( "boardTemplate", {boards: boards} )
+    //    .appendTo(target);
+}
+
+var boardList = [];
+$(function () {
+    $.ajax({
+        type: "GET",
+        url: "api/v2/boards",
+        data: {}
+    }).done(function (responseText) {
+        console.log(responseText);
+        if (!responseText.success) {
+            return ;
+        }
+        boardList = responseText.data;
+        let boardListItems = $('.pin-create .right-part .boardlist .scrollable .recent');
+        console.log(boardListItems);
+        for(var j=0;j<boardListItems.length;j++){
+            let boardListItem = boardListItems[j];
+            boardList = responseText.data;
+            showBoardList($(boardListItem), boardList);
+
+        }
+
+    });
+    $('.pin-create .right-part .boardlist .scrollable .recent').on('click', '.item', function (event) {
+        if (!event.currentTarget.dataset.id) {
+            return;
+        }
+        console.log(event.currentTarget.dataset.id);
+        selectBoard (event.currentTarget.dataset.id);
+    });
+});

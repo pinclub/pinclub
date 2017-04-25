@@ -10,6 +10,8 @@ var TopicBoardSchema = new Schema({
     user_id: { type: ObjectId },
     topic_id: { type: ObjectId },
     board_id: { type:ObjectId},
+    desc: {type: String},
+    tags: [{type: String}],
     create_at: { type: Date, default: Date.now }
 });
 

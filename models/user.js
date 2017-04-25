@@ -24,12 +24,15 @@ var UserSchema = new Schema({
 
   score: { type: Number, default: 0 },
   topic_count: { type: Number, default: 0 },
+  board_count: { type: Number, default: 0 },
   reply_count: { type: Number, default: 0 },
   follower_count: { type: Number, default: 0 },
   following_count: { type: Number, default: 0 },
   collect_tag_count: { type: Number, default: 0 },
   collect_topic_count: { type: Number, default: 0 },
   like_image_count: { type: Number, default: 0 },
+  get_image_count: { type: Number, default: 0 },
+
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
   is_star: { type: Boolean },

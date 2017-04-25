@@ -29,10 +29,10 @@ var config = require('./config');
 var router = express.Router();
 
 // home page
-router.get('/', site.index);
+//router.get('/', site.index);
 
 // pic home page
-router.get('/pics', site.index_pic);
+router.get('/', site.index_pic);
 router.get('/pics/partial', site.pic_list_partial);
 
 // sitemap

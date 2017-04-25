@@ -447,13 +447,14 @@ exports.de_collect = function (req, res, next) {
     });
 };
 
+// DONE(hhdem) 不对val进行inspect
 exports.upload = function (req, res, next) {
     var isFileLimit = false;
     var uploadResult;
     var topicImage = {};
     req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
         console.log('Field [' + fieldname + ']: value: ' + inspect(val));
-        topicImage[fieldname] = inspect(val);
+        topicImage[fieldname] = val;
     });
 
     req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {

@@ -1,13 +1,60 @@
-<%- partial('sidebar') %>
+<%- Loader('/public/stylesheets/pics.min.css')
+.css('/public/stylesheets/pics.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<div id="content_pic">
+  <div class="panel">
+    <div id="pic_list" class="grid">
+      <div class="grid-sizer"></div>
+      <!-- TODO(hhdem) 用户信息显示的样式调整, 参考花瓣网 -->
+      <div id="loginDiv" class="grid-item grid-item-nb">
+        <% if (typeof(user) !== 'undefined' || current_user) { %>
+        <div class='header'>
+          <span class='col_fade'>个人信息</span>
+        </div>
+        <div class='innerBox'>
+          <%- partial('user/card',{ object: typeof(user) === 'undefined' ? current_user : user, as: 'user' }) %>
+        </div>
+        <div class="grid-item-content">
+          <a href='/topic/create' id='create_topic_btn'>
+            <span class='span-success'>发布话题</span>
+          </a>
+          <a id='create_pic_btn' data-toggle="modal" data-target="#image_upload" >
+            <span class='span-success'>发布图片</span>
+          </a>
+        </div>
+        <% } else { %>
+        <div class='innerBox'>
+          <p><%= config.description %></p>
 
-<div id="content">
+          <div>
+            您可以
+            <a href='/signin'>登录</a>
+            或
+            <a href='/signup'>注册</a>
+            , 也可以
+            <a href="/auth/github">
+              <span class="span-info">
+                通过 GitHub 登录
+              </span>
+            </a>
+          </div>
+        </div>
+        <% } %>
+
+      </div>
+    </div>
+    <div id="pic-page-marker"></div>
+  </div>
+</div>
+<div id="content_text">
   <div class="panel">
     <div class="header">
       <% [['all', '全部'], ['good', '精华']].concat(tabs).forEach(function (pair) {
-        var value = pair[0];
-        var text = pair[1]; %>
-        <a href="<%= value ? '/?tab=' + value : '/' %>"
-          class="topic-tab <%= value === tab ? 'current-tab' : '' %>"><%= text %></a>
+      var value = pair[0];
+      var text = pair[1]; %>
+      <a href="<%= value ? '/?tab=' + value : '/' %>"
+         class="topic-tab <%= value === tab ? 'current-tab' : '' %>"><%= text %></a>
       <% }) %>
     </div>
     <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
@@ -17,7 +64,7 @@
       pages: pages,
       current_page: current_page,
       base: '/',
-      lazyload: false
+      config: picConfig
       }) %>
     </div>
     <% } else { %>
@@ -27,3 +74,12 @@
     <% } %>
   </div>
 </div>
+<% if (picConfig.lazyload) { %>
+<%- partial('topic/_pic_list', {
+topics: topics,
+pages: pages,
+current_page: current_page,
+base: '/',
+config: picConfig
+}) %>
+<% } %>

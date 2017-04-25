@@ -90,11 +90,11 @@ exports.getBoardsByQuery = function (query, opt, callback) {
 
         boards.forEach(function (board, i) {
             var ep = new EventProxy();
-            ep.all('creator', 'reply', function (creator, reply) {
+            ep.all('creator', function (creator) {
                 // 保证顺序
                 // 作者可能已被删除
                 if (creator) {
-                    board.creator = author;
+                    board.creator = creator;
                 } else {
                     boards[i] = null;
                 }

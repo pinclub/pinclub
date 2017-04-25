@@ -5,6 +5,9 @@
 <script id="picBoxTmp" type="text/x-jquery-tmpl">
 <%- partial('../topic/_pic_box') %>
 </script>
+<script id="boardTemplate" type="text/x-jquery-tmpl">
+<%- partial('../topic/_board_list') %>
+</script>
 
 <!-- Upload 图片的 Modal 层 -->
 <!-- DONE(hhdem) modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口 -->
@@ -53,8 +56,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" id="upload-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="upload-submit" class="btn btn-primary">Save changes</button>
+                <button type="button" id="upload-close" class="btn" data-dismiss="modal">Close</button>
+                <button type="button" id="upload-submit" class="btn">Save changes</button>
             </div>
         </div>
     </div>
@@ -64,7 +67,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Get图片</h5>
+                <h5 class="modal-title">Get图片</h5>
             </div>
             <div class="modal-body">
                 <div id="get_image_view">
@@ -75,14 +78,56 @@
                             <textarea id="get-preview-image-desc" placeholder="点击添加描述..." class="description"></textarea>
                         </div>
                         <div class="right-part">
-                            board
+                            <input placeholder="搜索或创建Board" class="clear-input search-input">
+                            <div class="board-divider"></div>
+                            <div class="boardlist" data-id="35843606">
+                                <div class="scrollable">
+                                    <div class="recent">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-block-divider"></div>
+                            <div class="text-block">
+                                <div style="display: none;" class="createboard" data-text="">
+                                    <i class="icon add"></i>创建Board “<span class="text"></span>”
+                                </div>
+                                <div class="tag-inputs">
+                                    <input placeholder="输入文字，按空格或回车以生成标签" class="clear-input tag-input">
+                                </div>
+                                <div class="tag-bar">
+                                    <div style="display: block;" class="normal"><span class="title">推荐标签</span>
+                                        <span class="tags">
+                                            <div class="tag">素材</div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="get-image-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="get-image-submit" class="btn btn-primary">Get Image</button>
+                <button type="button" id="get-image-close" class="btn " data-dismiss="modal">Close</button>
+                <button type="button" id="get-image-submit" class="btn " data-image="" data-desc="" data-image-id="" data-board-id="">Get Image</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade splitwide" id="preview_modal" role="dialog" aria-hidden="true" aria-labelledby="previewModalLabel" style="background: none; border: 0px; -webkit-box-shadow: none; box-shadow: none; ">
+    <div class="modal-dialog pin-view" role="document">
+        <div class="pin-view-wrapper modal-body">
+            <div class="main-part">
+                <div class="image-piece piece">
+                    <div class="tool-bar">asdfasdf</div>
+                    <div class="main-image"></div>
+                </div>
+            </div>
+            <div class="side-part">
+                <div class="board-piece piece">
+                    <div class="board-info">adfsdafsdaf</div>
+                </div>
             </div>
         </div>
     </div>
