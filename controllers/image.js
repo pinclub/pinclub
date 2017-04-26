@@ -475,52 +475,53 @@ exports.upload = function (req, res, next) {
                 return;
             }
             uploadResult = result;
+            let filepath = path.resolve(__dirname, '..'+uploadResult.url);
+            imghash
+                .hash(filepath, null, 'binary')
+                .then((hash) => {
+                    getColors(path.resolve(__dirname, '..'+uploadResult.url)).then(colors => {
+                        topicImage.image_colors = colors;
+                        let rgbColor = [];
+                        colors.forEach(function(color) {
+                            rgbColor.push(color.rgb());
+                        });
+                        topicImage.image_colors_rgb = rgbColor;
+                        topicImage.image_hash = hash;
+                        topicImage.image = uploadResult.url;
+                        topicImage.type = 'image';
+                        topicImage.author_id = req.session.user;
+                        Image.newAndSaveImage(topicImage, function (err, image) {
+                            if (err) {
+                                return next(err);
+                            }
+                            // TODO 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
+                            var proxy = new EventProxy();
 
+                            proxy.fail(next);
+                            User.getUserById(req.session.user._id, proxy.done(function (user) {
+                                user.score += 5;
+                                user.image_count += 1;
+                                user.save();
+                                req.session.user = user;
+                                image.author = user;
+                                res.json({
+                                    success: true,
+                                    data: [structureHelper.topic(image)]
+                                });
+                            }));
+
+                            //发送at消息
+                            at.sendMessageToMentionUsers(topicImage.title, image._id, req.session.user._id);
+                        });
+                    });
+                });
         });
 
     });
 
     req.busboy.on('finish', function() {
         console.log('Done parsing form!');
-        imghash
-            .hash(path.resolve(__dirname, '..'+uploadResult.url), null, 'binary')
-            .then((hash) => {
-                getColors(path.resolve(__dirname, '..'+uploadResult.url)).then(colors => {
-                    topicImage.image_colors = colors;
-                    let rgbColor = [];
-                    colors.forEach(function(color) {
-                        rgbColor.push(color.rgb());
-                    });
-                    topicImage.image_colors_rgb = rgbColor;
-                    topicImage.image_hash = hash;
-                    topicImage.image = uploadResult.url;
-                    topicImage.type = 'image';
-                    topicImage.author_id = req.session.user;
-                    Image.newAndSaveImage(topicImage, function (err, image) {
-                        if (err) {
-                            return next(err);
-                        }
-                        // TODO 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
-                        var proxy = new EventProxy();
 
-                        proxy.fail(next);
-                        User.getUserById(req.session.user._id, proxy.done(function (user) {
-                            user.score += 5;
-                            user.image_count += 1;
-                            user.save();
-                            req.session.user = user;
-                            image.author = user;
-                            res.json({
-                                success: true,
-                                data: [structureHelper.topic(image)]
-                            });
-                        }));
-
-                        //发送at消息
-                        at.sendMessageToMentionUsers(topicImage.title, image._id, req.session.user._id);
-                    });
-                });
-            });
     });
 
     req.pipe(req.busboy);

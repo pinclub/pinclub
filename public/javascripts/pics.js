@@ -84,10 +84,11 @@ var uploader = new Q.Uploader({
     dataType: "json",
     data: {title: 'test'},
     //图片缩放
-    scale: {
-        //最大图片大小(width|height)
-        maxWidth: 700
-    },
+    // DONE(hhdem) 如果是在win环境下, 打开图片缩放无法成功上传
+    // scale: {
+    //     //最大图片大小(width|height)
+    //     maxWidth: 700
+    // },
     UI: {
         //init: function () { },
         draw: function (task) {
