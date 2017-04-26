@@ -1331,3 +1331,322 @@ textarea.editor {
 .sponsor_outlink:hover {
   text-decoration: none;
 }
+
+#Profile {
+  position: relative
+}
+
+#Profile .profile-basic {
+  height: 54px;
+  line-height: 30px;
+  position: relative;
+  background: #FAFAFA;
+  margin: 16px;
+  overflow: hidden
+}
+
+#Profile .profile-basic a.img {
+  display: block;
+  width: 54px;
+  height: 54px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-indent: -9999px
+}
+
+#Profile .profile-basic a.userlink {
+  display: block;
+  position: absolute;
+  left: 64px;
+  top: 0;
+  max-width: 140px;
+  height: 54px;
+  line-height: 54px;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis
+}
+
+#Profile .profile-basic a.userlink .v-icon {
+  position: relative;
+  margin: 0 0 -3px 5px
+}
+
+#Profile .profile-basic a.settings {
+  display: block;
+  width: 35px;
+  height: 54px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url(../images/icon_setting.png) 10px 20px no-repeat #F5F5F5;
+  opacity: 0;
+  -webkit-transition: opacity .2s linear;
+  transition: opacity .2s linear
+}
+
+#Profile .profile-basic a.settings:hover {
+  background-position: 10px -20px
+}
+
+#Profile .profile-basic a.settings:active {
+  background-position: 10px -60px
+}
+
+#Profile:hover .profile-basic a.settings {
+  opacity: 1
+}
+
+#Profile .profile-stats,#Profile .profile-acts {
+  padding: 6px 15px
+}
+
+#Profile .profile-stats {
+  height: 50px;
+  padding: 0;
+  border-top: 1px solid #F5F2F2;
+  border-bottom: 1px solid #F5F2F2;
+  border-width: 1px 0;
+  background: #FFF
+}
+
+#Profile .profile-stats a {
+  float: left;
+  padding: 5px 10px;
+  font-size: 12px;
+  width: 23%;
+  height: 40px;
+  text-align: center;
+  color: #999;
+  text-decoration: none
+}
+
+#Profile .profile-stats a.middle {
+  border-left: 1px solid #F5F2F2;
+  border-right: 1px solid #F5F2F2;
+  width: 54px
+}
+
+#Profile .profile-stats a strong {
+  font-size: 16px;
+  display: block;
+  color: #000;
+  margin-bottom: 4px
+}
+
+#Profile .profile-stats a:hover {
+  background-color: #FAFAFA;
+  color: #AAA
+}
+
+#Profile .profile-stats a:hover strong {
+  color: #222
+}
+
+#Profile .followed-tags {
+  padding: 15px 16px
+}
+
+#Profile .followed-tags h3 {
+  font-weight: 400;
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #777
+}
+
+#Profile .followed-tags .tag {
+  padding: 2px 8px;
+  background: #FAFAFA;
+  border: 1px solid #EDEDED;
+  color: #777;
+  border-radius: 3px;
+  text-decoration: none;
+  display: block;
+  float: left;
+  margin: 0 5px 5px 0
+}
+
+#Profile .followed-tags .tag:hover {
+  background: #fff;
+  border-color: #DDD;
+  color: #C90000
+}
+
+#Profile .followed-tags .tag:active {
+  background: #F7F7F7
+}
+
+#Profile .suggestion {
+  position: relative;
+  border-bottom: 1px solid #F5F2F2
+}
+
+#Profile .suggestion a {
+  display: block
+}
+
+#Profile .suggestion .userlink {
+  font-size: 12px;
+  color: #221919;
+  margin-bottom: 10px;
+  width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+
+#Profile .suggestion span.txt {
+  font-size: 12px;
+  color: #999;
+  padding-left: 4px;
+  width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+
+#Profile .suggestion span.icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-left: 50px;
+  background: url(/img/icons_social_gray.png) no-repeat
+}
+
+#Profile .suggestion span.weibo {
+  background-position: -30px 0
+}
+
+#Profile .suggestion span.douban {
+  background-position: 0 0
+}
+
+#Profile .suggestion span.tqq {
+  background-position: -60px 0
+}
+
+#Profile .suggestion span.renren {
+  background-position: -90px 0
+}
+
+#Profile .suggestion a.img {
+  position: absolute;
+  width: 40px;
+  height: 40px
+}
+
+#Profile .suggestion a.img img {
+  width: 40px;
+  height: 40px
+}
+
+#Profile .suggestion .txt {
+  display: block;
+  margin-left: 50px
+}
+
+#Profile .suggestion a.btn {
+  position: absolute;
+  top: 10px;
+  right: 15px
+}
+
+#Profile a.mute {
+  display: block;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  cursor: pointer;
+  background: url(/img/icon_remove.png) no-repeat;
+  -webkit-transition: opacity .2s linear;
+  -webkit-transition-property: opacity,right,bottom
+}
+
+#Profile a.mute:hover {
+  background-position: 0 center
+}
+
+#Profile a.mute:active {
+  background-position: 0 bottom
+}
+
+#Profile .suggestion:hover a.mute {
+  visibility: visible;
+  opacity: 1;
+  right: 0;
+  bottom: 0
+}
+
+#Profile .all-friends {
+  color: #999;
+  border-bottom: 1px solid #F5F2F2;
+  position: relative
+}
+
+#Profile .all-friends a {
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 15px
+}
+
+#Profile .profile-acts {
+  clear: both;
+  padding: 10px 15px 16px;
+  border-top: 1px solid white
+}
+
+#Profile .profile-acts .links {
+  padding-right: 5px
+  float: left;
+  text-align: center;
+}
+
+#Profile .profile-acts .links strong {
+  line-height: 22px
+}
+
+#Profile .profile-acts .links a {
+  padding: 0 10px
+}
+
+#Profile .profile-acts .links a em {
+  float: right;
+  height: 16px;
+  width: 65px;
+  background: url(/img/icon_find_btn.png) no-repeat 0 0;
+  margin-top: 6px
+}
+
+#Profile .profile-acts .links a:hover em {
+  background-position: 0 -30px
+}
+
+#Profile .profile-acts .add {
+  float: left;
+  height: 31px;
+  width: 30px;
+  text-indent: -9999px;
+  background: url(/img/sprite_nav.png?v2.png) no-repeat 0 -120px;
+  margin-top: 3px
+}
+
+#Profile .profile-acts .add:hover {
+  background-position: 0 -160px
+}
+
+#Profile .profile-acts .add:active {
+  background-position: 0 -200px
+}
+
+#Profile .convo {
+  padding: 10px 16px
+}

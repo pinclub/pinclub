@@ -20,6 +20,7 @@ router.post('/topics/update', middleware.auth, topicController.update);
 
 // 图片
 router.get('/images/sim', imageController.sim);
+router.get('/images/:id', imageController.show);
 router.post('/images/like', middleware.auth, imageController.like);
 router.post('/images/get', middleware.auth, imageController.getImage);
 

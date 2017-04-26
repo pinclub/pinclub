@@ -1,12 +1,28 @@
 <div id="page-marker"></div>
 <script id="topicListTmp" type="text/x-jquery-tmpl">
-<%- partial('../topic/_abstract') %>
+    <%- partial('_abstract') %>
 </script>
 <script id="picBoxTmp" type="text/x-jquery-tmpl">
-<%- partial('../topic/_pic_box') %>
+    <%- partial('_pic_box') %>
 </script>
 <script id="boardTemplate" type="text/x-jquery-tmpl">
-<%- partial('../topic/_board_list') %>
+    <%- partial('../board/_board_list') %>
+</script>
+
+<script id="boardInfoTemplate" type="text/x-jquery-tmpl">
+    <div class="board-info">
+        <a href="/${author.loginname}" title="${author.loginname}" class="img x">
+            <img src="${author.avatar_url}" data-baiduimageplus-ignore="1" class="avt">
+        </a>
+        <a href="/boards/35011137/" class="name x">花童</a>
+        <div class="sub">${author.loginname}</div>
+    </div>
+    <div class="board-pins cst-scrollbar">
+        <div id="board_pins_waterfall">
+
+        </div>
+    </div>
+    <a data-id="29409295" href="#" onclick="return false;" class="follow-btn btn"><span class="text"> 关注画板</span></a>
 </script>
 
 <!-- Upload 图片的 Modal 层 -->
@@ -21,14 +37,17 @@
                 <h5 class="modal-title" id="exampleModalLabel">上传图片</h5>
             </div>
             <div class="modal-body">
-                <div id="upload_area"  class="upload-area" >
+                <div id="upload_area" class="upload-area">
                     <div class="normal">
                         <a href="#" onclick="return false;" class="upload-btn btn btn18" for="img_input2">
                             <span class="text"> 上传采集</span>
                         </a>
+
                         <div style="margin-top: 25px" class="note">也可以拖拽图片到该区域，完成上传</div>
                         <div style="margin: 10px 0 25px" class="sub">支持单张 10m 以内图片上传</div>
-                        <div style="margin-top: 20px; font-size: 12px" class="sub">[提示]请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息</div>
+                        <div style="margin-top: 20px; font-size: 12px" class="sub">
+                            [提示]请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息
+                        </div>
 
                     </div>
                     <div style="display: none" class="draging">
@@ -49,7 +68,7 @@
                             <textarea id="preview-desc" placeholder="点击添加描述..." class="description"></textarea>
                         </div>
                         <div class="right-part">
-                            board
+                            <%- partial('../board/_board_create_search') %>
                         </div>
                     </div>
                 </div>
@@ -75,58 +94,66 @@
                         <div class="preview">
                             <div id="get-preview-image" class="image">
                             </div>
-                            <textarea id="get-preview-image-desc" placeholder="点击添加描述..." class="description"></textarea>
+                            <textarea id="get-preview-image-desc" placeholder="点击添加描述..."
+                                      class="description"></textarea>
                         </div>
                         <div class="right-part">
-                            <input placeholder="搜索或创建Board" class="clear-input search-input">
-                            <div class="board-divider"></div>
-                            <div class="boardlist" data-id="35843606">
-                                <div class="scrollable">
-                                    <div class="recent">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-block-divider"></div>
-                            <div class="text-block">
-                                <div style="display: none;" class="createboard" data-text="">
-                                    <i class="icon add"></i>创建Board “<span class="text"></span>”
-                                </div>
-                                <div class="tag-inputs">
-                                    <input placeholder="输入文字，按空格或回车以生成标签" class="clear-input tag-input">
-                                </div>
-                                <div class="tag-bar">
-                                    <div style="display: block;" class="normal"><span class="title">推荐标签</span>
-                                        <span class="tags">
-                                            <div class="tag">素材</div>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                            <%- partial('../board/_board_create_search') %>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="get-image-close" class="btn " data-dismiss="modal">Close</button>
-                <button type="button" id="get-image-submit" class="btn " data-image="" data-desc="" data-image-id="" data-board-id="">Get Image</button>
+                <button type="button" id="get-image-submit" class="btn " data-image="" data-desc="" data-image-id=""
+                        data-board-id="">Get Image
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade splitwide" id="preview_modal" role="dialog" aria-hidden="true" aria-labelledby="previewModalLabel" style="background: none; border: 0px; -webkit-box-shadow: none; box-shadow: none; ">
-    <div class="modal-dialog pin-view" role="document">
-        <div class="pin-view-wrapper modal-body">
+<div id="preview_modal" role="dialog" aria-hidden="true" aria-labelledby="previewModalLabel">
+    <div class="close-layer"><i></i></div>
+    <div class="pin-view" role="document">
+        <div class="pin-view-wrapper">
             <div class="main-part">
                 <div class="image-piece piece">
-                    <div class="tool-bar">asdfasdf</div>
-                    <div class="main-image"></div>
+                    <div class="tool-bar">
+                        <a data-id="" data-name="" data-src="" href="#" class="repin-btn btn rbtn get-pic-btn"
+                           id="preview_modal_rpin_btn">
+                            <span class="text"> Get</span>
+                        </a>
+                        <a data-id="" href="#" onclick="return false;" class="like-btn  btn-with-icon btn">
+                            <i class="heart"></i>
+                        </a>
+                    </div>
+                    <div class="main-image">
+                        <div id="baidu_image_holder" class="image-holder">
+
+                        </div>
+                    </div>
+                    <div class="tool-bar-bottom"><a
+                            onclick="app.requireLogin(function(){app.showDialogBox('repin', {pin_id: '1090982775'});});return false;"
+                            href="#" class="repin-btn btn-with-icon btn"><i class="class"></i><span
+                            class="text"> 采集 <span class="num">88</span></span>
+                        <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+                    </a><a href="#" onclick="return false;" class="like-btn btn-with-icon btn"><i
+                            class="class"></i><span class="text"> 喜欢 <span class="num">3</span></span></a><a href="#"
+                                                                                                             onclick="return false;"
+                                                                                                             class="comment-btn btn-with-icon btn"><i
+                            class="class"></i><span class="text"> 评论 <span class="num"></span></span></a><!--btn.download-btn(href='#{imgURL(pin.file)}', target='_blank', download) #{((pin.file.type || '').substring(6) || 'jpeg').toUpperCase()}-->
+                        <!--    i.new--><!--    i-->
+                        <div class="right-part"><a title="举报这张采集" href="#" onclick="return false;"
+                                                   class="report-btn btn-with-icon btn"><i class="class"></i></a><a
+                                href="/go/?pin_id=1090982775" rel="nofollow" target="_blank" class="source btn"><i
+                                class="class"></i>查看来源 dribbble.com</a></div>
+                    </div>
                 </div>
             </div>
             <div class="side-part">
                 <div class="board-piece piece">
-                    <div class="board-info">adfsdafsdaf</div>
+
                 </div>
             </div>
         </div>
@@ -139,5 +166,6 @@
 .js('/public/libs/Q.Uploader.all.js')
 .js('/public/libs/Q.Uploader.image.all.js')
 .js('/public/javascripts/pics.js')
+.js('/public/javascripts/pics_preview.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>

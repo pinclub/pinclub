@@ -8,7 +8,9 @@ var config = {
   // debug 为 true 时，用于本地调试
   debug: true,
 
-  get mini_assets() { return !this.debug; }, // 是否启用静态文件的合并压缩，详见视图中的Loader
+  get mini_assets() {
+    return !this.debug;
+  }, // 是否启用静态文件的合并压缩，详见视图中的Loader
 
   name: 'Nodeclub', // 社区名字
   description: 'CNode：Node.js专业中文社区', // 社区的描述
@@ -16,15 +18,15 @@ var config = {
 
   // 添加到 html head 中的信息
   site_headers: [
-    '<meta name="author" content="EDP@TAOBAO" />'
+    '<meta name="author" content="" />'
   ],
   site_logo: '/public/images/cnodejs_light.svg', // default is `name`
   site_icon: '/public/images/cnode_icon_32.png', // 默认没有 favicon, 这里填写网址
   // 右上角的导航区
   site_navs: [
     // 格式 [ path, title, [target=''] ]
-    [ '/public/apidoc/', 'API' ],
-    [ '/about', '关于' ]
+    ['/about', '关于'],
+    ['/public/apidoc/', 'API']
   ],
   // cdn host，如 http://cnodejs.qiniudn.com
   site_static_host: '', // 静态文件存储域名
@@ -51,7 +53,19 @@ var config = {
   port: 3000,
 
   // 话题列表显示的话题数量
-  list_topic_count: 20,
+  list_topic_count: 10,
+
+  // 图片列表显示的数量
+  list_pic_count: 5,
+
+  // Board 列表显示数量
+  list_board_count: 10,
+
+  pic_inner_scroll: false,
+
+  pic_inner_height: 600,
+
+  lazyload: true,
 
   // RSS配置
   rss: {
@@ -79,7 +93,7 @@ var config = {
   weibo_id: 'your_weibo_id',
 
   // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
-  admins: { user_login_name: true },
+  admins: {user_login_name: true},
 
   // github 登陆的配置
   GITHUB_OAUTH: {
@@ -130,9 +144,12 @@ var config = {
   },
 
   create_post_per_day: 1000, // 每个用户一天可以发的主题数
+  create_board_per_day: 1000, // 每个用户一天可以创建的Board数量
   create_reply_per_day: 1000, // 每个用户一天可以发的评论数
   create_user_per_ip: 1000,
   visit_per_day: 1000, // 每个 ip 每天能访问的次数
+
+  jwt_token: 'pinclub-JWT'
 };
 
 if (process.env.NODE_ENV === 'test') {

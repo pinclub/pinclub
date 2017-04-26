@@ -262,7 +262,7 @@ $(document).on('click', '#pic_list .preview-image', function (event) {
     console.log(event.currentTarget.dataset.id);
     console.log(event.currentTarget.dataset.src);
     $('#get-preview-image-desc').val('');
-    $('#preview_modal .main-image').html('<img src="'+event.currentTarget.dataset.src+'">');
+    $('#baidu_image_holder').html('<img src="'+event.currentTarget.dataset.src+'">');
 });
 
 function similarPics(picid) {

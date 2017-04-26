@@ -1,0 +1,5 @@
+{{each boards}}
+    <div class="item {{if $index == 0}}selected{{/if}}" data-id="${boards[$index]._id}" id="${boards[$index]._id}" data-title="${boards[$index].title}">
+        <i class="icon history"></i>${boards[$index].title}<div class="controller"></div>
+    </div>
+{{/each}}

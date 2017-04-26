@@ -285,3 +285,82 @@ exports.getImage = function (req, res, next) {
     });
 
 };
+
+/**
+ * TODO 增加Board信息的返回,以及统计信息
+ * @api {get} /v2/images/:id 显示图片信息
+ * @apiDescription
+ * 获取某图片信息
+ * @apiName showImage
+ * @apiGroup images
+ *
+ * @apiParam {String} id 要获取的图片 id
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/images/get
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
+exports.show = function (req, res, next) {
+    var topicId = String(req.params.id);
+
+    var mdrender = req.query.mdrender === 'false' ? false : true;
+    var ep = new eventproxy();
+
+    if (!validator.isMongoId(topicId)) {
+        res.status(400);
+        return res.send({success: false, error_msg: '不是有效的话题id'});
+    }
+
+    ep.fail(next);
+
+    TopicProxy.getFullTopic(topicId, ep.done(function (msg, topic, author, replies) {
+        if (!topic) {
+            res.status(404);
+            return res.send({success: false, error_msg: '话题不存在'});
+        }
+        topic = _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply', 'last_reply_at',
+            'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'image']);
+
+        if (mdrender) {
+            topic.content = renderHelper.markdown(at.linkUsers(topic.content));
+        }
+        topic.author = _.pick(author, ['loginname', 'avatar_url']);
+
+        topic.replies = replies.map(function (reply) {
+            if (mdrender) {
+                reply.content = renderHelper.markdown(at.linkUsers(reply.content));
+            }
+            reply.author = _.pick(reply.author, ['loginname', 'avatar_url']);
+            reply = _.pick(reply, ['id', 'author', 'content', 'ups', 'create_at', 'reply_id']);
+            reply.reply_id = reply.reply_id || null;
+
+            if (reply.ups && req.user && reply.ups.indexOf(req.user.id) != -1) {
+                reply.is_uped = true;
+            } else {
+                reply.is_uped = false;
+            }
+
+            return reply;
+        });
+
+        ep.emit('full_topic', topic)
+    }));
+
+
+    if (!req.user) {
+        ep.emitLater('is_collect', null)
+    } else {
+        TopicCollect.getTopicCollect(req.user._id, topicId, ep.done('is_collect'))
+    }
+
+    ep.all('full_topic', 'is_collect', function (full_topic, is_collect) {
+        full_topic.is_collect = !!is_collect;
+
+        res.send({success: true, data: full_topic});
+    })
+
+};

@@ -500,7 +500,7 @@ exports.upload = function (req, res, next) {
                         if (err) {
                             return next(err);
                         }
-
+                        // TODO 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
                         var proxy = new EventProxy();
 
                         proxy.fail(next);

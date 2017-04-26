@@ -192,6 +192,49 @@ exports.getFullTopic = function (id, callback) {
 };
 
 /**
+ * 获取所有信息的主题
+ * Callback:
+ * - err, 数据库异常
+ * - message, 消息
+ * - topic, 主题
+ * - author, 主题作者
+ * - board, 画板
+ * - replies, 主题的回复
+ * @param {String} id 主题ID
+ * @param {Function} callback 回调函数
+ */
+exports.getFullImage = function (id, callback) {
+    var proxy = new EventProxy();
+    var events = ['topic', 'author', 'replies'];
+    proxy
+        .assign(events, function (topic, author, replies) {
+            callback(null, '', topic, author, replies);
+        })
+        .fail(callback);
+
+    Topic.findOne({_id: id, deleted: false}, proxy.done(function (topic) {
+        if (!topic) {
+            proxy.unbind();
+            return callback(null, '此话题不存在或已被删除。');
+        }
+        at.linkUsers(topic.content, proxy.done('topic', function (str) {
+            topic.linkedContent = str;
+            return topic;
+        }));
+
+        User.getUserById(topic.author_id, proxy.done(function (author) {
+            if (!author) {
+                proxy.unbind();
+                return callback(null, '话题的作者丢了。');
+            }
+            proxy.emit('author', author);
+        }));
+
+        Reply.getRepliesByTopicId(topic._id, proxy.done('replies'));
+    }));
+};
+
+/**
  * 更新主题的最后回复信息
  * @param {String} topicId 主题ID
  * @param {String} replyId 回复ID

@@ -8,40 +8,52 @@
             <div class="grid-sizer"></div>
             <!-- TODO(hhdem) 用户信息显示的样式调整, 参考花瓣网 -->
             <div id="loginDiv" class="grid-item grid-item-nb">
-                    <% if (typeof(user) !== 'undefined' || current_user) { %>
-                    <div class='header'>
-                        <span class='col_fade'>个人信息</span>
-                    </div>
-                    <div class='innerBox'>
-                        <%- partial('user/card',{ object: typeof(user) === 'undefined' ? current_user : user, as: 'user' }) %>
-                    </div>
-                    <div class="grid-item-content">
-                        <a href='/topic/create' id='create_topic_btn'>
-                            <span class='span-success'>发布话题</span>
-                        </a>
-                        <a id='create_pic_btn' data-toggle="modal" data-target="#image_upload" >
-                            <span class='span-success'>发布图片</span>
-                        </a>
-                    </div>
-                    <% } else { %>
-                    <div class='innerBox'>
-                        <p><%= config.description %></p>
+                <div id="Profile">
+                <% if (typeof(user) !== 'undefined' || current_user) { %>
+                    <!-- TODO 用户统计信息获取, 目前为写死 -->
 
-                        <div>
-                            您可以
-                            <a href='/signin'>登录</a>
-                            或
-                            <a href='/signup'>注册</a>
-                            , 也可以
-                            <a href="/auth/github">
-              <span class="span-info">
-                通过 GitHub 登录
-              </span>
-                            </a>
+                    <div class="profile-basic">
+                        <a href="/user/<%= current_user.loginname %>" title="<%= current_user.loginname %>" class="img x loaded">
+                            <img width="54"
+                              height="54"
+                              src="<%= current_user.avatar_url %>"
+                              data-baiduimageplus-ignore="1"></a>
+                        <a href="/user/<%= current_user.loginname %>" class="userlink">hhdem</a>
+                        <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
+                    </div>
+                    <div class="profile-stats">
+                        <a href="/user/<%= current_user.loginname %>/get"><strong>2</strong>Get</a>
+                        <a href="/user/<%= current_user.loginname %>/board" class="middle"><strong>3</strong>画板</a>
+                        <a href="/user/<%= current_user.loginname %>/followers"><strong><%= current_user.score %></strong>积分</a>
+                    </div>
+                    <div class="profile-acts convo">
+                        <div class="links">
+                            <a href="/topic/create" class="btn"><strong>
+                            发布话题</strong><span></span></a>
+
+                            <a id='create_pic_btn' data-toggle="modal" data-target="#image_upload" class="btn wbtn"><strong>
+                                发布图片</strong><span></span></a>
                         </div>
                     </div>
-                    <% } %>
+                <% } else { %>
+                    <div class="profile-basic">
+                        <p><%= config.description %></p>
+                    </div>
+                    <div class="profile-acts convo">
+                        <div class="links">
+                            <a href="/signin" class="btn"><strong>
+                                登录</strong><span></span></a>
 
+                            <a href="/signup" class="btn wbtn"><strong>
+                                注册</strong><span></span></a>
+
+                            <a href="/auth/github" class="btn wbtn"><strong>
+                                通过 GitHub 登录</strong><span></span></a>
+                        </div>
+                    </div>
+
+                <% } %>
+                </div>
             </div>
         </div>
         <div id="pic-page-marker"></div>

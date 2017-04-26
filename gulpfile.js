@@ -17,6 +17,7 @@ gulp.task('todo', function() {
     gulp.src(todoSrc)
         .pipe(todo({
             customTags: ['DONE'],
+            absolute: false,
             transformComment: function (file, line, text, kind, ref) {
                 if (kind === 'DONE') {
                     text = '~~' +text+ '~~';
