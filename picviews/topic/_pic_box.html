@@ -14,7 +14,9 @@
         </div>
     </div>
     <a href="#${item.id}" data-id="${item.id}" data-name="${item.title}" data-src="${item.image}" class="preview-image preview_image_btn">
-        <img src="${item.image}" title="${item.title}" alt="${item.title}"/>
+        <img src="{{if !!item.image_fixed}}${item.image_fixed}{{else}}${item.image}{{/if}}" title="${item.title}" alt="${item.title}"/>
+
+        <div class="cover"></div>
     </a>
     <p class="stats less">
         <span title="转采" class="repin"><i></i>5</span>

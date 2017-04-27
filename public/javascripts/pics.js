@@ -47,7 +47,7 @@ $('#page-marker').on('lazyshow', function () {
 
 $('#pic-page-marker').on('lazyshow', function () {
     $.ajax({
-        url: "api/v2/topics?type=image&limit=5&page=" + pic_page
+        url: "api/v2/images?type=image&limit=5&page=" + pic_page
     }).done(function (responseText) {
         let itemLength = responseText.data.length;
         let picelements = '';
@@ -90,7 +90,9 @@ var uploader = new Q.Uploader({
     //     maxWidth: 700
     // },
     UI: {
-        //init: function () { },
+        init: function () {
+            console.info('UI init method');
+        },
         draw: function (task) {
             var self = this,
                 ops = self.ops,
@@ -100,24 +102,36 @@ var uploader = new Q.Uploader({
 
             var name = task.name;
 
+            var li = '';
+            loadImage(task.file,
+                function (img, data) {
+                    img.style.width = '180px';
+                    var html =
+                        '<div class="u-img"></div><span class="u-loaded"></span><span class="u-total"></span>';
+                    var taskId = task.id,
+                        box = Q.createEle("div", "u-item", html);
+
+                    box.taskId = taskId;
+
+                    var boxImage = Q.getFirst(box);
+
+                    task.box = box;
+                    boxImage.appendChild(img);
+                    //添加到视图中
+                    boxView.appendChild(box);
+
+                    //---------------- 预览图片并更新UI ----------------
+                    $('#preview-desc').html(name);
+                    $('#preview').append(img);
+                },
+                {orientation: true} // Options
+            );
+            //task.file = li;
             var html =
-                '<div class="u-img"></div><span class="u-loaded"></span><span class="u-total"></span>';
+                '<div class="u-img">'+li+'</div><span class="u-loaded"></span><span class="u-total"></span>';
 
-            var taskId = task.id,
-                box = Q.createEle("div", "u-item", html);
 
-            box.taskId = taskId;
-
-            var boxImage = Q.getFirst(box);
-
-            task.box = box;
-
-            //添加到视图中
-            boxView.appendChild(box);
-
-            //---------------- 预览图片并更新UI ----------------
-            $('#preview-desc').html(name);
-            self.previewImage(boxImage, task, ops);
+            //self.previewImage(boxImage, task, ops);
         },
         update: function (task) {
 
@@ -141,7 +155,9 @@ var uploader = new Q.Uploader({
         //上传之前触发
         upload: function (task) {
             //可针对单独的任务配置参数(POST方式)
-            uploader.data = {title: $('#preview-desc').val()};
+            uploader.data = {
+                title: $('#preview-desc').val()
+            };
         },
         //上传完成后触发
         complete: function (task) {
@@ -171,7 +187,24 @@ var uploader = new Q.Uploader({
             if (this.index >= this.list.length - 1) {
                 //所有任务上传完成
                 console.log("所有任务上传完成：" + new Date());
+                let boardSelected = $('#image_upload .right-part .boardlist .item.selected');
                 $('#image_upload').modal('hide');
+                $('#upload-submit').button('reset');
+                console.log(event.currentTarget.dataset);
+
+                let imageItem = {
+                    desc : item.title,
+                    topic_id: item.id,
+                    board_id: boardSelected.data("id")
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "api/v2/images/get",
+                    data: imageItem
+                }).done(function (response) {
+                    console.log('Save board relate after upload pic', response);
+                });
             }
         }
 
@@ -179,6 +212,8 @@ var uploader = new Q.Uploader({
 });
 
 document.getElementById("upload-submit").onclick = function () {
+    var $this = $(this);
+    $this.button('loading');
     uploader.start();
 };
 

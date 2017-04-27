@@ -19,6 +19,7 @@ router.post('/topics', middleware.auth, limit.peruserperday('create_topic', conf
 router.post('/topics/update', middleware.auth, topicController.update);
 
 // 图片
+router.get('/images', imageController.index);
 router.get('/images/sim', imageController.sim);
 router.get('/images/:id', imageController.show);
 router.post('/images/like', middleware.auth, imageController.like);

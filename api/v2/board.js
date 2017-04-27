@@ -60,7 +60,8 @@ var index = function (req, res, next) {
  * 获取当前用户 Board 列表
  * @apiName saveBoards
  * @apiGroup board
-
+ *
+ * @apiUse ApiHeaderType
  * @apiParam {String} [type] 类型, 平台统一分类
  * @apiParam {Number} [page] 页数
  * @apiParam {Number} [limit] 每一页的主题数量

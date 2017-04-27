@@ -76,7 +76,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="upload-close" class="btn" data-dismiss="modal">Close</button>
-                <button type="button" id="upload-submit" class="btn">Save changes</button>
+                <button type="button" id="upload-submit" class="btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin' style='background: none;margin: 0px;'></i> Uploading">Upload Image</button>
             </div>
         </div>
     </div>
@@ -164,6 +164,7 @@
 .js('/public/libs/masonry.pkgd.js')
 .js('/public/libs/imagesloaded.pkgd.min.js')
 .js('/public/libs/Q.Uploader.image.all.js')
+.js('/public/libs/load-image.all.min.js')
 .js('/public/javascripts/pics.js')
 .js('/public/javascripts/pics_preview.js')
 .done(assets, config.site_static_host, config.mini_assets)

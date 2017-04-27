@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var models = require('../../models');
 var TopicModel = models.Topic;
 var TopicProxy = require('../../proxy').Topic;
@@ -9,6 +10,99 @@ var ReplyProxy = require('../../proxy').Reply;
 var config = require('../../config');
 var eventproxy = require('eventproxy');
 var structureHelper = require('../../common/structure_helper');
+
+/**
+ * @api {get} /v2/images 图片主题列表
+ * @apiDescription
+ * 获取本站图片主题列表
+ * @apiName getImages
+ * @apiGroup images
+ *
+ * @apiParam {Number} [page] 页数
+ * @apiParam {Number} [limit] 每一页的主题数量
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/images
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "success": true,
+          "data": [
+              {
+                  "id": "",
+                  "author_id": "",
+                  "tab": "ask",
+                  "content": "",
+                  "title": "",
+                  "last_reply_at": "",
+                  "good": false,
+                  "top": false,
+                  "reply_count": 2,
+                  "visit_count": 8,
+                  "create_at": "",
+                  "author": {
+                      "loginname": "admin",
+                      "avatar_url": "//gravatar.com/avatar/80579ac37c768d5dffa97b46bb4754f2?size=48"
+                  },
+                  "reply": {
+                      "author": {
+                          "loginname": "admin",
+                          "avatar_url": "//gravatar.com/avatar/80579ac37c768d5dffa97b46bb4754f2?size=48"
+                      },
+                      "content": "回复内容",
+                      "create_at_ago", "几秒前",
+                      "id": ""
+                  }
+              }
+          ]
+      }
+ */
+exports.index = function (req, res, next) {
+    var type = 'image';
+    var page = parseInt(req.query.page, 10) || 1;
+    page = page > 0 ? page : 1;
+
+    var limit = Number(req.query.limit) || config.list_topic_count;
+
+    var query = {};
+    query.deleted = false;
+    query.type = type;
+    var options = {skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at'};
+
+    var ep = new eventproxy();
+    ep.fail(next);
+
+    TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
+        return topics;
+    }));
+
+    if (!!req.session.user) {
+        // TODO 此处需要优化,不要每次都获得全部喜欢的图片列表
+        TopicLike.getTopicLikesByUserId(req.session.user._id, {}, ep.done('liked_topics'));
+    } else {
+        ep.emit('liked_topics', []);
+    }
+
+    ep.all('topics', 'liked_topics', function (topics, liked_topics) {
+        let liked_t_ids = _.map(liked_topics, 'topic_id');
+        topics = topics.map(function (topic) {
+            let structedTopic = structureHelper.image(topic);
+            liked_t_ids.forEach(function(lti){
+                let tid = lti.toString();
+                if (topic.id === tid) {
+                    structedTopic.liked = true;
+                }
+            });
+
+            return structedTopic
+        });
+
+        res.send({success: true, data: topics});
+    });
+};
 
 /**
  * @api {get} /v2/images/sim 相似图片列表
@@ -55,7 +149,7 @@ exports.sim = function (req, res, next) {
             return res.send({success: false, error_msg: '图片不存在'});
         }
         var options = {limit: limit, sort: '-_id'};
-        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 20"}, options, ep.done('topics', function (topics) {
+        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 60"}, options, ep.done('topics', function (topics) {
             return topics;
         }));
 
@@ -181,6 +275,7 @@ exports.like = function (req, res, next) {
 
 /**
  *
+ * 把图片Get到自己的board中
  * @api {post} /v2/images/get Get图片
  * @apiDescription
  * Get某图片
@@ -278,7 +373,7 @@ exports.getImage = function (req, res, next) {
             ep.all('get_image_success', 'user_count', 'topic_count', function(topicBoard){
                 res.send({
                     success: true,
-                    topic_id: topicBoard.id
+                    data: topicBoard
                 });
             });
         }

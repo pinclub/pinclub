@@ -10,6 +10,7 @@ var validator = require('validator');
 var imghash = require('imghash');
 var getColors = require('get-image-colors');
 var path = require('path');
+var rotator = require('auto-rotate');
 var inspect = require('util').inspect;
 var at = require('../common/at');
 var User = require('../proxy').User;
@@ -474,12 +475,29 @@ exports.upload = function (req, res, next) {
             if (isFileLimit) {
                 return;
             }
+
+            // TODO 此处需要考虑上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取, 前台只是需要个 id ,可以先生成id返回,之后再进行剩下的操作
+            // TODO 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
             uploadResult = result;
             let filepath = path.resolve(__dirname, '..'+uploadResult.url);
+            let extname = filepath.substring(filepath.lastIndexOf('.') + 1) ;
+            let filename_path = filepath.substring(0, filepath.lastIndexOf('.')) ;
+            let upload_path = uploadResult.url.substring(0, uploadResult.url.lastIndexOf('.')) ;
+            let filepath_fixed = filename_path + '_fixed.' + extname;
+            let upload_fixed = upload_path + '_fixed.' + extname;
+            //topicImage.image_fixed = upload_fixed;
+            // TODO 自动旋转图片方向, 此处代码需要优化性能, 所以先注释掉
+            //rotator.autoRotateFile(filepath, filepath_fixed)
+            //    .then(function(rotated) {
+            //        console.log(rotated ? filepath + ' rotated to ' + filepath_fixed : filepath + ' no rotation was needed');
+            //    }).catch(function(err) {
+            //        console.error('Got error: '+err);
+            //    });
+
             imghash
-                .hash(filepath, null, 'binary')
+                .hash(filepath, 16, 'binary')
                 .then((hash) => {
-                    getColors(path.resolve(__dirname, '..'+uploadResult.url)).then(colors => {
+                    getColors(path.resolve(filepath)).then(colors => {
                         topicImage.image_colors = colors;
                         let rgbColor = [];
                         colors.forEach(function(color) {
@@ -490,11 +508,13 @@ exports.upload = function (req, res, next) {
                         topicImage.image = uploadResult.url;
                         topicImage.type = 'image';
                         topicImage.author_id = req.session.user;
+
                         Image.newAndSaveImage(topicImage, function (err, image) {
                             if (err) {
                                 return next(err);
                             }
-                            // TODO 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
+                            topicImage.id = image.id;
+                            // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
                             var proxy = new EventProxy();
 
                             proxy.fail(next);
@@ -503,16 +523,19 @@ exports.upload = function (req, res, next) {
                                 user.image_count += 1;
                                 user.save();
                                 req.session.user = user;
-                                image.author = user;
+                                topicImage.author_id = user.id;
+                                topicImage.author = user;
                                 res.json({
                                     success: true,
-                                    data: [structureHelper.topic(image)]
+                                    data: [structureHelper.image(topicImage)]
                                 });
                             }));
 
                             //发送at消息
                             at.sendMessageToMentionUsers(topicImage.title, image._id, req.session.user._id);
                         });
+
+
                     });
                 });
         });
