@@ -3,7 +3,7 @@
     <div class='header'>
       <span class='col_fade'>作者</span>
     </div>
-    <div class='inner'>
+    <div class='innerTopic'>
       <%- partial('../user/card', { object: topic.author, as: 'user' }) %>
     </div>
   </div>
@@ -16,7 +16,7 @@
     <div class='header'>
       <span class='col_fade'>作者其它话题</span>
     </div>
-    <div class='inner'>
+    <div class='innerTopic'>
       <% if (typeof(author_other_topics) === 'undefined' || author_other_topics.length > 0) { %>
       <ul class='unstyled'>
         <%- partial('../topic/small', { collection: author_other_topics, as: 'topic' }) %>
@@ -31,7 +31,7 @@
     <div class='header'>
       <span class='col_fade'>无人回复的话题</span>
     </div>
-    <div class='inner'>
+    <div class='innerTopic'>
       <% if (typeof(no_reply_topics) !== 'undefined' && no_reply_topics.length > 0) { %>
       <ul class='unstyled'>
         <%- partial('../topic/small', { collection: no_reply_topics, as: 'topic' }) %>
@@ -126,7 +126,7 @@
       </div>
       <% } %>
     </div>
-    <div class='inner topic'>
+    <div class='innerTopic topic'>
 
       <div class='topic_content'>
         <%- markdown(topic.linkedContent) %>
@@ -146,7 +146,7 @@
     <div class='header'>
       <span class='col_fade'>添加回复</span>
     </div>
-    <div class='inner reply'>
+    <div class='innerTopic reply'>
       <form id='reply_form' action='/<%= topic._id %>/reply' method='post'>
 
         <div class='markdown_editor in_editor'>

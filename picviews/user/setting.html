@@ -8,7 +8,7 @@
         <li class='active'>设置</li>
       </ul>
     </div>
-    <div class='inner'>
+    <div class='innerTopic'>
       <% if(typeof(error) !== 'undefined' && error){ %>
       <div class="alert alert-error">
         <a class="close" data-dismiss="alert" href="#">&times;</a>
@@ -93,7 +93,7 @@
     <div class='header'>
       <span class='col_fade'>更改密码</span>
     </div>
-    <div class='inner'>
+    <div class='innerTopic'>
       <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
         <div class='control-group'>
           <label class='control-label' for='old_pass'>当前密码</label>
@@ -123,7 +123,7 @@
     <div class='header'>
       <span class='col_fade'>Access Token</span>
     </div>
-    <div class='inner'>
+    <div class='innerTopic'>
       <div>
         <span>字符串：</span>
         <%- accessToken %>

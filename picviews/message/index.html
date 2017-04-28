@@ -11,7 +11,7 @@
     <% if (typeof(hasnot_read_messages) !== 'undefined' && hasnot_read_messages.length > 0) { %>
     <%- partial('../message/message', { collection: hasnot_read_messages, as: 'message' }) %>
     <% } else { %>
-    <div class='inner'>
+    <div class='innerTopic'>
       <p>无消息</p>
     </div>
     <% } %>

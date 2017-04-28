@@ -164,7 +164,8 @@ var uploader = new Q.Uploader({
             if (task.state != Q.Uploader.COMPLETE) return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!");
 
             var json = task.json;
-            if (!json) return console.log(task.name + ": 服务器未返回正确的数据！<br />");
+            if (!json.success)
+                return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
 
             console.log(task.name + ": 服务器返回 " + (task.response || ""));
             let resJson = JSON.parse(task.response);
@@ -177,8 +178,9 @@ var uploader = new Q.Uploader({
             let jpicelements = $(itemHtml);
             //let jpicelements = $('<div class="grid-item heightlight" id="'+resJson.id+'"><div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.title+'" alt="'+resJson.title+'"/></div></div>');
 
-            gridMasonry.append(jpicelements)
-                .masonry('prepended', jpicelements);
+            //gridMasonry.append(jpicelements)
+            //    .masonry('prepended', jpicelements);
+            gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
             gridMasonry.imagesLoaded().progress(function () {
                 gridMasonry.masonry('layout');
             });
@@ -218,11 +220,13 @@ document.getElementById("upload-submit").onclick = function () {
 };
 
 $('#image_upload').on('hidden.bs.modal', function (e) {
+    $('#upload-submit').button('reset');
     $('#upload_area').show();
     $('#upload_view').hide();
     $('#preview').html('');
 });
 $('#image_upload').on('hide.bs.modal', function (e) {
+    $('#upload-submit').button('reset');
     $('#upload_area').show();
     $('#upload_view').hide();
     $('#preview').html('');
