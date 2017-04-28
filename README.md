@@ -51,6 +51,14 @@ function (a, b) {
 
 使用 npm run apidoc 命令在本地生成文档后, 访问: http://localhost:3000/public/apidoc
 
+## 截图
+
+![首页](https://s-media-cache-ak0.pinimg.com/originals/00/b2/ed/00b2ed90e8af4721d5acab894cef33e7.jpg)
+![上传图片](https://s-media-cache-ak0.pinimg.com/originals/10/c5/e1/10c5e11cbe032138b26827b1a58e21cf.jpg)
+![设置board](https://s-media-cache-ak0.pinimg.com/originals/5a/4e/d8/5a4ed82f3fe250c2051c3c463db8e397.jpg)
+![图片box](https://s-media-cache-ak0.pinimg.com/originals/61/dd/c0/61ddc022328245d89cf24aba204b95a2.jpg)
+![Get图片](https://s-media-cache-ak0.pinimg.com/originals/15/d0/18/15d018bcbe7fe02e2c541f648c6a1e16.jpg)
+
 ## 关于 Nodeclub
 
 Nodeclub 是使用 **Node.js** 和 **MongoDB** 开发的社区系统，界面优雅，功能丰富，小巧迅速，
