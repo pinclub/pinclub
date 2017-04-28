@@ -3,7 +3,8 @@
 |:------|:------:|:------
 | v2/auth.js | 100 | [@hhdem](https://github.com/hhdem) ~~提醒激活不然无法继续进行下一步操作~~
 | store_local.js | 21 | [@hhdem](https://github.com/hhdem) ~~上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法~~
-| image.js | 450 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
+| image.js | 451 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
+| image.js | 517 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
 | topic/_pic_box.html | 3 | [@hhdem](https://github.com/hhdem) ~~喜欢图片功能按钮实现~~
 | topic/_pic_box.html | 4 | [@hhdem](https://github.com/hhdem) ~~图片发布人信息显示, 目前为写死~~
 | topic/_pic_list.html | 29 | [@hhdem](https://github.com/hhdem) ~~modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口~~
@@ -12,12 +13,14 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| v2/image.js | 89 |  此处需要优化,不要每次都获得全部喜欢的图片列表
-| v2/image.js | 369 |  增加 err 的错误校验, 返回对应的错误信息
-| v2/image.js | 375 |  增加 err 的错误校验, 返回对应的错误信息
-| v2/image.js | 392 |  增加Board信息的返回,以及统计信息
+| v2/image.js | 83 |  此处需要优化,不要每次都获得全部喜欢的图片列表
+| v2/image.js | 362 |  增加 err 的错误校验, 返回对应的错误信息
+| v2/image.js | 368 |  增加 err 的错误校验, 返回对应的错误信息
+| v2/image.js | 385 |  增加Board信息的返回,以及统计信息
 | v2/topic.js | 97 |  此处需要优化,不要每次都获得全部喜欢的图片列表
-| image.js | 497 |  上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
+| image.js | 479 |  此处需要考虑上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取, 前台只是需要个 id ,可以先生成id返回,之后再进行剩下的操作
+| image.js | 480 |  图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
+| image.js | 488 |  自动旋转图片方向, 此处代码需要优化性能, 所以先注释掉
 | index.html | 9 | [@hhdem](https://github.com/hhdem) 用户信息显示的样式调整, 参考花瓣网
 | index_pic.html | 9 | [@hhdem](https://github.com/hhdem) 用户信息显示的样式调整, 参考花瓣网
 | index_pic.html | 13 |  用户统计信息获取, 目前为写死

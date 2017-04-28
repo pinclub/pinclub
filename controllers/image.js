@@ -485,14 +485,14 @@ exports.upload = function (req, res, next) {
             let upload_path = uploadResult.url.substring(0, uploadResult.url.lastIndexOf('.')) ;
             let filepath_fixed = filename_path + '_fixed.' + extname;
             let upload_fixed = upload_path + '_fixed.' + extname;
-            //topicImage.image_fixed = upload_fixed;
             // TODO 自动旋转图片方向, 此处代码需要优化性能, 所以先注释掉
-            //rotator.autoRotateFile(filepath, filepath_fixed)
-            //    .then(function(rotated) {
-            //        console.log(rotated ? filepath + ' rotated to ' + filepath_fixed : filepath + ' no rotation was needed');
-            //    }).catch(function(err) {
-            //        console.error('Got error: '+err);
-            //    });
+            topicImage.image_fixed = upload_fixed;
+            rotator.autoRotateFile(filepath, filepath_fixed)
+                .then(function(rotated) {
+                    console.log(rotated ? filepath + ' rotated to ' + filepath_fixed : filepath + ' no rotation was needed');
+                }).catch(function(err) {
+                    console.error('Got error: '+err);
+                });
 
             imghash
                 .hash(filepath, 16, 'binary')
