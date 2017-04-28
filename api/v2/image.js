@@ -149,14 +149,14 @@ exports.sim = function (req, res, next) {
             return res.send({success: false, error_msg: '图片不存在'});
         }
         var options = {limit: limit, sort: '-_id'};
-        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 60"}, options, ep.done('topics', function (topics) {
+        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 90"}, options, ep.done('topics', function (topics) {
             return topics;
         }));
 
     });
     ep.all('topics', function (topics) {
         topics = topics.map(function (topic) {
-            return structureHelper.topic(topic);
+            return structureHelper.image(topic);
         });
 
         res.send({success: true, data: topics});
