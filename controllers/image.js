@@ -11,6 +11,7 @@ var imghash = require('imghash');
 var getColors = require('get-image-colors');
 var path = require('path');
 var rotator = require('auto-rotate');
+var mongoose = require('mongoose');
 var inspect = require('util').inspect;
 var at = require('../common/at');
 var User = require('../proxy').User;
@@ -453,9 +454,9 @@ exports.upload = function (req, res, next) {
     var isFileLimit = false;
     var uploadResult;
     var topicImage = {};
-    req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
-        console.log('Field [' + fieldname + ']: value: ' + inspect(val));
-        topicImage[fieldname] = val;
+    req.busboy.on('field', function(fieldname, value, fieldnameTruncated, valTruncated, encoding, mimetype) {
+        console.log('Field [' + fieldname + ']: value: ' + inspect(value));
+        topicImage[fieldname] = value;
     });
 
     req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
@@ -467,7 +468,7 @@ exports.upload = function (req, res, next) {
                 msg: 'File size too large. Max is ' + config.file_limit
             })
         });
-
+        // TODO 上传图片时裁剪图片生成缩略图, 存储到upload下
         store.upload(file, {filename: filename}, function (err, result) {
             if (err) {
                 return next(err);
@@ -498,11 +499,14 @@ exports.upload = function (req, res, next) {
                 .hash(filepath, 16, 'binary')
                 .then((hash) => {
                     getColors(path.resolve(filepath)).then(colors => {
-                        topicImage.image_colors = colors;
+
                         let rgbColor = [];
+                        let hexColor = [];
                         colors.forEach(function(color) {
                             rgbColor.push(color.rgb());
+                            hexColor.push(color.toString());
                         });
+                        topicImage.image_colors = hexColor;
                         topicImage.image_colors_rgb = rgbColor;
                         topicImage.image_hash = hash;
                         topicImage.image = uploadResult.url;

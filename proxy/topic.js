@@ -1,6 +1,7 @@
 var EventProxy = require('eventproxy');
 var models = require('../models');
 var Topic = models.Topic;
+var Board = require('./board');
 var User = require('./user');
 var Reply = require('./reply');
 var tools = require('../common/tools');
@@ -89,12 +90,13 @@ exports.getTopicsByQuery = function (query, opt, callback) {
 
         topics.forEach(function (topic, i) {
             var ep = new EventProxy();
-            ep.all('author', 'reply', function (author, reply) {
+            ep.all('author', 'reply', 'board', function (author, reply, board) {
                 // 保证顺序
                 // 作者可能已被删除
                 if (author) {
                     topic.author = author;
                     topic.reply = reply;
+                    topic.board = board;
                 } else {
                     topics[i] = null;
                 }
@@ -104,6 +106,47 @@ exports.getTopicsByQuery = function (query, opt, callback) {
             User.getUserById(topic.author_id, ep.done('author'));
             // 获取主题的最后回复
             Reply.getReplyById(topic.last_reply, ep.done('reply'));
+            Board.getBoardById(topic.board_id, ep.done('board'));
+        });
+    });
+};
+
+exports.getImagesByQuery = function (query, opt, callback) {
+    query.deleted = false;
+    Topic.find(query, {}, opt, function (err, topics) {
+        if (err) {
+            return callback(err);
+        }
+        if (topics.length === 0) {
+            return callback(null, []);
+        }
+
+        var proxy = new EventProxy();
+        proxy.after('topic_ready', topics.length, function () {
+            topics = _.compact(topics); // 删除不合规的 topic
+            return callback(null, topics);
+        });
+        proxy.fail(callback);
+
+        topics.forEach(function (topic, i) {
+            var ep = new EventProxy();
+            ep.all('author', 'reply', 'board', function (author, reply, board) {
+                // 保证顺序
+                // 作者可能已被删除
+                if (author) {
+                    topic.author = author;
+                    topic.reply = reply;
+                    topic.board = board;
+                } else {
+                    topics[i] = null;
+                }
+                proxy.emit('topic_ready');
+            });
+
+            User.getUserById(topic.author_id, ep.done('author'));
+            // 获取主题的最后回复
+            Reply.getReplyById(topic.last_reply, ep.done('reply'));
+            Board.getBoardById(topic.board_id, ep.done('board'));
         });
     });
 };
@@ -205,10 +248,12 @@ exports.getFullTopic = function (id, callback) {
  */
 exports.getFullImage = function (id, callback) {
     var proxy = new EventProxy();
-    var events = ['topic', 'author', 'replies'];
+    var events = ['topic', 'author', 'board', 'replies'];
     proxy
-        .assign(events, function (topic, author, replies) {
-            callback(null, '', topic, author, replies);
+        .assign(events, function (topic, author, board, replies) {
+            topic.author = author;
+            topic.board = board;
+            callback(null, '', topic, replies);
         })
         .fail(callback);
 
@@ -217,10 +262,7 @@ exports.getFullImage = function (id, callback) {
             proxy.unbind();
             return callback(null, '此话题不存在或已被删除。');
         }
-        at.linkUsers(topic.content, proxy.done('topic', function (str) {
-            topic.linkedContent = str;
-            return topic;
-        }));
+        proxy.emit('topic', topic);
 
         User.getUserById(topic.author_id, proxy.done(function (author) {
             if (!author) {
@@ -228,6 +270,14 @@ exports.getFullImage = function (id, callback) {
                 return callback(null, '话题的作者丢了。');
             }
             proxy.emit('author', author);
+        }));
+
+        Board.getBoardById(topic.board_id, proxy.done(function (board) {
+            if (!board) {
+                proxy.unbind();
+                return callback(null, '话题的Board丢了。');
+            }
+            proxy.emit('board', board);
         }));
 
         Reply.getRepliesByTopicId(topic._id, proxy.done('replies'));

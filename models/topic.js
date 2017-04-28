@@ -27,6 +27,8 @@ var TopicSchema = new Schema({
     tab: {type: String},
     deleted: {type: Boolean, default: false},
 
+    // TODO 在 topic 模型中增加 board 关联
+    board_id: {type: ObjectId},
     type: {type: String, default: 'text', enum: ['text', 'image']},
     image: {type: String},
     image_fixed: {type: String},
@@ -34,6 +36,8 @@ var TopicSchema = new Schema({
     image_colors: {type: [String]},
     image_colors_rgb: [],
     image_source: {type: String},
+
+    get_from_topic: {type: ObjectId},
 
     profile_source: {type: String, default: false},
     //标签

@@ -73,6 +73,7 @@ $('#pic-page-marker').on('lazyshow', function () {
     });
 }).lazyLoadXT({visibleOnly: false});
 
+// TODO 考虑是否使用 http://www.dropzonejs.com/ 上传插件修改上传代码, 支持拖拽上传
 // Upload
 var uploader = new Q.Uploader({
     url: "imageupload?type=file",
@@ -155,8 +156,10 @@ var uploader = new Q.Uploader({
         //上传之前触发
         upload: function (task) {
             //可针对单独的任务配置参数(POST方式)
+            let boardSelected = $('#image_upload .right-part .boardlist .item.selected');
             uploader.data = {
-                title: $('#preview-desc').val()
+                title: $('#preview-desc').val(),
+                board_id: boardSelected.data("id")
             };
         },
         //上传完成后触发
@@ -189,24 +192,8 @@ var uploader = new Q.Uploader({
             if (this.index >= this.list.length - 1) {
                 //所有任务上传完成
                 console.log("所有任务上传完成：" + new Date());
-                let boardSelected = $('#image_upload .right-part .boardlist .item.selected');
                 $('#image_upload').modal('hide');
                 $('#upload-submit').button('reset');
-                console.log(event.currentTarget.dataset);
-
-                let imageItem = {
-                    desc : item.title,
-                    topic_id: item.id,
-                    board_id: boardSelected.data("id")
-                };
-
-                $.ajax({
-                    type: "POST",
-                    url: "api/v2/images/get",
-                    data: imageItem
-                }).done(function (response) {
-                    console.log('Save board relate after upload pic', response);
-                });
             }
         }
 
@@ -372,12 +359,15 @@ function likePic(picid) {
     });
 }
 
-function selectBoard (boardid) {
+function selectBoard (selectedElem) {
+    let boardid = selectedElem.dataset.id;
     if (!boardid) {
         return;
     }
-    let boardE = $('#'+boardid);
-    let selectedE = $('.boardlist .selected');
+    var selectedBoard = $(selectedElem);
+
+    let boardE = selectedBoard.parent().children('#'+boardid);
+    let selectedE = selectedBoard.parent().children('.selected');
     getImageObject.board_id = boardid;
     if (!boardE.hasClass('selected')) {
         selectedE.removeClass('selected');
@@ -472,7 +462,6 @@ $(function () {
         if (!event.currentTarget.dataset.id) {
             return;
         }
-        console.log(event.currentTarget.dataset.id);
-        selectBoard (event.currentTarget.dataset.id);
+        selectBoard (event.currentTarget);
     });
 });

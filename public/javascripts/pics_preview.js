@@ -30,7 +30,7 @@ $(document).on('click', '.preview_image_btn', function(event){
     $('#preview_modal').modal('show');
     $('body .modal-backdrop').css({"background-color": "#eee"});
     $.ajax({
-        url: "api/v2/topic/"+dataset.id
+        url: "api/v2/images/"+dataset.id
     }).done(function (response) {
         console.log(response);
         let itemHtml = $("#boardInfoTemplate").tmpl(response.data);
@@ -50,4 +50,5 @@ $(document).on('click', '#preview_modal .get-pic-btn', function (event) {
     $('#get-preview-image-desc').val('');
     $('#get-preview-image').html('<img src="'+event.currentTarget.dataset.src+'">');
     $('#get_image_modal').modal('show');
+
 });

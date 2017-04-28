@@ -752,6 +752,7 @@ a.img img {
 }
 
 // preview
+// DONE(hhdem) 目前只有点击右上角的Close才能关闭 查看 窗口, 需要点击白色遮罩层也要关闭 查看 窗口
 #preview_modal {
   position: fixed;
   top: 100%;
@@ -760,10 +761,12 @@ a.img img {
   left: 0;
   z-index: -100;
   overflow: auto;
+  margin: 0 auto;
+  width: 992px;
 }
 
 #preview_modal::-webkit-scrollbar {
-  //display: none;
+  display: none;
 }
 
 #preview_modal .pin-view {
@@ -1913,7 +1916,7 @@ a.img img {
   right: 14px;
   top: 0;
   cursor: pointer;
-  z-index: 99995;
+  z-index: 1038;
 }
 
 .grid-item a.preview-image .cover {

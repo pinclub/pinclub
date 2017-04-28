@@ -4,12 +4,14 @@ var TopicModel = models.Topic;
 var TopicProxy = require('../../proxy').Topic;
 var TopicLike = require('../../proxy').TopicLike;
 var TopicBoard = require('../../proxy').TopicBoard;
+var BoardProxy = require('../../proxy').Board;
 var UserProxy = require('../../proxy').User;
 var UserModel = models.User;
 var ReplyProxy = require('../../proxy').Reply;
 var config = require('../../config');
 var eventproxy = require('eventproxy');
 var structureHelper = require('../../common/structure_helper');
+var validator = require('validator');
 
 /**
  * @api {get} /v2/images 图片主题列表
@@ -75,7 +77,7 @@ exports.index = function (req, res, next) {
     var ep = new eventproxy();
     ep.fail(next);
 
-    TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
+    TopicProxy.getImagesByQuery(query, options, ep.done('topics', function (topics) {
         return topics;
     }));
 
@@ -105,6 +107,7 @@ exports.index = function (req, res, next) {
 };
 
 /**
+ * TODO 此处应该修改为每次GET都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象
  * @api {get} /v2/images/sim 相似图片列表
  * @apiDescription
  * 获取本站相似图片列表, 根据hamming距离算法计算.
@@ -320,63 +323,69 @@ exports.getImage = function (req, res, next) {
         return res.status(400).json({success: false, err_message: '参数验证失败', err: req.validationErrors()}).end();
     }
 
-    TopicBoard.getTopicBoard(currentUser.id, topic_id, function (err, topicBoard) {
+    // 获得要Get的topic对象
+    TopicProxy.getTopicById(topic_id, function (err, topic) {
+        // DONE(hhdem) 增加 err 的错误校验, 返回对应的错误信息
         if (err) {
             return next(err);
         }
-        if (topicBoard && topicBoard.id === board_id) {
-            res.json({success: false});
-            return;
+        topic.geted_count += 1;
+        topic.save();
+        ep.emit('topic_from', topic);
+    });
+    // 获得Get目标Board对象
+    BoardProxy.getBoardById(board_id, function (err, board) {
+        if (err) {
+            return next(err);
         }
-
-        if (topicBoard) {
-            topicBoard.board_id = board_id;
-            topicBoard.desc = desc || null;
-            topicBoard.save(function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                //res.send({
-                //    success: true,
-                //    topic_id: topicBoard.id
-                //});
-                ep.emit('get_image_success',topicBoard );
-            });
-            ep.on('get_image_success', function(topicBoard){
-                res.send({
-                    success: true,
-                    topic_id: topicBoard.id
-                });
-            });
-        } else {
-            TopicBoard.newAndSave(currentUser.id, topic_id, board_id, desc || null, null, function (err, topicBoard) {
-                if (err) {
-                    return next(err);
-                }
-
-                ep.emit('get_image_success', topicBoard);
-                //res.json({success: true});
-            });
-            UserProxy.getUserById(currentUser.id, function (err, user) {
-                // TODO 增加 err 的错误校验, 返回对应的错误信息
-                user.get_image_count += 1;
-                user.save();
-                ep.emit('user_count');
-            });
-            TopicProxy.getTopicById(topic_id, function (err, topic) {
-                // TODO 增加 err 的错误校验, 返回对应的错误信息
-                topic.geted_count += 1;
-                topic.save();
-                ep.emit('topic_count');
-            });
-            ep.all('get_image_success', 'user_count', 'topic_count', function(topicBoard){
-                res.send({
-                    success: true,
-                    data: topicBoard
-                });
-            });
-        }
+        board.topic_count += 1;
+        board.save();
+        ep.emit('board_to');
+    });
+    // 生成新的topic对象
+    ep.on('topic_from', function(fromTopic) {
+        var topicImage = _.pick(fromTopic, structureHelper.image_copy_fields);
+        topicImage.title = desc;
+        topicImage.author_id = currentUser;
+        topicImage.get_from_topic = fromTopic._id;
+        topicImage.board_id = board_id;
+        TopicProxy.newAndSaveImage(topicImage, function (err, image) {
+            if (err) {
+                return next(err);
+            }
+            topicImage.id = image.id;
+            ep.emit('new_topic_saved', topicImage);
+        });
+    });
+    // 生成topicBoard关联对象
+    ep.all('new_topic_saved', 'board_to', function(newImage) {
+        TopicBoard.newAndSave(currentUser.id, newImage.id, board_id, desc || null, null, function (err, topicBoard) {
+            if (err) {
+                return next(err);
+            }
+            ep.emit('new_topic_board_saved', topicBoard);
+            //res.json({success: true});
+        });
+    });
+    // 更新统计数据
+    UserProxy.getUserById(currentUser.id, function (err, user) {
+        // TODO 增加 err 的错误校验, 返回对应的错误信息
+        user.get_image_count += 1;
+        user.save();
+        ep.emit('user_count');
+    });
+    TopicProxy.getTopicById(topic_id, function (err, topic) {
+        // TODO 增加 err 的错误校验, 返回对应的错误信息
+        topic.geted_count += 1;
+        topic.save();
+        ep.emit('topic_count');
+    });
+    // 返回处理结果
+    ep.all('new_topic_board_saved', 'user_count', 'topic_count', function(topicBoard){
+        res.send({
+            success: true,
+            data: topicBoard
+        });
     });
 
 };
@@ -412,18 +421,16 @@ exports.show = function (req, res, next) {
 
     ep.fail(next);
 
-    TopicProxy.getFullTopic(topicId, ep.done(function (msg, topic, author, replies) {
+    TopicProxy.getFullImage(topicId, ep.done(function (msg, topic, replies) {
         if (!topic) {
             res.status(404);
             return res.send({success: false, error_msg: '话题不存在'});
         }
-        topic = _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply', 'last_reply_at',
-            'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'image']);
-
-        if (mdrender) {
-            topic.content = renderHelper.markdown(at.linkUsers(topic.content));
+        if (!!msg) {
+            res.status(404);
+            return res.send({success: false, error_msg: msg});
         }
-        topic.author = _.pick(author, ['loginname', 'avatar_url']);
+        topic = structureHelper.image(topic);
 
         topic.replies = replies.map(function (reply) {
             if (mdrender) {
