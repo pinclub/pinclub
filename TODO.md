@@ -2,7 +2,7 @@
 | Filename | line # | DONE
 |:------|:------:|:------
 | v2/auth.js | 100 | [@hhdem](https://github.com/hhdem) ~~提醒激活不然无法继续进行下一步操作~~
-| v2/image.js | 327 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
+| v2/image.js | 328 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | store_local.js | 21 | [@hhdem](https://github.com/hhdem) ~~上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法~~
 | image.js | 452 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
 | image.js | 521 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
@@ -22,11 +22,11 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| v2/image.js | 84 |  此处需要优化,不要每次都获得全部喜欢的图片列表
-| v2/image.js | 109 |  此处应该修改为每次GET都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象
-| v2/image.js | 371 |  增加 err 的错误校验, 返回对应的错误信息
-| v2/image.js | 377 |  增加 err 的错误校验, 返回对应的错误信息
-| v2/image.js | 393 |  增加Board信息的返回,以及统计信息
+| v2/image.js | 85 |  此处需要优化,不要每次都获得全部喜欢的图片列表
+| v2/image.js | 110 |  此处应该修改为每次GET都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象
+| v2/image.js | 372 |  增加 err 的错误校验, 返回对应的错误信息
+| v2/image.js | 378 |  增加 err 的错误校验, 返回对应的错误信息
+| v2/image.js | 394 |  增加Board信息的返回,以及统计信息
 | v2/topic.js | 97 |  此处需要优化,不要每次都获得全部喜欢的图片列表
 | image.js | 471 |  上传图片时裁剪图片生成缩略图, 存储到upload下
 | image.js | 480 |  此处需要考虑上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取, 前台只是需要个 id ,可以先生成id返回,之后再进行剩下的操作

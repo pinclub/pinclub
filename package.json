@@ -76,6 +76,7 @@
   },
   "scripts": {
     "test": "make test",
+    "todo": "gulp todo",
     "apidoc": "./node_modules/.bin/apidoc -i api/ -o public/apidoc"
   }
 }

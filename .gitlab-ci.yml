@@ -22,9 +22,9 @@ deploy:
   stage: deploy
   script:
     - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
-    - gulp todo
     - restart jiuyanlou app
     - apidoc jiuyanlou
+    - npm run todo
   only:
     - master
   tags:
