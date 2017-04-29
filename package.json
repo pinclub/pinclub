@@ -62,6 +62,7 @@
     "apidoc": "https://github.com/hhdem/apidoc.git",
     "errorhandler": "1.4.3",
     "gulp": "^3.9.1",
+    "gulp-if": "^2.0.2",
     "gulp-todo": "^5.3.0",
     "istanbul": "0.4.2",
     "loader-connect": "1.0.1",
