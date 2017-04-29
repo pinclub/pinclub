@@ -1,4 +1,5 @@
 /**
+ * TODO 考虑使用 alasql 或者 localForage 存储客户端的访问信息, 不知道可不可行
  * 存储最后一个每个相似图片请求的最后一个返回id的边界,总的key为 all, 其他的key为id
  * [{all:'object id'},{ 'request object id': 'response object id'}]
   */
@@ -85,7 +86,7 @@ var uploader = new Q.Uploader({
     dataType: "json",
     data: {title: 'test'},
     //图片缩放
-    // DONE(hhdem) 如果是在win环境下, 打开图片缩放无法成功上传
+    // DONE(hhdem) 如果是在win环境下, 打开图片缩放将无法成功上传
     // scale: {
     //     //最大图片大小(width|height)
     //     maxWidth: 700
@@ -106,7 +107,7 @@ var uploader = new Q.Uploader({
             var li = '';
             loadImage(task.file,
                 function (img, data) {
-                    img.style.width = '180px';
+                    img.style.width = '100%';
                     var html =
                         '<div class="u-img"></div><span class="u-loaded"></span><span class="u-total"></span>';
                     var taskId = task.id,
@@ -177,8 +178,12 @@ var uploader = new Q.Uploader({
             //gridItem.innerHTML = '<div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.url+'" alt="'+resJson.url+'"/></div>';
             //bricklayer.prepend(gridItem);
             let item = resJson.data[0];
-            let itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true});
+            let itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true, image: $('#preview').children('canvas').html()});
+
             let jpicelements = $(itemHtml);
+            // 上传成功后, 直接把预览里的 canvas 加入 _pic_box 里面
+            jpicelements.children('#pic_'+item.id).children('img').remove();
+            jpicelements.children('#pic_'+item.id).prepend($('#preview').children('canvas'));
             //let jpicelements = $('<div class="grid-item heightlight" id="'+resJson.id+'"><div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.title+'" alt="'+resJson.title+'"/></div></div>');
 
             //gridMasonry.append(jpicelements)
