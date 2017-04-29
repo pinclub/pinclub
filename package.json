@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "apidoc": "https://github.com/hhdem/apidoc.git",
+    "del": "^2.2.2",
     "errorhandler": "1.4.3",
     "gulp": "^3.9.1",
     "gulp-if": "^2.0.2",
