@@ -28,6 +28,6 @@ deploy:
     - restart jiuyanlou app
     - apidoc jiuyanlou
   only:
-    - master
+    - picview
   tags:
     - jinwan-ci
