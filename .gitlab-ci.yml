@@ -1,0 +1,33 @@
+cache:
+  paths:
+  - node_modules/
+
+
+stages:
+  - test
+  - eslint
+  - deploy
+
+#test:
+#  stage: test
+#  only:
+#      - master
+#  script:
+#    - deploy 47.52.20.174/jinwan/laibijia.git laibijia
+#    - ./node_modules/.bin/istanbul cover _mocha
+#  tags:
+#    - jinwan-ci
+
+deploy:
+  stage: deploy
+  before_script:
+    - npm install
+  script:
+    - deploy 47.52.20.174/liubing/jiuyanlou.git laibijia
+    - gulp todo
+    - restart jiuyanlou app
+    - apidoc jiuyanlou
+  only:
+    - master
+  tags:
+    - jinwan-ci
