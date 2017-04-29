@@ -23,11 +23,11 @@ deploy:
   before_script:
     - npm install
   script:
-    - deploy 47.52.20.174/liubing/jiuyanlou.git laibijia
+    - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
     - gulp todo
     - restart jiuyanlou app
     - apidoc jiuyanlou
   only:
-    - picview
+    - master
   tags:
     - jinwan-ci
