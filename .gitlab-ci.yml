@@ -20,8 +20,6 @@ stages:
 
 deploy:
   stage: deploy
-  before_script:
-    - npm install
   script:
     - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
     - gulp todo
