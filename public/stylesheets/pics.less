@@ -799,6 +799,8 @@ a.img img {
   margin: 0 auto;
 }
 
+
+
 #preview_modal .pin-view::-webkit-scrollbar {
   //display: none;
 }
@@ -1950,4 +1952,29 @@ a.img img {
   top: 0;
   width: 100%;
   height: 100%;
+}
+
+@media (max-width: 960px) {
+  #preview_modal {
+    padding: 40px 0;
+    width: auto;
+  }
+
+  #preview_modal .pin-view {
+    width: 500px;
+    margin: 0 auto;
+  }
+
+  .pin-view .pin-view-wrapper {
+    width: auto;
+  }
+
+  .pin-view .side-part {
+    position: relative;
+    width: 500px
+  }
+
+  .pin-view .main-part {
+    width: auto;
+  }
 }
