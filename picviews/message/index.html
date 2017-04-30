@@ -23,7 +23,7 @@
     <% if (typeof(has_read_messages) !== 'undefined' && has_read_messages.length > 0) { %>
     <%- partial('../message/message', { collection: has_read_messages, as: 'message' }) %>
     <% } else { %>
-    <div class='inner'>
+    <div class='innerTopic'>
       <p>无消息</p>
     </div>
     <% } %>
