@@ -85,7 +85,7 @@ exports.index = function (req, res, next) {
 
         // get other_topics
         var options = {limit: 5, sort: '-last_reply_at'};
-        var query = {author_id: topic.author_id, _id: {'$nin': [topic._id]}};
+        var query = {author_id: topic.author_id, _id: {'$nin': [topic._id]}, type: 'text'};
         Topic.getTopicsByQuery(query, options, ep.done('other_topics'));
 
         // get no_reply_topics
@@ -94,7 +94,7 @@ exports.index = function (req, res, next) {
                 ep.emit('no_reply_topics', no_reply_topics);
             } else {
                 Topic.getTopicsByQuery(
-                    {reply_count: 0, tab: {$ne: 'job'}},
+                    {reply_count: 0, tab: {$ne: 'job'}, type: 'text'},
                     {limit: 5, sort: '-create_at'},
                     ep.done('no_reply_topics', function (no_reply_topics) {
                         cache.set('no_reply_topics', no_reply_topics, 60 * 1);

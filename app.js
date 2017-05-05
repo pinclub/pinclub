@@ -123,6 +123,7 @@ passport.use(new GitHubStrategy(config.GITHUB_OAUTH, githubStrategyMiddleware));
 app.use(auth.authUser);
 app.use(auth.blockUser());
 
+//
 if (!config.debug) {
   app.use(function (req, res, next) {
     if (req.path === '/api' || req.path.indexOf('/api') === -1) {

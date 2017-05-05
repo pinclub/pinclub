@@ -47,7 +47,7 @@ test-cov cov: install pretest
 
 
 build:
-	@./node_modules/loader-builder/bin/builder views .
+	@./node_modules/loader-builder/bin/builder picviews .
 
 run:
 	@node app.js

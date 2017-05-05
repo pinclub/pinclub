@@ -11,12 +11,12 @@
   </div>
   <div class='panel'>
     <div class="header"><%= user.loginname %> 参与的话题</div>
-    <div class="inner padding">
+    <div class="innerTopic padding">
     <% if(typeof(topics) !== 'undefined' && topics.length > 0){ %>
     <%- partial('../topic/list',
     {topics:topics,pages:pages,current_pages:current_page,base:'/user/'+user.loginname+'/replies'}) %>
     <% }else{ %>
-    <div class='inner'>
+    <div class='innerTopic'>
       <p>无话题</p>
     </div>
     <% } %>

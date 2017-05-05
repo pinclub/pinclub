@@ -22,8 +22,8 @@
                         <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
                     </div>
                     <div class="profile-stats">
-                        <a href="/user/<%= current_user.loginname %>/get"><strong>2</strong>Get</a>
-                        <a href="/user/<%= current_user.loginname %>/board" class="middle"><strong>3</strong>画板</a>
+                        <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.get_image_count %></strong>Get</a>
+                        <a href="/user/<%= current_user.loginname %>/board" class="middle"><strong><%= current_user.board_count %></strong>画板</a>
                         <a href="/user/<%= current_user.loginname %>/followers"><strong><%= current_user.score %></strong>积分</a>
                     </div>
                     <div class="profile-acts convo">
@@ -97,7 +97,7 @@ config: picConfig
 <% } %>
 
 <% if (typeof(user) !== 'undefined' || current_user) { %>
-<script type="javascript">
+<script type="text/javascript">
     var boardList = [];
     $(function () {
         $.ajax({

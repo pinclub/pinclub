@@ -8,7 +8,7 @@ var _ = require('lodash');
 var TopicSchema = new Schema({
     title: {type: String},
     content: {type: String},
-    author_id: {type: ObjectId},
+    author_id: {type: ObjectId, ref: 'User'},
     top: {type: Boolean, default: false}, // 置顶帖
     good: {type: Boolean, default: false}, // 精华帖
     lock: {type: Boolean, default: false}, // 被锁定主题
@@ -21,14 +21,14 @@ var TopicSchema = new Schema({
 
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now},
-    last_reply: {type: ObjectId},
+    last_reply: {type: ObjectId, ref: 'Reply'},
     last_reply_at: {type: Date, default: Date.now},
     content_is_html: {type: Boolean},
     tab: {type: String},
     deleted: {type: Boolean, default: false},
 
     // TODO 在 topic 模型中增加 board 关联
-    board_id: {type: ObjectId},
+    board: {type: ObjectId, ref: 'Board'},
     type: {type: String, default: 'text', enum: ['text', 'image']},
     image: {type: String},
     image_fixed: {type: String},

@@ -41,7 +41,7 @@ exports.getBoardById = function (id, callback) {
 
         if (board.topic_count) {
             var options = { limit: 5};
-            var query = { board_id: id };
+            var query = { board: id };
             Topic.getTopicsByQuery(query, options, proxy.done(function (topics) {
                 proxy.emit('topics', topics);
             }));

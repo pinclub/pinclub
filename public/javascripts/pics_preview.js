@@ -33,7 +33,7 @@ $(document).on('click', '.preview_image_btn', function(event){
         url: "api/v2/images/"+dataset.id
     }).done(function (response) {
         console.log(response);
-        let itemHtml = $("#boardInfoTemplate").tmpl(response.data);
+        var itemHtml = $("#boardInfoTemplate").tmpl(response.data);
         $('#preview_modal .side-part .board-piece').html(itemHtml);
         $('#preview_modal .close-layer').css({"position": "fixed"});
     });

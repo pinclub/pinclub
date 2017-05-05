@@ -6,6 +6,7 @@ node_modules
 coverage.html
 .monitor
 
+*.hashed.*
 *.min.*.js
 *.min.*.css
 assets.json

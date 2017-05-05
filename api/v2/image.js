@@ -109,7 +109,7 @@ exports.index = function (req, res, next) {
 };
 
 /**
- * TODO 此处应该修改为每次GET都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象
+ *
  * @api {get} /v2/images/sim 相似图片列表
  * @apiDescription
  * 获取本站相似图片列表, 根据hamming距离算法计算.
@@ -280,6 +280,7 @@ exports.like = function (req, res, next) {
 
 /**
  *
+ * DONE (hhdem) 修改为每次GET操作都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象
  * 把图片Get到自己的board中
  * @api {post} /v2/images/get Get图片
  * @apiDescription
@@ -289,7 +290,7 @@ exports.like = function (req, res, next) {
  *
  * @apiUse ApiHeaderType
  * @apiParam {String} topic_id 要 Get 的图片 id
- * @apiParam {String} board_id 放入 Board 的 id
+ * @apiParam {String} board 放入 Board 的 id
  * @apiParam {String} [desc] 描述
  * @apiParam {String[]} [tags] 标签
  *
@@ -350,7 +351,7 @@ exports.getImage = function (req, res, next) {
         topicImage.title = desc;
         topicImage.author_id = currentUser;
         topicImage.get_from_topic = fromTopic._id;
-        topicImage.board_id = board_id;
+        topicImage.board = board_id;
         TopicProxy.newAndSaveImage(topicImage, function (err, image) {
             if (err) {
                 return next(err);

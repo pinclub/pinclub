@@ -48,7 +48,7 @@ exports.index = function (req, res, next) {
     proxy.assign('recent_topics', 'recent_replies', render);
     proxy.fail(next);
 
-    var query = {author_id: user._id};
+    var query = {author_id: user._id, type: 'text'};
     var opt = {limit: 5, sort: '-create_at'};
     Topic.getTopicsByQuery(query, opt, proxy.done('recent_topics'));
 

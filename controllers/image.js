@@ -469,7 +469,7 @@ exports.upload = function (req, res, next) {
             })
         });
         // TODO 上传图片时裁剪图片生成缩略图, 存储到upload下
-        store.upload(file, {filename: filename}, function (err, result) {
+        store.upload(file, {filename: filename, userId: req.session.user._id}, function (err, result) {
             if (err) {
                 return next(err);
             }

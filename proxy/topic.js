@@ -73,7 +73,9 @@ exports.getCountByQuery = function (query, callback) {
  */
 exports.getTopicsByQuery = function (query, opt, callback) {
     query.deleted = false;
-    Topic.find(query, {}, opt, function (err, topics) {
+    Topic.find(query, {}, opt)
+        .populate('board', 'title desc _id topic_count')
+        .exec(function (err, topics) {
         if (err) {
             return callback(err);
         }
@@ -82,7 +84,7 @@ exports.getTopicsByQuery = function (query, opt, callback) {
         }
 
         var proxy = new EventProxy();
-        proxy.after('topic_ready', topics.length, function () {
+        proxy.after(JSON.stringify(query)+'topic_ready', topics.length, function () {
             topics = _.compact(topics); // 删除不合规的 topic
             return callback(null, topics);
         });
@@ -90,30 +92,33 @@ exports.getTopicsByQuery = function (query, opt, callback) {
 
         topics.forEach(function (topic, i) {
             var ep = new EventProxy();
-            ep.all('author', 'reply', 'board', function (author, reply, board) {
+            ep.all('author' + i, 'reply' + i, function (author, reply) {
                 // 保证顺序
                 // 作者可能已被删除
                 if (author) {
                     topic.author = author;
                     topic.reply = reply;
-                    topic.board = board;
                 } else {
                     topics[i] = null;
                 }
-                proxy.emit('topic_ready');
+                proxy.emit(JSON.stringify(query) + 'topic_ready');
             });
 
-            User.getUserById(topic.author_id, ep.done('author'));
+            User.getUserById(topic.author_id, ep.done('author' + i));
             // 获取主题的最后回复
-            Reply.getReplyById(topic.last_reply, ep.done('reply'));
-            Board.getBoardById(topic.board_id, ep.done('board'));
+            Reply.getReplyById(topic.last_reply, ep.done('reply' + i));
+            //if (topic.prototype == 'text') {
+            //    ep.done('board' + i, null);
+            //} else {
+            //    Board.getBoardById(topic.board, ep.done('board' + i));
+            //}
         });
     });
 };
 
 exports.getImagesByQuery = function (query, opt, callback) {
     query.deleted = false;
-    Topic.find(query, {}, opt, function (err, topics) {
+    Topic.find(query, {}, opt).populate('board', 'id title topic_count create_at type').exec(function (err, topics) {
         if (err) {
             return callback(err);
         }
@@ -130,13 +135,12 @@ exports.getImagesByQuery = function (query, opt, callback) {
 
         topics.forEach(function (topic, i) {
             var ep = new EventProxy();
-            ep.all('author', 'reply', 'board', function (author, reply, board) {
+            ep.all('author', 'reply', function (author, reply) {
                 // 保证顺序
                 // 作者可能已被删除
                 if (author) {
                     topic.author = author;
                     topic.reply = reply;
-                    topic.board = board;
                 } else {
                     topics[i] = null;
                 }
@@ -146,7 +150,6 @@ exports.getImagesByQuery = function (query, opt, callback) {
             User.getUserById(topic.author_id, ep.done('author'));
             // 获取主题的最后回复
             Reply.getReplyById(topic.last_reply, ep.done('reply'));
-            Board.getBoardById(topic.board_id, ep.done('board'));
         });
     });
 };
@@ -160,7 +163,7 @@ exports.getImagesByQuery = function (query, opt, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getTopicsByBoardId = function (id, cb) {
-    Topic.find({board_id: id, deleted: false}, '', {sort: 'create_at'}, function (err, topics) {
+    Topic.find({board: id, deleted: false}, '', {sort: 'create_at'}, function (err, topics) {
         if (err) {
             return cb(err);
         }
@@ -272,7 +275,7 @@ exports.getFullImage = function (id, callback) {
             proxy.emit('author', author);
         }));
 
-        Board.getBoardById(topic.board_id, proxy.done(function (board) {
+        Board.getBoardById(topic.board, proxy.done(function (board) {
             if (!board) {
                 proxy.unbind();
                 return callback(null, '话题的Board丢了。');

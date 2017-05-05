@@ -108,7 +108,7 @@ var create = function (req, res, next) {
         proxy.all('score_saved', function () {
             res.send({
                 success: true,
-                board_id: board.id,
+                board: board.id,
                 title: board.title
             });
         });

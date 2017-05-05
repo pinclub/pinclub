@@ -27,8 +27,11 @@ $('#page-marker').on('lazyshow', function () {
         url: "api/v2/topics?page=" + topic_page
     }).done(function (responseText) {
         console.info(responseText);
-        let itemLength = responseText.data.length;
-        let elements = [];
+        var itemLength = 0;
+        if (!!responseText.data && _.isArray(responseText.data)) {
+            itemLength = _.size(responseText.data);
+        }
+        var elements = [];
         responseText.data.forEach(function (item) {
             elements.push($("#topicListTmp").tmpl({topic: item}));
         });
@@ -49,12 +52,12 @@ $('#pic-page-marker').on('lazyshow', function () {
     $.ajax({
         url: "api/v2/images?type=image&limit=5&page=" + pic_page
     }).done(function (responseText) {
-        let itemLength = responseText.data.length;
-        let picelements = '';
+        var itemLength = responseText.data.length;
+        var picelements = '';
         responseText.data.forEach(function (item) {
-            let itemHtml = $("#picBoxTmp").tmpl({item: item});
+            var itemHtml = $("#picBoxTmp").tmpl({item: item});
             lastItemId['all'] = item.id;
-            let jpicelements = $(itemHtml);
+            var jpicelements = $(itemHtml);
             gridMasonry.append(jpicelements)
                 .masonry('appended', jpicelements);
         });
@@ -75,8 +78,9 @@ $('#pic-page-marker').on('lazyshow', function () {
 
 // TODO 考虑是否使用 http://www.dropzonejs.com/ 上传插件修改上传代码, 支持拖拽上传
 // Upload
+var _csrf = $('meta[name=csrf-token]').attr('content');
 var uploader = new Q.Uploader({
-    url: "imageupload?type=file",
+    url: "imageupload?type=file&_csrf=" + _csrf,
     target: document.getElementById("upload_area"),
     view: document.getElementById("preview"),
     allows: ".jpg,.png,.gif,.bmp,.jpeg",
@@ -156,10 +160,10 @@ var uploader = new Q.Uploader({
         //上传之前触发
         upload: function (task) {
             //可针对单独的任务配置参数(POST方式)
-            let boardSelected = $('#image_upload .right-part .boardlist .item.selected');
+            var boardSelected = $('#image_upload .right-part .boardlist .item.selected');
             uploader.data = {
                 title: $('#preview-desc').val(),
-                board_id: boardSelected.data("id")
+                board: boardSelected.data("id")
             };
         },
         //上传完成后触发
@@ -171,19 +175,19 @@ var uploader = new Q.Uploader({
                 return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
 
             console.log(task.name + ": 服务器返回 " + (task.response || ""));
-            let resJson = JSON.parse(task.response);
+            var resJson = JSON.parse(task.response);
             //var gridItem = document.createElement('div');
             //gridItem.classList = 'grid-item';
             //gridItem.innerHTML = '<div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.url+'" alt="'+resJson.url+'"/></div>';
             //bricklayer.prepend(gridItem);
-            let item = resJson.data[0];
-            let itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true, image: $('#preview').children('canvas').html()});
+            var item = resJson.data[0];
+            var itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true, image: $('#preview').children('canvas').html()});
 
-            let jpicelements = $(itemHtml);
+            var jpicelements = $(itemHtml);
             // 上传成功后, 直接把预览里的 canvas 加入 _pic_box 里面
             jpicelements.children('#pic_'+item.id).children('img').remove();
             jpicelements.children('#pic_'+item.id).prepend($('#preview').children('canvas'));
-            //let jpicelements = $('<div class="grid-item heightlight" id="'+resJson.id+'"><div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.title+'" alt="'+resJson.title+'"/></div></div>');
+            //var jpicelements = $('<div class="grid-item heightlight" id="'+resJson.id+'"><div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.title+'" alt="'+resJson.title+'"/></div></div>');
 
             //gridMasonry.append(jpicelements)
             //    .masonry('prepended', jpicelements);
@@ -264,6 +268,20 @@ $(document).on('click', '#get-image-submit', function (event) {
     }).done(function (response) {
         console.log(response);
         if (response.success) {
+            // TODO 插入图片列表中
+            //var itemHtml = $("#picBoxTmp").tmpl({item: getImageObject, highlight: true});
+            //lastItemId[picid] = item.id;
+            //var jpicelements = $(itemHtml);
+            //var items = gridMasonry.masonry('getItemElements');
+            //var clickIndex = 0;
+            //_.find(items, function (e) {
+            //    clickIndex++;
+            //    return e.id == picid;
+            //});
+            //gridMasonry.append(jpicelements).masonry('insertItems', clickIndex, jpicelements);
+            //gridMasonry.imagesLoaded().progress(function () {
+            //    gridMasonry.masonry('layout');
+            //});
             $('#get_image_modal').modal('hide');
         }
     });
@@ -297,7 +315,7 @@ $(document).on('click', '#pic_list .preview-image', function (event) {
 });
 
 function similarPics(picid) {
-    let sid = lastItemId['all'];
+    var sid = lastItemId['all'];
     if (!picid) {
         return;
     }
@@ -315,17 +333,17 @@ function similarPics(picid) {
     }).done(function (responseText) {
         console.log(responseText);
         var items = gridMasonry.masonry('getItemElements');
-        let rids = _.map(responseText.data, 'id');
-        let aids = _.map(items, 'id');
-        let needInsertItem = _.filter(responseText.data, function (o) {
+        var rids = _.map(responseText.data, 'id');
+        var aids = _.map(items, 'id');
+        var needInsertItem = _.filter(responseText.data, function (o) {
             return _.includes(_.difference(rids, aids), o.id)
         });
         needInsertItem.forEach(function (item) {
-            let itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true});
+            var itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true});
             lastItemId[picid] = item.id;
-            let jpicelements = $(itemHtml);
+            var jpicelements = $(itemHtml);
             var items = gridMasonry.masonry('getItemElements');
-            let clickIndex = 0;
+            var clickIndex = 0;
             _.find(items, function (e) {
                 clickIndex++;
                 return e.id == picid;
@@ -353,7 +371,7 @@ function likePic(picid) {
         if(!response.success) {
             return console.error("Error：", response);
         }
-        let likeA = $('#'+picid + ' .actions .right a');
+        var likeA = $('#'+picid + ' .actions .right a');
         if (likeA.hasClass('unlike')) {
             $('#'+picid + ' .actions .right a').removeClass('unlike');
         } else {
@@ -364,14 +382,14 @@ function likePic(picid) {
 }
 
 function selectBoard (selectedElem) {
-    let boardid = selectedElem.dataset.id;
+    var boardid = selectedElem.dataset.id;
     if (!boardid) {
         return;
     }
     var selectedBoard = $(selectedElem);
 
-    let boardE = selectedBoard.parent().children('#'+boardid);
-    let selectedE = selectedBoard.parent().children('.selected');
+    var boardE = selectedBoard.parent().children('#'+boardid);
+    var selectedE = selectedBoard.parent().children('.selected');
     getImageObject.board_id = boardid;
     if (!boardE.hasClass('selected')) {
         selectedE.removeClass('selected');
@@ -383,8 +401,8 @@ function searchBoard (obj, searchText) {
     if (!obj) {
         return;
     }
-    let refreshListTarget = obj.next().next();
-    let createTextTarget = obj.next().next().next().next();
+    var refreshListTarget = obj.next().next();
+    var createTextTarget = obj.next().next().next().next();
     if (searchText) {
         refreshListTarget.css({"height":"180px"});
         createTextTarget.find('.createboard').show();
@@ -402,7 +420,7 @@ function createBoard (boardName) {
     if (!boardName) {
         return;
     }
-    let boardItem = {
+    var boardItem = {
         title: boardName
     };
     $.ajax({
@@ -415,7 +433,7 @@ function createBoard (boardName) {
         if (!responseText.success) {
             return ;
         }
-        boardItem._id = responseText.board_id;
+        boardItem._id = responseText.board;
         boardItem.title = responseText.title;
         boardList.splice(0, 0, boardItem);
         showBoardList($('.pin-create .right-part .boardlist .scrollable .recent'), boardList);

@@ -35,9 +35,9 @@
         <div class="text">
             <div class="inner">
                 <div class="line">
-                    <a href="/user/${item.author.loginname}" rel="" class="author x">${item.author.loginname}</a>&nbsp;采集到
+                    <a href="/user/${item.author.loginname}" rel="" class="author x">${item.author.loginname}</a>&nbsp;Get到
                     </div>
-                <div class="line"><a href="/boards/${item.board.id}" rel="" class="x">${item.board.title}</a></div>
+                <div class="line"><a href="/boards/${item.board.id || item.board._id}" rel="" class="x">${item.board.title}</a></div>
                 <a title="评论" class="replyButton"></a>
             </div>
         </div>
