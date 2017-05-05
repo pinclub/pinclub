@@ -22,7 +22,6 @@ deploy:
   stage: deploy
   script:
     - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
-    - make build
     - restart jiuyanlou app.js
     - npmrun apidoc jiuyanlou
     - npmrun todo jiuyanlou
