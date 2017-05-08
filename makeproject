@@ -1,0 +1,16 @@
+#!/bin/bash
+if [ $# -ne 2 ]
+then
+      echo "arguments error!"
+      exit 1
+else
+      deploy_path="/home/$1"
+      if [ ! -d "$deploy_path" ]
+      then
+              echo "dir does not exists:"$deploy_path
+              exit 1
+      else
+              cd $deploy_path
+              make $2
+      fi
+fi
