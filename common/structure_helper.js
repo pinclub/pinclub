@@ -32,6 +32,12 @@ exports.image = function (topic) {
     return _.pick(topic, image_show_fields);
 };
 
+exports.reply = function (reply) {
+    reply.author = _.pick(reply.author, ['loginname', 'avatar_url']);
+    reply = _.pick(reply, ['id', 'author', 'content', 'ups', 'create_at', 'reply_id']);
+    return reply;
+};
+
 exports.image_show_fields = image_show_fields;
 
 exports.image_copy_fields = image_copy_fields;

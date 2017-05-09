@@ -7,9 +7,12 @@ Pinclub
 [node-image]: https://img.shields.io/badge/node.js-%3E=_4.2-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 
-## 介绍
+## 介绍 / Intro
 
 Pinclub 是基于 Nodeclub 进行的二次开发. 增加了瀑布流展示方式, 主要参考花瓣网的设计风格(感谢花瓣网的设计师和前端工程师的辛勤工作), 加入了hanming距离的算法, 当然是在mongodb中使用了 function 的形式实现.
+
+Pinclub's base code is forked from [Nodeclub](https://github.com/cnodejs/nodeclub) project. Pinclub add waterfall layout using Masonry plugin. The style of Frontend is mainly refer to [Huaban.com](http://huaban.com), thanks.
+For support simulate search function simply add an mongodb function to achieve the [Hamming Distance algorithm](https://zh.wikipedia.org/wiki/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB).
 
 ## 图片相似度算法说明
 

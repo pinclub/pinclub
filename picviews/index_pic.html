@@ -10,8 +10,8 @@
             <div id="loginDiv" class="grid-item grid-item-nb">
                 <div id="Profile">
                 <% if (typeof(user) !== 'undefined' || current_user) { %>
-                    <!-- TODO 用户统计信息获取, 目前为写死 -->
-
+                    <!-- DONE (hhdem) 用户统计信息获取 -->
+                    <!-- TODO (hhdem) 点击统计信息进入用户面板页面 -->
                     <div class="profile-basic">
                         <a href="/user/<%= current_user.loginname %>" title="<%= current_user.loginname %>" class="img x loaded">
                             <img width="54"

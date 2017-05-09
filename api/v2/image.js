@@ -372,13 +372,19 @@ exports.getImage = function (req, res, next) {
     });
     // 更新统计数据
     UserProxy.getUserById(currentUser.id, function (err, user) {
-        // TODO 增加 err 的错误校验, 返回对应的错误信息
+        // DONE (hhdem) 增加 err 的错误校验, 返回对应的错误信息
+        if (err) {
+            return next(err);
+        }
         user.get_image_count += 1;
         user.save();
         ep.emit('user_count');
     });
     TopicProxy.getTopicById(topic_id, function (err, topic) {
-        // TODO 增加 err 的错误校验, 返回对应的错误信息
+        // DONE (hhdem) 增加 err 的错误校验, 返回对应的错误信息
+        if (err) {
+            return next(err);
+        }
         topic.geted_count += 1;
         topic.save();
         ep.emit('topic_count');
@@ -394,7 +400,7 @@ exports.getImage = function (req, res, next) {
 };
 
 /**
- * TODO 增加Board信息的返回,以及统计信息
+ * DONE (hhdem) 增加Board信息的返回,以及统计信息
  * @api {get} /v2/images/:id 显示图片信息
  * @apiDescription
  * 获取某图片信息
@@ -404,7 +410,7 @@ exports.getImage = function (req, res, next) {
  * @apiParam {String} id 要获取的图片 id
  *
  * @apiPermission none
- * @apiSampleRequest /v2/images/get
+ * @apiSampleRequest /v2/images/:id
  *
  * @apiVersion 2.0.0
  *
@@ -439,8 +445,7 @@ exports.show = function (req, res, next) {
             if (mdrender) {
                 reply.content = renderHelper.markdown(at.linkUsers(reply.content));
             }
-            reply.author = _.pick(reply.author, ['loginname', 'avatar_url']);
-            reply = _.pick(reply, ['id', 'author', 'content', 'ups', 'create_at', 'reply_id']);
+            reply = structureHelper.reply(reply);
             reply.reply_id = reply.reply_id || null;
 
             if (reply.ups && req.user && reply.ups.indexOf(req.user.id) != -1) {

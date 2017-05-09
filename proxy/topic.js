@@ -251,16 +251,17 @@ exports.getFullTopic = function (id, callback) {
  */
 exports.getFullImage = function (id, callback) {
     var proxy = new EventProxy();
-    var events = ['topic', 'author', 'board', 'replies'];
+    var events = ['topic', 'author', 'replies'];
     proxy
-        .assign(events, function (topic, author, board, replies) {
+        .assign(events, function (topic, author, replies) {
             topic.author = author;
-            topic.board = board;
             callback(null, '', topic, replies);
         })
         .fail(callback);
 
-    Topic.findOne({_id: id, deleted: false}, proxy.done(function (topic) {
+    Topic.findOne({_id: id, deleted: false})
+        .populate('board', 'id title topic_count create_at type')
+        .exec(proxy.done(function (topic) {
         if (!topic) {
             proxy.unbind();
             return callback(null, '此话题不存在或已被删除。');
@@ -275,13 +276,7 @@ exports.getFullImage = function (id, callback) {
             proxy.emit('author', author);
         }));
 
-        Board.getBoardById(topic.board, proxy.done(function (board) {
-            if (!board) {
-                proxy.unbind();
-                return callback(null, '话题的Board丢了。');
-            }
-            proxy.emit('board', board);
-        }));
+        // TODO 查看图片详细信息时, 需要获取对应 Board 中的图片列表
 
         Reply.getRepliesByTopicId(topic._id, proxy.done('replies'));
     }));

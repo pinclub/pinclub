@@ -27,7 +27,7 @@ var TopicSchema = new Schema({
     tab: {type: String},
     deleted: {type: Boolean, default: false},
 
-    // TODO 在 topic 模型中增加 board 关联
+    // DONE (hhdem) 在 Topic 模型中增加 board 关联
     board: {type: ObjectId, ref: 'Board'},
     type: {type: String, default: 'text', enum: ['text', 'image']},
     image: {type: String},
