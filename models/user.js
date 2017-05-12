@@ -24,6 +24,7 @@ var UserSchema = new Schema({
 
   score: { type: Number, default: 0 },
   topic_count: { type: Number, default: 0 },
+  image_count: { type: Number, default: 0 },
   board_count: { type: Number, default: 0 },
   reply_count: { type: Number, default: 0 },
   follower_count: { type: Number, default: 0 },

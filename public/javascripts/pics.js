@@ -24,7 +24,7 @@ var topic_page = 1;
 var pic_page = 1;
 $('#page-marker').on('lazyshow', function () {
     $.ajax({
-        url: "api/v2/topics?page=" + topic_page
+        url: "/api/v2/topics?page=" + topic_page
     }).done(function (responseText) {
         console.info(responseText);
         var itemLength = 0;
@@ -50,7 +50,7 @@ $('#page-marker').on('lazyshow', function () {
 
 $('#pic-page-marker').on('lazyshow', function () {
     $.ajax({
-        url: "api/v2/images?type=image&limit=5&page=" + pic_page
+        url: "/api/v2/images?type=image&limit=5&page=" + pic_page
     }).done(function (responseText) {
         var itemLength = responseText.data.length;
         var picelements = '';
@@ -78,154 +78,161 @@ $('#pic-page-marker').on('lazyshow', function () {
 
 // TODO 考虑是否使用 http://www.dropzonejs.com/ 上传插件修改上传代码, 支持拖拽上传
 // Upload
-var _csrf = $('meta[name=csrf-token]').attr('content');
-var uploader = new Q.Uploader({
-    url: "imageupload?type=file&_csrf=" + _csrf,
-    target: document.getElementById("upload_area"),
-    view: document.getElementById("preview"),
-    allows: ".jpg,.png,.gif,.bmp,.jpeg",
-    auto: false,
-    multiple: false,
-    dataType: "json",
-    data: {title: 'test'},
-    //图片缩放
-    // DONE(hhdem) 如果是在win环境下, 打开图片缩放将无法成功上传
-    // scale: {
-    //     //最大图片大小(width|height)
-    //     maxWidth: 700
-    // },
-    UI: {
-        init: function () {
-            console.info('UI init method');
-        },
-        draw: function (task) {
-            var self = this,
-                ops = self.ops,
-                boxView = ops.view;
-
-            if (!boxView) return;
-
-            var name = task.name;
-
-            var li = '';
-            loadImage(task.file,
-                function (img, data) {
-                    img.style.width = '100%';
-                    var html =
-                        '<div class="u-img"></div><span class="u-loaded"></span><span class="u-total"></span>';
-                    var taskId = task.id,
-                        box = Q.createEle("div", "u-item", html);
-
-                    box.taskId = taskId;
-
-                    var boxImage = Q.getFirst(box);
-
-                    task.box = box;
-                    boxImage.appendChild(img);
-                    //添加到视图中
-                    boxView.appendChild(box);
-
-                    //---------------- 预览图片并更新UI ----------------
-                    $('#preview-desc').html(name);
-                    $('#preview').append(img);
-                },
-                {orientation: true} // Options
-            );
-            //task.file = li;
-            var html =
-                '<div class="u-img">'+li+'</div><span class="u-loaded"></span><span class="u-total"></span>';
-
-
-            //self.previewImage(boxImage, task, ops);
-        },
-        update: function (task) {
-
-        }
-    },
-    on: {
-        //添加之前触发
-        add: function (task) {
-            if (task.disabled) return alert("允许上传的文件格式为：" + this.ops.allows);
-            $('#upload_view').show();
-            $('#upload_area').hide();
-        },
-        //图片预览后触发
-        preview: function (data) {
-            console.log(data.task.name + " : " + data.src);
-        },
-        //图片压缩后触发,如果图片或浏览器不支持压缩,则不触发
-        scale: function (data) {
-            console.log(data.task.name + " : 已压缩！");
-        },
-        //上传之前触发
-        upload: function (task) {
-            //可针对单独的任务配置参数(POST方式)
-            var boardSelected = $('#image_upload .right-part .boardlist .item.selected');
-            uploader.data = {
-                title: $('#preview-desc').val(),
-                board: boardSelected.data("id")
-            };
-        },
-        //上传完成后触发
-        complete: function (task) {
-            if (task.state != Q.Uploader.COMPLETE) return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!");
-
-            var json = task.json;
-            if (!json.success)
-                return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
-
-            console.log(task.name + ": 服务器返回 " + (task.response || ""));
-            var resJson = JSON.parse(task.response);
-            //var gridItem = document.createElement('div');
-            //gridItem.classList = 'grid-item';
-            //gridItem.innerHTML = '<div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.url+'" alt="'+resJson.url+'"/></div>';
-            //bricklayer.prepend(gridItem);
-            var item = resJson.data[0];
-            var itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true, image: $('#preview').children('canvas').html()});
-
-            var jpicelements = $(itemHtml);
-            // 上传成功后, 直接把预览里的 canvas 加入 _pic_box 里面
-            jpicelements.children('#pic_'+item.id).children('img').remove();
-            jpicelements.children('#pic_'+item.id).prepend($('#preview').children('canvas'));
-            //var jpicelements = $('<div class="grid-item heightlight" id="'+resJson.id+'"><div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.title+'" alt="'+resJson.title+'"/></div></div>');
-
-            //gridMasonry.append(jpicelements)
-            //    .masonry('prepended', jpicelements);
-            gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
-            gridMasonry.imagesLoaded().progress(function () {
-                gridMasonry.masonry('layout');
-            });
-            //this.list  为上传任务列表
-            //this.index 为当前上传任务索引
-            if (this.index >= this.list.length - 1) {
-                //所有任务上传完成
-                console.log("所有任务上传完成：" + new Date());
-                $('#image_upload').modal('hide');
-                $('#upload-submit').button('reset');
-            }
-        }
-
-    }
-});
-
-document.getElementById("upload-submit").onclick = function () {
-    var $this = $(this);
-    $this.button('loading');
-    uploader.start();
-};
-
-$('#image_upload').on('hidden.bs.modal', function (e) {
-    $('#upload-submit').button('reset');
-    $('#upload_area').show();
-    $('#upload_view').hide();
-    $('#preview').html('');
-});
-$('#image_upload').on('hide.bs.modal', function (e) {
-    $('#upload-submit').button('reset');
-    $('#upload_area').show();
-    $('#upload_view').hide();
-    $('#preview').html('');
-});
+//var _csrf = $('meta[name=csrf-token]').attr('content');
+//var uploader = new Q.Uploader({
+//    url: "imageupload?type=file&_csrf=" + _csrf,
+//    target: document.getElementById("upload_area"),
+//    view: document.getElementById("preview"),
+//    allows: ".jpg,.png,.gif,.bmp,.jpeg",
+//    auto: false,
+//    multiple: false,
+//    dataType: "json",
+//    data: {title: 'test'},
+//    //图片缩放
+//    // DONE(hhdem) 如果是在win环境下, 打开图片缩放将无法成功上传
+//    // scale: {
+//    //     //最大图片大小(width|height)
+//    //     maxWidth: 700
+//    // },
+//    UI: {
+//        init: function () {
+//            console.info('UI init method');
+//        },
+//        draw: function (task) {
+//            var self = this,
+//                ops = self.ops,
+//                boxView = ops.view;
+//
+//            if (!boxView) return;
+//
+//            var name = task.name;
+//
+//            var li = '';
+//            loadImage(task.file,
+//                function (img, data) {
+//                    img.style.width = '100%';
+//                    var html =
+//                        '<div class="u-img"></div><span class="u-loaded"></span><span class="u-total"></span>';
+//                    var taskId = task.id,
+//                        box = Q.createEle("div", "u-item", html);
+//
+//                    box.taskId = taskId;
+//
+//                    var boxImage = Q.getFirst(box);
+//
+//                    task.box = box;
+//                    boxImage.appendChild(img);
+//                    //添加到视图中
+//                    boxView.appendChild(box);
+//
+//                    //---------------- 预览图片并更新UI ----------------
+//                    $('#preview-desc').html(name);
+//                    $('#preview').append(img);
+//                },
+//                {orientation: true} // Options
+//            );
+//            //task.file = li;
+//            var html =
+//                '<div class="u-img">'+li+'</div><span class="u-loaded"></span><span class="u-total"></span>';
+//
+//
+//            //self.previewImage(boxImage, task, ops);
+//        },
+//        update: function (task) {
+//
+//        }
+//    },
+//    on: {
+//        //添加之前触发
+//        add: function (task) {
+//            if (task.disabled) return alert("允许上传的文件格式为：" + this.ops.allows);
+//            $('#upload_view').show();
+//            $('#upload_area').hide();
+//        },
+//        //图片预览后触发
+//        preview: function (data) {
+//            console.log(data.task.name + " : " + data.src);
+//        },
+//        //图片压缩后触发,如果图片或浏览器不支持压缩,则不触发
+//        scale: function (data) {
+//            console.log(data.task.name + " : 已压缩！");
+//        },
+//        //上传之前触发
+//        upload: function (task) {
+//            //可针对单独的任务配置参数(POST方式)
+//            var boardSelected = $('#image_upload .right-part .boardlist .item.selected');
+//            uploader.data = {
+//                title: $('#preview-desc').val(),
+//                board: boardSelected.data("id")
+//            };
+//        },
+//        //上传完成后触发
+//        complete: function (task) {
+//            if (task.state != Q.Uploader.COMPLETE) return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!");
+//
+//            var json = task.json;
+//            if (!json.success) {
+//                $('#board_message_alert .alert-content').html(json.msg);
+//                $('#board_message_alert').fadeIn();
+//                return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
+//            }
+//
+//            console.log(task.name + ": 服务器返回 " + (task.response || ""));
+//            var resJson = JSON.parse(task.response);
+//            var item = resJson.data[0];
+//            var itemHtml = $("#picBoxTmp").tmpl({item: item, highlight: true, image: $('#preview').children('canvas').html()});
+//
+//            var jpicelements = $(itemHtml);
+//            // 上传成功后, 直接把预览里的 canvas 加入 _pic_box 里面
+//            jpicelements.children('#pic_'+item.id).children('img').remove();
+//            jpicelements.children('#pic_'+item.id).prepend($('#preview').children('canvas'));
+//            // TODO 把预览里的board信息也添加到 _pic_box 里面
+//            //var jpicelements = $('<div class="grid-item heightlight" id="'+resJson.id+'"><div class="grid-item-content"><img src="' + resJson.url + '" title="'+resJson.title+'" alt="'+resJson.title+'"/></div></div>');
+//
+//            //gridMasonry.append(jpicelements)
+//            //    .masonry('prepended', jpicelements);
+//            gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
+//            gridMasonry.imagesLoaded().progress(function () {
+//                gridMasonry.masonry('layout');
+//            });
+//            //this.list  为上传任务列表
+//            //this.index 为当前上传任务索引
+//            if (this.index >= this.list.length - 1) {
+//                //所有任务上传完成
+//                console.log("所有任务上传完成：" + new Date());
+//                $('#image_upload').modal('hide');
+//                $('#upload-submit').button('reset');
+//            }
+//        }
+//
+//    }
+//});
+//
+//// 开始上传图片
+//document.getElementById("upload-submit").onclick = function () {
+//    var $this = $(this);
+//    if(boardList.length == 0) {
+//        // 如果没有 Board 提示创建
+//        $('#board_message_alert .alert-content').html('请先创建一个 Board 吧!');
+//        $('#board_message_alert').fadeIn();
+//        return;
+//    }
+//    $this.button('loading');
+//    uploader.start();
+//};
+//
+//$('#image_upload').on('hidden.bs.modal', function (e) {
+//    $('#upload-submit').button('reset');
+//    $('#upload_area').show();
+//    $('#upload_view').hide();
+//    $('#preview').html('');
+//});
+//$('#image_upload').on('hide.bs.modal', function (e) {
+//    $('#upload-submit').button('reset');
+//    $('#upload_area').show();
+//    $('#upload_view').hide();
+//    $('#preview').html('');
+//});
 
 // 绑定like按钮的点击事件
 $(document).on('click', '.like-btn', function (event) {
@@ -254,65 +261,61 @@ $(document).on('click', '#pic_list .get-pic-btn', function (event) {
     getImageObject.topic_id = event.currentTarget.dataset.id;
     $('#get-preview-image-desc').val('');
     $('#get-preview-image').html('<img src="'+event.currentTarget.dataset.src+'">');
+    $('#get-image-submit').attr('data-id', event.currentTarget.dataset.id);
+    $('#get-image-submit').attr('data-image', event.currentTarget.dataset.src);
 });
 
 // 保存要Get的图片信息
 $(document).on('click', '#get-image-submit', function (event) {
     console.log(event.currentTarget.dataset);
     getImageObject.desc = $('#get-preview-image-desc').val();
+    getImageObject.image_fixed = event.currentTarget.dataset.image;
     console.log('getImageObject:', getImageObject);
     $.ajax({
         type: "POST",
-        url: "api/v2/images/get",
+        url: "/api/v2/images/get",
         data: getImageObject
     }).done(function (response) {
         console.log(response);
         if (response.success) {
             // TODO 插入图片列表中
-            //var itemHtml = $("#picBoxTmp").tmpl({item: getImageObject, highlight: true});
-            //lastItemId[picid] = item.id;
-            //var jpicelements = $(itemHtml);
-            //var items = gridMasonry.masonry('getItemElements');
-            //var clickIndex = 0;
-            //_.find(items, function (e) {
-            //    clickIndex++;
-            //    return e.id == picid;
-            //});
-            //gridMasonry.append(jpicelements).masonry('insertItems', clickIndex, jpicelements);
-            //gridMasonry.imagesLoaded().progress(function () {
-            //    gridMasonry.masonry('layout');
-            //});
+            var itemHtml = $("#picBoxTmp").tmpl({item: response.data, highlight: true});
+            var jpicelements = $(itemHtml);
+            gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
+            gridMasonry.imagesLoaded().progress(function () {
+                gridMasonry.masonry('layout');
+            });
             $('#get_image_modal').modal('hide');
         }
     });
 });
-
-// 绑定Board 查询事件
-$(document).on('keyup', '.pin-create .right-part .search-input', function (event) {
-    if (!event.currentTarget) {
-        return;
-    }
-    // TODO 根据输入的关键词模糊查询Board列表,并刷新 boardlist 的显示列表
-    searchBoard ($(this), event.currentTarget.value);
-});
-
-// 绑定添加Board按钮
-$(document).on('click', '.pin-create .right-part .createboard', function (event) {
-    if (!event.currentTarget) {
-        return;
-    }
-    $(this).parent().prev().prev().css({"height":"220px"});
-    $(this).hide();
-    createBoard (event.currentTarget.dataset.text);
-});
+//
+//// 绑定Board 查询事件
+//$(document).on('keyup', '.pin-create .right-part .search-input', function (event) {
+//    if (!event.currentTarget) {
+//        return;
+//    }
+//    // TODO 根据输入的关键词模糊查询Board列表,并刷新 boardlist 的显示列表
+//    searchBoard ($(this), event.currentTarget.value);
+//});
+//
+//// 绑定添加Board按钮
+//$(document).on('click', '.pin-create .right-part .createboard', function (event) {
+//    if (!event.currentTarget) {
+//        return;
+//    }
+//    $(this).parent().prev().prev().css({"height":"220px"});
+//    $(this).hide();
+//    createBoard (event.currentTarget.dataset.text);
+//});
 
 // 绑定预览图片的查看
-$(document).on('click', '#pic_list .preview-image', function (event) {
-    console.log(event.currentTarget.dataset.id);
-    console.log(event.currentTarget.dataset.src);
-    $('#get-preview-image-desc').val('');
-    $('#baidu_image_holder').html('<img src="'+event.currentTarget.dataset.src+'">');
-});
+//$(document).on('click', '#pic_list .preview-image', function (event) {
+//    console.log(event.currentTarget.dataset.id);
+//    console.log(event.currentTarget.dataset.src);
+//    $('#get-preview-image-desc').val('');
+//    $('#baidu_image_holder').html('<img src="'+event.currentTarget.dataset.src+'">');
+//});
 
 function similarPics(picid) {
     var sid = lastItemId['all'];
@@ -328,7 +331,7 @@ function similarPics(picid) {
         sid: sid
     };
     $.ajax({
-        url: "api/v2/images/sim",
+        url: "/api/v2/images/sim",
         data: data
     }).done(function (responseText) {
         console.log(responseText);
@@ -365,7 +368,7 @@ function likePic(picid) {
     };
     $.ajax({
         type: "POST",
-        url: "api/v2/images/like",
+        url: "/api/v2/images/like",
         data: data
     }).done(function (response) {
         if(!response.success) {
@@ -377,84 +380,92 @@ function likePic(picid) {
         } else {
             $('#'+picid + ' .actions .right a').addClass('unlike');
         }
-
+        var likePreviewBtn = $('#preview_modal #preview_modal_like_btn');
+        if (likePreviewBtn.hasClass('unlike')) {
+            likePreviewBtn.removeClass('unlike');
+        } else {
+            likePreviewBtn.addClass('unlike');
+        }
     });
 }
-
-function selectBoard (selectedElem) {
-    var boardid = selectedElem.dataset.id;
-    if (!boardid) {
-        return;
-    }
-    var selectedBoard = $(selectedElem);
-
-    var boardE = selectedBoard.parent().children('#'+boardid);
-    var selectedE = selectedBoard.parent().children('.selected');
-    getImageObject.board_id = boardid;
-    if (!boardE.hasClass('selected')) {
-        selectedE.removeClass('selected');
-        boardE.addClass('selected');
-    }
-}
-
-function searchBoard (obj, searchText) {
-    if (!obj) {
-        return;
-    }
-    var refreshListTarget = obj.next().next();
-    var createTextTarget = obj.next().next().next().next();
-    if (searchText) {
-        refreshListTarget.css({"height":"180px"});
-        createTextTarget.find('.createboard').show();
-        createTextTarget.find('.createboard').attr("data-text", searchText);
-        createTextTarget.find('.text').html(searchText);
-    } else {
-        refreshListTarget.css({"height":"220px"});
-        createTextTarget.find('.createboard').hide();
-        createTextTarget.find('.text').html('');
-    }
-
-}
-
-function createBoard (boardName) {
-    if (!boardName) {
-        return;
-    }
-    var boardItem = {
-        title: boardName
-    };
-    $.ajax({
-        type: "POST",
-        url: "api/v2/boards",
-        data: {
-            title: boardName
-        }
-    }).done(function (responseText) {
-        if (!responseText.success) {
-            return ;
-        }
-        boardItem._id = responseText.board;
-        boardItem.title = responseText.title;
-        boardList.splice(0, 0, boardItem);
-        showBoardList($('.pin-create .right-part .boardlist .scrollable .recent'), boardList);
-    });
-}
-
-function showBoardList (target, boards) {
-    if (!target || !boards) {
-        return;
-    }
-    target.html('');
-    var markup = '{{each boards}}<div class="item {{if $index == 0}}selected{{/if}}" data-id="${boards[$index]._id}" id="${boards[$index]._id}" data-title="${boards[$index].title}">' +
-                    '<i class="icon history"></i>${boards[$index].title}<div class="controller"></div>' +
-                 '</div>{{/each}}';
-    if (boards.length) {
-        getImageObject.board_id = boards[0]._id;
-    }
-    $("#boardTemplate").tmpl({boards: boards}).appendTo(target);
-
-    //$.template( "boardTemplate", markup );
-    //$.tmpl( "boardTemplate", {boards: boards} )
-    //    .appendTo(target);
-}
+//
+//function selectBoard (selectedElem) {
+//    var boardid = selectedElem.dataset.id;
+//    if (!boardid) {
+//        return;
+//    }
+//    var selectedBoard = $(selectedElem);
+//
+//    var boardE = selectedBoard.parent().children('#'+boardid);
+//    var selectedE = selectedBoard.parent().children('.selected');
+//    getImageObject.board_id = boardid;
+//    if (!boardE.hasClass('selected')) {
+//        selectedE.removeClass('selected');
+//        boardE.addClass('selected');
+//    }
+//}
+//
+//function searchBoard (obj, searchText) {
+//    if (!obj) {
+//        return;
+//    }
+//    var refreshListTarget = obj.next().next();
+//    var createTextTarget = obj.next().next().next().next();
+//    if (searchText) {
+//        refreshListTarget.css({"height":"180px"});
+//        createTextTarget.find('.createboard').show();
+//        createTextTarget.find('.createboard').attr("data-text", searchText);
+//        createTextTarget.find('.text').html(searchText);
+//    } else {
+//        refreshListTarget.css({"height":"220px"});
+//        createTextTarget.find('.createboard').hide();
+//        createTextTarget.find('.text').html('');
+//    }
+//
+//}
+//
+//function createBoard (boardName) {
+//    if (!boardName) {
+//        return;
+//    }
+//    var boardItem = {
+//        title: boardName
+//    };
+//    $.ajax({
+//        type: "POST",
+//        url: "api/v2/boards",
+//        data: {
+//            title: boardName
+//        }
+//    }).done(function (responseText) {
+//        if (!responseText.success) {
+//            return ;
+//        }
+//        boardItem._id = responseText.board;
+//        boardItem.title = responseText.title;
+//        boardList.splice(0, 0, boardItem);
+//        showBoardList($('.pin-create .right-part .boardlist .scrollable .recent'), boardList);
+//    });
+//}
+//
+//function showBoardList (target, boards) {
+//    if (!target || !boards) {
+//        return;
+//    }
+//    target.html('');
+//    var markup = '{{each boards}}<div class="item {{if $index == 0}}selected{{/if}}" data-id="${boards[$index]._id}" id="${boards[$index]._id}" data-title="${boards[$index].title}">' +
+//                    '<i class="icon history"></i>${boards[$index].title}<div class="controller"></div>' +
+//                 '</div>{{/each}}';
+//    if (boards.length) {
+//        getImageObject.board_id = boards[0]._id;
+//    } else {
+//        $('#board_message_alert .alert-content').html('创建一个 Board 吧!');
+//        $('#board_message_alert').fadeIn();
+//    }
+//    $("#boardTemplate").tmpl({boards: boards}).appendTo(target);
+//
+//    //$.template( "boardTemplate", markup );
+//    //$.tmpl( "boardTemplate", {boards: boards} )
+//    //    .appendTo(target);
+//}
 

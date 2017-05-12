@@ -22,7 +22,7 @@
                         <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
                     </div>
                     <div class="profile-stats">
-                        <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.get_image_count %></strong>Get</a>
+                        <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.topic_count + current_user.get_image_count %></strong>图片</a>
                         <a href="/user/<%= current_user.loginname %>/board" class="middle"><strong><%= current_user.board_count %></strong>画板</a>
                         <a href="/user/<%= current_user.loginname %>/followers"><strong><%= current_user.score %></strong>积分</a>
                     </div>
@@ -96,36 +96,3 @@ config: picConfig
 }) %>
 <% } %>
 
-<% if (typeof(user) !== 'undefined' || current_user) { %>
-<script type="text/javascript">
-    var boardList = [];
-    $(function () {
-        $.ajax({
-            type: "GET",
-            url: "api/v2/boards",
-            data: {}
-        }).done(function (responseText) {
-            console.log(responseText);
-            if (!responseText.success) {
-                return ;
-            }
-            boardList = responseText.data;
-            let boardListItems = $('.pin-create .right-part .boardlist .scrollable .recent');
-            console.log(boardListItems);
-            for(var j=0;j<boardListItems.length;j++){
-                let boardListItem = boardListItems[j];
-                boardList = responseText.data;
-                showBoardList($(boardListItem), boardList);
-
-            }
-
-        });
-        $('.pin-create .right-part .boardlist .scrollable .recent').on('click', '.item', function (event) {
-            if (!event.currentTarget.dataset.id) {
-                return;
-            }
-            selectBoard (event.currentTarget);
-        });
-    });
-</script>
-<% } %>

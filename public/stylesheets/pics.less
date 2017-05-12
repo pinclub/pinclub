@@ -568,6 +568,14 @@ textarea {
   line-height: 30px;
 }
 
+.btn.unlike i.heart {
+  background-position: 0 -60px;
+}
+
+.btn.unlike i.heart:hover i {
+  background-position: 0 -60px;
+}
+
 .btn-with-icon {
   padding: 0 10px;
 }
@@ -1328,15 +1336,16 @@ a.img img {
   overflow-x: hidden
 }
 
-.pin-view .board-piece .board-pins .cell {
-  display: block
+.pin-view .board-piece .board-pins .item {
+  margin-bottom: 2px;
+  position: relative;
 }
 
-.pin-view .board-piece .board-pins .cell img {
-  display: block
+.pin-view .board-piece .board-pins .item img {
+  position: relative;
 }
 
-.pin-view .board-piece .board-pins .cell .cover {
+.pin-view .board-piece .board-pins .item .cover {
   position: absolute;
   left: 0;
   top: 0;
@@ -1346,7 +1355,7 @@ a.img img {
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
 }
 
-.pin-view .board-piece .board-pins .cell:hover .cover {
+.pin-view .board-piece .board-pins .item:hover .cover {
   background: rgba(255,255,255,.2);
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.35)
 }
@@ -1358,7 +1367,7 @@ a.img img {
 
 #board_pins_waterfall {
   position: relative;
-  min-height: 380px
+  //min-height: 380px
 }
 
 .pin-view .board-piece .board-pins .loading {
@@ -1451,6 +1460,23 @@ a.img img {
   width: 278px;
   height: 250px;
   background: #fff
+}
+
+.cst-scrollbar::-webkit-scrollbar {
+  width: 8px
+}
+
+.cst-scrollbar::-webkit-scrollbar-track {
+  background: transparent
+}
+
+.cst-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0,0,0,.03);
+}
+
+.cst-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.5)
 }
 
 #pin_view_add_comment {

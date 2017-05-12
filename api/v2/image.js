@@ -87,24 +87,22 @@ exports.index = function (req, res, next) {
                     structedTopic.liked = true;
                 }
             });
-
-            return structedTopic
+            return structedTopic;
         });
 
         res.send({success: true, data: topics});
     });
 
     TopicProxy.getImagesByQuery(query, options, function (err, topics) {
+        if (!!req.session.user) {
+            // DONE (hhdem) 此处需要优化, 不要每次都获得全部喜欢的图片列表, 改为根据返回的图片列表, 查询是否like
+            let topic_t_ids = _.map(topics, 'id');
+            TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, topic_t_ids, {}, ep.done('liked_topics'));
+        } else {
+            ep.emit('liked_topics', []);
+        }
         ep.emit('topics', topics);
     });
-
-    if (!!req.session.user) {
-        // TODO 此处需要优化,不要每次都获得全部喜欢的图片列表
-        TopicLike.getTopicLikesByUserId(req.session.user._id, {}, ep.done('liked_topics'));
-    } else {
-        ep.emit('liked_topics', []);
-    }
-
 
 };
 
@@ -154,7 +152,8 @@ exports.sim = function (req, res, next) {
             return res.send({success: false, error_msg: '图片不存在'});
         }
         var options = {limit: limit, sort: '-_id'};
-        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 90"}, options, ep.done('topics', function (topics) {
+        // TODO 考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法
+        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 76"}, options, ep.done('topics', function (topics) {
             return topics;
         }));
 
@@ -245,6 +244,7 @@ exports.like = function (req, res, next) {
                 return next(err);
             }
             user.like_image_count += 1;
+            req.session.user.like_image_count += 1;
             user.save();
         });
 
@@ -266,6 +266,7 @@ exports.like = function (req, res, next) {
                     return next(err);
                 }
                 user.like_image_count -= 1;
+                req.session.user.like_image_count -= 1;
                 user.save();
             });
 
@@ -343,7 +344,7 @@ exports.getImage = function (req, res, next) {
         }
         board.topic_count += 1;
         board.save();
-        ep.emit('board_to');
+        ep.emit('board_to', board);
     });
     // 生成新的topic对象
     ep.on('topic_from', function(fromTopic) {
@@ -361,12 +362,13 @@ exports.getImage = function (req, res, next) {
         });
     });
     // 生成topicBoard关联对象
-    ep.all('new_topic_saved', 'board_to', function(newImage) {
+    ep.all('new_topic_saved', 'board_to', function(newImage, board) {
         TopicBoard.newAndSave(currentUser.id, newImage.id, board_id, desc || null, null, function (err, topicBoard) {
             if (err) {
                 return next(err);
             }
-            ep.emit('new_topic_board_saved', topicBoard);
+            newImage.board = board;
+            ep.emit('new_topic_board_saved', newImage);
             //res.json({success: true});
         });
     });
@@ -378,6 +380,7 @@ exports.getImage = function (req, res, next) {
         }
         user.get_image_count += 1;
         user.save();
+        req.session.user.get_image_count += 1;
         ep.emit('user_count');
     });
     TopicProxy.getTopicById(topic_id, function (err, topic) {
@@ -387,13 +390,14 @@ exports.getImage = function (req, res, next) {
         }
         topic.geted_count += 1;
         topic.save();
-        ep.emit('topic_count');
+        ep.emit('topic_count', topic);
     });
     // 返回处理结果
-    ep.all('new_topic_board_saved', 'user_count', 'topic_count', function(topicBoard){
+    ep.all('new_topic_board_saved', 'user_count', 'topic_count', function(newImage){
+        newImage.author = currentUser;
         res.send({
             success: true,
-            data: topicBoard
+            data: newImage
         });
     });
 
@@ -428,8 +432,6 @@ exports.show = function (req, res, next) {
         return res.send({success: false, error_msg: '不是有效的话题id'});
     }
 
-    ep.fail(next);
-
     TopicProxy.getFullImage(topicId, ep.done(function (msg, topic, replies) {
         if (!topic) {
             res.status(404);
@@ -439,7 +441,8 @@ exports.show = function (req, res, next) {
             res.status(404);
             return res.send({success: false, error_msg: msg});
         }
-        topic = structureHelper.image(topic);
+
+        TopicProxy.getTopicsByBoardId(topic.board._id, ep.done('boardImages'));
 
         topic.replies = replies.map(function (reply) {
             if (mdrender) {
@@ -460,17 +463,26 @@ exports.show = function (req, res, next) {
         ep.emit('full_topic', topic)
     }));
 
-
-    if (!req.user) {
-        ep.emitLater('is_collect', null)
+    if (!req.session.user) {
+        ep.emit('liked_topics', []);
     } else {
-        TopicCollect.getTopicCollect(req.user._id, topicId, ep.done('is_collect'))
+        TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, [topicId], {}, ep.done('liked_topics'));
     }
 
-    ep.all('full_topic', 'is_collect', function (full_topic, is_collect) {
-        full_topic.is_collect = !!is_collect;
+    ep.all('full_topic', 'boardImages', 'liked_topics', function (full_topic, boardImages, liked_topics) {
 
+        full_topic.board.images = boardImages;
+
+        full_topic = structureHelper.image(full_topic);
+        full_topic.liked = false;
+        if (!!liked_topics && _.isArray(liked_topics)) {
+            full_topic.liked = liked_topics.length > 0;
+        }
         res.send({success: true, data: full_topic});
-    })
+    });
+
+    ep.fail(function(err){
+        console.error(err);
+    });
 
 };

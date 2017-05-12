@@ -16,6 +16,7 @@ var inspect = require('util').inspect;
 var at = require('../common/at');
 var User = require('../proxy').User;
 var Image = require('../proxy').Topic;
+var Board = require('../proxy').Board;
 var ImageCollect = require('../proxy').TopicCollect;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
@@ -405,6 +406,7 @@ exports.collect = function (req, res, next) {
                     return next(err);
                 }
                 user.collect_image_count += 1;
+                req.session.user.collect_image_count += 1;
                 user.save();
             });
 
@@ -437,6 +439,7 @@ exports.de_collect = function (req, res, next) {
                     return next(err);
                 }
                 user.collect_image_count -= 1;
+                req.session.user.collect_image_count -= 1;
                 req.session.user = user;
                 user.save();
             });
@@ -450,12 +453,13 @@ exports.de_collect = function (req, res, next) {
 };
 
 // DONE(hhdem) 不对val进行inspect
+// TODO 上传图片要支持 7牛云, 增加对应的配置
 exports.upload = function (req, res, next) {
     var isFileLimit = false;
     var uploadResult;
     var topicImage = {};
     req.busboy.on('field', function(fieldname, value, fieldnameTruncated, valTruncated, encoding, mimetype) {
-        console.log('Field [' + fieldname + ']: value: ' + inspect(value));
+
         topicImage[fieldname] = value;
     });
 
@@ -466,9 +470,17 @@ exports.upload = function (req, res, next) {
             res.json({
                 success: false,
                 msg: 'File size too large. Max is ' + config.file_limit
-            })
+            });
+            return;
         });
-        // TODO 上传图片时裁剪图片生成缩略图, 存储到upload下
+        if (!!topicImage.board && topicImage.board == 'undefined') {
+            res.json({
+                success: false,
+                msg: '未选择对应的Board'
+            });
+            return;
+        }
+
         store.upload(file, {filename: filename, userId: req.session.user._id}, function (err, result) {
             if (err) {
                 return next(err);
@@ -513,30 +525,45 @@ exports.upload = function (req, res, next) {
                         topicImage.type = 'image';
                         topicImage.author_id = req.session.user;
 
+                        var ep = new EventProxy();
+                        ep.fail(next);
+                        ep.all('board_update', 'new_image', function(board, topicImage) {
+                            topicImage.board = board;
+                            res.json({
+                                success: true,
+                                data: [structureHelper.image(topicImage)]
+                            });
+                            //发送at消息
+                            at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author_id);
+                        });
+
+                        Board.getBoardById(topicImage.board, function (err, board) {
+                            if (err) {
+                                return next(err);
+                            }
+                            board.topic_count += 1;
+                            board.save();
+                            ep.emit('board_update', board);
+                        });
+
                         Image.newAndSaveImage(topicImage, function (err, image) {
                             if (err) {
                                 return next(err);
                             }
                             topicImage.id = image.id;
                             // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
-                            var proxy = new EventProxy();
-
-                            proxy.fail(next);
-                            User.getUserById(req.session.user._id, proxy.done(function (user) {
+                            User.getUserById(req.session.user._id, function (err, user) {
                                 user.score += 5;
                                 user.image_count += 1;
                                 user.save();
+                                req.session.user.image_count += 1;
                                 req.session.user = user;
                                 topicImage.author_id = user.id;
                                 topicImage.author = user;
-                                res.json({
-                                    success: true,
-                                    data: [structureHelper.image(topicImage)]
-                                });
-                            }));
+                                ep.emit('new_image', topicImage);
 
-                            //发送at消息
-                            at.sendMessageToMentionUsers(topicImage.title, image._id, req.session.user._id);
+                            });
+
                         });
 
 

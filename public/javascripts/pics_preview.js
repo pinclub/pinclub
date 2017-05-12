@@ -1,4 +1,5 @@
 
+
 // preview image modal
 $('#preview_modal').on('hidden.bs.modal', function (e) {
     // 在预览框消失之后恢复 body 的滚动能力
@@ -21,26 +22,69 @@ $(document).on('click', '#preview_modal .close-layer', function (event) {
 
 // 绑定Preview点击后事件
 $(document).on('click', '.preview_image_btn', function(event){
-    console.log(event.currentTarget.dataset);
     var repinBtn = $('#preview_modal #preview_modal_rpin_btn');
+    var likeBtn = $('#preview_modal #preview_modal_like_btn');
     var dataset = event.currentTarget.dataset;
     repinBtn.attr("data-id", dataset.id);
     repinBtn.attr("data-src", dataset.src);
     repinBtn.attr("data-name", dataset.name);
+    likeBtn.attr("data-id", dataset.id);
+    likeBtn.attr("data-src", dataset.src);
+    likeBtn.attr("data-name", dataset.name);
+    $('#preview_modal').modal('hide');
+
+    $('#get-preview-image-desc').val('');
+    $('#baidu_image_holder').html('<img src="'+event.currentTarget.dataset.src+'">');
+    $('#preview_modal #zoomBtn').attr('href', event.currentTarget.dataset.src);
     $('#preview_modal').modal('show');
     $('body .modal-backdrop').css({"background-color": "#eee"});
     $.ajax({
         url: "api/v2/images/"+dataset.id
     }).done(function (response) {
         console.log(response);
-        var itemHtml = $("#boardInfoTemplate").tmpl(response.data);
+        let result = response.data;
+        let boardImages = result.board.images;
+        var itemHtml = $("#boardInfoTemplate").tmpl(result);
+
         $('#preview_modal .side-part .board-piece').html(itemHtml);
         $('#preview_modal .close-layer').css({"position": "fixed"});
+        $('#preview_modal .repin-btn .num').html(result.geted_count);
+        $('#preview_modal .like-btn .num').html(result.like_count);
+
+        if (result.liked) {
+            likeBtn.addClass('unlike');
+        } else {
+            likeBtn.removeClass('unlike');
+        }
+
+        var gridBoardImagesMasonry = $('.board_grid').masonry({
+            // options...
+            itemSelector: '.item',
+            columnWidth: 86,
+            gutter: 2
+        });
+        boardImages.forEach(function(image) {
+            if (dataset.id == image._id) {
+                image.selected = true;
+            }
+            if (!!image.image) {
+                let extname = image.image.substring(image.image.lastIndexOf('.') + 1) ;
+                let filename_path = image.image.substring(0, image.image.lastIndexOf('.')) ;
+                image.image_86 = filename_path + '_86.' + extname;
+            }
+            let itemHtml = $("#boardImageTemplate").tmpl(image);
+            var jpicelements = $(itemHtml);
+            gridBoardImagesMasonry.append(jpicelements)
+                .masonry('appended', jpicelements);
+        });
+        gridBoardImagesMasonry.imagesLoaded().progress(function () {
+            gridBoardImagesMasonry.masonry('layout');
+        });
     });
 });
 
 // 点击 Get 图片到自己的 Board, 弹出 Modal 层
-$(document).on('click', '#preview_modal .get-pic-btn', function (event) {
+$(document).on('click', '#preview_modal_rpin_btn', function (event) {
     if (!event.currentTarget.dataset.id || !event.currentTarget.dataset.src) {
         return;
     }

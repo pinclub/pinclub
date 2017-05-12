@@ -172,7 +172,7 @@ exports.getTopicsByBoardId = function (id, cb) {
         }
 
         var proxy = new EventProxy();
-        proxy.after('topic_find', topics.length, function () {
+        proxy.after('reply_find', topics.length, function () {
             cb(null, topics);
         });
         for (var j = 0; j < topics.length; j++) {
@@ -254,6 +254,7 @@ exports.getFullImage = function (id, callback) {
     var events = ['topic', 'author', 'replies'];
     proxy
         .assign(events, function (topic, author, replies) {
+            topic = topic.toObject();
             topic.author = author;
             callback(null, '', topic, replies);
         })

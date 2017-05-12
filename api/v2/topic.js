@@ -107,15 +107,14 @@ var index = function (req, res, next) {
     });
 
     TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
+        if (!!req.session.user) {
+            let topic_t_ids = _.map(topics, 'id');
+            TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, topic_t_ids, {}, ep.done('liked_topics'));
+        } else {
+            ep.emit('liked_topics', []);
+        }
         return topics;
     }));
-
-    if (!!req.session.user) {
-        // TODO 此处需要优化,不要每次都获得全部喜欢的图片列表
-        TopicLike.getTopicLikesByUserId(req.session.user._id, {}, ep.done('liked_topics'));
-    } else {
-        ep.emit('liked_topics', []);
-    }
 };
 
 exports.index = index;

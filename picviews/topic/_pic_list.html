@@ -5,10 +5,12 @@
 <script id="picBoxTmp" type="text/x-jquery-tmpl">
     <%- partial('_pic_box') %>
 </script>
+<!-- 创建图片时要选择的Board列表 -->
 <script id="boardTemplate" type="text/x-jquery-tmpl">
     <%- partial('../board/_board_list') %>
 </script>
-
+<!-- 预览图片时弹出的右侧Board信息 -->
+<!-- DONE (hhdem) 点击图片Box, 弹出浏览图片的modal, 图片 Board 信息显示功能, Board统计信息和 Board 中的图片列表 -->
 <script id="boardInfoTemplate" type="text/x-jquery-tmpl">
     <div class="board-info">
         <a href="/${author.loginname}" title="${author.loginname}" class="img x">
@@ -18,68 +20,24 @@
         <div class="sub">${author.loginname}</div>
     </div>
     <div class="board-pins cst-scrollbar">
-        <div id="board_pins_waterfall">
-
+        <div id="board_pins_waterfall" class="board_grid">
+            <div class="grid-sizer"></div>
+            <!-- 瀑布流图片列表 -->
         </div>
     </div>
-    <a data-id="29409295" href="#" onclick="return false;" class="follow-btn btn"><span class="text"> 关注画板</span></a>
+    <a data-id="${board.id}" href="#" onclick="return false;" class="follow-btn btn"><span class="text">关注 Board (${board.topic_count})</span></a>
+</script>
+
+<script id="boardImageTemplate" type="text/x-jquery-tmpl">
+    <a href="#${_id}" id="pic_priview_${_id}" data-id="${_id}" data-name="${title}" data-src="{{if !!image_fixed}}${image_fixed}{{else}}${image}{{/if}}" class="item{{if selected}} selected{{else}} preview_image_btn{{/if}}">
+        <img src="${image_86?image_86:image_fixed}" width="86">
+        <div class="cover"></div>
+    </a>
 </script>
 
 <!-- Upload 图片的 Modal 层 -->
-<!-- DONE(hhdem) modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口 -->
-<!-- DONE(hhdem) 点击上传图片后弹出的模态框中确认上传按钮样式错误 -->
-<!-- TODO(hhdem) chrome 插件直接采集 -->
-<!-- DONE(hhdem) 弹出层上传文件, 文件只能单选, 默认描述是文件名 -->
-<div class="modal fade" id="image_upload" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">上传图片</h5>
-            </div>
-            <div class="modal-body">
-                <div id="upload_area" class="upload-area">
-                    <div class="normal">
-                        <a href="#" onclick="return false;" class="upload-btn btn btn18" for="img_input2">
-                            <span class="text"> 上传采集</span>
-                        </a>
+<%- partial('_pic_create_modal') %>
 
-                        <div style="margin: 10px 0 25px" class="sub">支持单张 10m 以内图片上传</div>
-                        <div style="margin-top: 20px; font-size: 12px" class="sub">
-                            [提示]请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息
-                        </div>
-
-                    </div>
-                    <div style="display: none" class="draging">
-                        <div class="note">释放鼠标以上传</div>
-                    </div>
-                    <div style="display: none" class="uploading">
-                        <div class="animate">上传中...</div>
-                    </div>
-                    <div class="dropzone dz-clickable">
-                        <div class="dz-default dz-message"><span>拖动文件到这里上传</span></div>
-                    </div>
-                </div>
-                <div id="upload_view" style="display: none">
-                    <div class="pin-create">
-                        <div class="preview">
-                            <div id="preview" class="image">
-                            </div>
-                            <textarea id="preview-desc" placeholder="点击添加描述..." class="description"></textarea>
-                        </div>
-                        <div class="right-part">
-                            <%- partial('../board/_board_create_search') %>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="upload-close" class="btn" data-dismiss="modal">Close</button>
-                <button type="button" id="upload-submit" class="btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin' style='background: none;margin: 0px;'></i> Uploading">Upload Image</button>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Get 图片的modal层-->
 <div class="modal fade" id="get_image_modal" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
@@ -123,26 +81,31 @@
                            id="preview_modal_rpin_btn">
                             <span class="text"> Get</span>
                         </a>
-                        <a data-id="" href="#" onclick="return false;" class="like-btn  btn-with-icon btn">
+                        <a id="preview_modal_like_btn" data-id="" data-name="" data-src="" href="#" class="like-btn btn-with-icon btn">
                             <i class="heart"></i>
                         </a>
+                        <div class="right-part">
+                            <a id="zoomBtn" href="/pins/324257310/zoom/" target="_blank" title="查看原图" class="zoomin btn-with-icon btn"><i class="class"></i></a>
+                        </div>
                     </div>
                     <div class="main-image">
                         <div id="baidu_image_holder" class="image-holder">
 
                         </div>
                     </div>
-                    <div class="tool-bar-bottom"><a
-                            onclick="app.requireLogin(function(){app.showDialogBox('repin', {pin_id: '1090982775'});});return false;"
-                            href="#" class="repin-btn btn-with-icon btn"><i class="class"></i><span
-                            class="text"> 采集 <span class="num">88</span></span>
-                        <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
-                    </a><a href="#" onclick="return false;" class="like-btn btn-with-icon btn"><i
-                            class="class"></i><span class="text"> 喜欢 <span class="num">3</span></span></a><a href="#"
-                                                                                                             onclick="return false;"
-                                                                                                             class="comment-btn btn-with-icon btn"><i
-                            class="class"></i><span class="text"> 评论 <span class="num"></span></span></a><!--btn.download-btn(href='#{imgURL(pin.file)}', target='_blank', download) #{((pin.file.type || '').substring(6) || 'jpeg').toUpperCase()}-->
-                        <!--    i.new--><!--    i-->
+                    <div class="tool-bar-bottom">
+                        <a href="#" class="repin-btn btn-with-icon btn">
+                            <i class="class"></i>
+                            <span class="text"> 采集 <span class="num">88</span></span>
+                            <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+                        </a>
+                        <a href="#" onclick="return false;" class="like-btn btn-with-icon btn">
+                            <i class="class"></i><span class="text"> 喜欢 <span class="num">3</span></span>
+                        </a>
+                        <a href="#" onclick="return false;" class="comment-btn btn-with-icon btn">
+                            <i class="class"></i>
+                            <span class="text"> 评论 <span class="num"></span></span>
+                        </a>
                         <div class="right-part"><a title="举报这张采集" href="#" onclick="return false;"
                                                    class="report-btn btn-with-icon btn"><i class="class"></i></a><a
                                 href="/go/?pin_id=1090982775" rel="nofollow" target="_blank" class="source btn"><i
@@ -165,6 +128,15 @@
 .js('/public/libs/Q.Uploader.image.all.js')
 .js('/public/libs/load-image.all.min.js')
 .js('/public/javascripts/pics.js')
+.js('/public/javascripts/board.js')
+.js('/public/javascripts/pics_create.js')
 .js('/public/javascripts/pics_preview.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
+
+<% if (typeof(user) !== 'undefined' || current_user) { %>
+<%- Loader('/public/boards.min.js')
+.js('/public/javascripts/board_init.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<% } %>

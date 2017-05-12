@@ -1,5 +1,4 @@
 <!-- DONE (hhdem) 点击图片Box, 弹出浏览图片的modal, 查看图片详情 -->
-<!-- TODO 点击图片Box, 弹出浏览图片的modal, 图片 Board 信息显示功能, Board统计信息和 Board 中的图片列表 -->
 <!-- DONE(hhdem) Get 图片功能按钮实现 -->
 <!-- DONE(hhdem) 喜欢图片功能按钮实现 -->
 <!-- DONE(hhdem) 图片发布人信息显示, 目前为写死 -->
@@ -18,8 +17,8 @@
         <div class="cover"></div>
     </a>
     <p class="stats less">
-        <span title="转采" class="repin"><i></i>5</span>
-        <span title="喜欢" class="like"><i></i>1</span>
+        <span title="Get" class="repin"><i></i>${item.geted_count?item.geted_count:0}</span>
+        <span title="Like" class="like"><i></i>${item.like_count?item.like_count:0}</span>
         {{each item.image_colors}}
         <span title="${item.image_colors[$index]}" style="background-color: ${item.image_colors[$index]}; margin-right: 0px;"><i style="background: none;margin: 0;"></i></span>
         {{/each}}
@@ -30,7 +29,7 @@
     </p>
     <div class="convo attribution clearfix">
         <a href="#" title="hhdem" rel="nofollow" class="img x">
-        <img src="${item.author.avatar_url}" data-baiduimageplus-ignore="1" class="avt">
+        <img src="${item.author.avatar_url?item.author.avatar_url:item.author.avatar}" data-baiduimageplus-ignore="1" class="avt">
         </a>
         <div class="text">
             <div class="inner">
