@@ -10,10 +10,10 @@ $(function () {
             return ;
         }
         boardList = responseText.data;
-        let boardListItems = $('.pin-create .right-part .boardlist .scrollable .recent');
+        var boardListItems = $('.pin-create .right-part .boardlist .scrollable .recent');
         console.log(boardListItems);
         for(var j=0;j<boardListItems.length;j++){
-            let boardListItem = boardListItems[j];
+            var boardListItem = boardListItems[j];
             boardList = responseText.data;
             showBoardList($(boardListItem), boardList);
         }

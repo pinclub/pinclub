@@ -39,8 +39,8 @@ $(document).on('click', '.preview_image_btn', function(event){
         url: "api/v2/images/"+dataset.id
     }).done(function (response) {
         console.log(response);
-        let result = response.data;
-        let boardImages = result.board.images;
+        var result = response.data;
+        var boardImages = result.board.images;
         var itemHtml = $("#boardInfoTemplate").tmpl(result);
 
         $('#preview_modal .side-part .board-piece').html(itemHtml);
@@ -65,7 +65,7 @@ $(document).on('click', '.preview_image_btn', function(event){
                 image.selected = true;
             }
 
-            let itemHtml = $("#boardImageTemplate").tmpl(image);
+            var itemHtml = $("#boardImageTemplate").tmpl(image);
             var jpicelements = $(itemHtml);
             gridBoardImagesMasonry.append(jpicelements)
                 .masonry('appended', jpicelements);
