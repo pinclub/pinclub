@@ -31,7 +31,7 @@
     "jpush-sdk": "3.3.2",
     "jsonwebtoken": "^7.4.0",
     "loader": "2.1.1",
-    "loader-builder": "2.4.1",
+    "loader-builder": "2.5.0",
     "lodash": "4.16.2",
     "log4js": "^0.6.29",
     "markdown-it": "6.0.0",
@@ -74,7 +74,7 @@
     "nock": "7.5.0",
     "pedding": "1.0.0",
     "should": "8.3.0",
-    "supertest": "1.2.0",
+    "supertest": "^1.2.0",
     "vinyl-paths": "^2.1.0"
   },
   "scripts": {

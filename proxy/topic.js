@@ -350,7 +350,7 @@ exports.newAndSave = function (title, content, tab, authorId, callback) {
     topic.content = content;
     topic.tab = tab;
     topic.author_id = authorId;
-
+    topic.type = 'text';
     topic.save(callback);
 };
 

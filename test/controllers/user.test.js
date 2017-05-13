@@ -35,7 +35,7 @@ describe('test/controllers/user.test.js', function () {
       .expect(200, function (err, res) {
         var texts = [
           '注册时间',
-          '这家伙很懒，什么个性签名都没有留下。',
+          'Nothing to say.',
           '最近创建的话题',
           '无话题',
           '最近参与的话题',

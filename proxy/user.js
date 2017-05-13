@@ -2,6 +2,7 @@ var models  = require('../models');
 var User    = models.User;
 var utility = require('utility');
 var uuid    = require('node-uuid');
+var jwt = require('jsonwebtoken');
 
 /**
  * 根据用户名列表查找用户列表
@@ -103,7 +104,11 @@ exports.newAndSave = function (name, loginname, pass, email, avatar_url, active,
   user.email       = email;
   user.avatar      = avatar_url;
   user.active      = active || false;
-
+  let accessToken = jwt.sign({
+    loginname: user.loginname,
+    _id: user._id
+  }, 'pinclub_test', {expiresIn: 3600});
+  user.accessToken = accessToken;
   user.save(callback);
 };
 

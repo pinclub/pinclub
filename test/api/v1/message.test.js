@@ -13,6 +13,7 @@ describe('test/api/v1/message.test.js', function () {
   before(function (done) {
     support.ready(function () {
       support.createUser(function (err, user) {
+
         mockUser = user;
         done();
       });
@@ -23,6 +24,7 @@ describe('test/api/v1/message.test.js', function () {
     mm.restore();
   });
 
+  // FIXME accessToken 的问题导致测试用例失败
   it('should get unread messages', function (done) {
     mm(MessageProxy, 'getMessageById', function (id, callback) {
       callback(null, {reply: {author: {}}});

@@ -5,25 +5,9 @@ describe('test/controllers/static.test.js', function () {
   it('should get /about', function (done) {
     request.get('/about').expect(200)
       .end(function (err, res) {
-        res.text.should.containEql('CNode 社区由一批热爱 Node.js 技术的工程师发起');
+        res.text.should.containEql('Pinclub 是基于 Nodeclub 进行的二次开发. 增加了瀑布流展示方式, 主要参考花瓣网的设计风格(感谢花瓣网的设计师和前端工程师的辛勤工作), 加入了hanming距离的算法, 当然是在mongodb中使用了 function 的形式实现.');
         done(err);
       });
-  });
-
-  it('should get /faq', function (done) {
-    request.get('/faq').expect(200)
-      .end(function (err, res) {
-        res.text.should.containEql('CNode 社区和 Node Club 是什么关系？');
-        done(err);
-      });
-  });
-
-  it('should get /getstart', function (done) {
-    request.get('/getstart').expect(200)
-    .end(function (err, res) {
-      res.text.should.containEql('Node.js 新手入门');
-      done(err);
-    });
   });
 
   it('should get /robots.txt', function (done) {

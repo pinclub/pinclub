@@ -136,7 +136,7 @@ describe('test/api/v1/reply.test.js', function () {
     it('should up', function (done) {
       request.post('/api/v1/reply/' + mockReplyId + '/ups')
         .send({
-          accesstoken: support.normalUser.accessToken
+          accesstoken: support.normalUser2.accessToken
         })
         .end(function (err, res) {
           should.not.exists(err);
@@ -149,7 +149,7 @@ describe('test/api/v1/reply.test.js', function () {
     it('should down', function (done) {
       request.post('/api/v1/reply/' + mockReplyId + '/ups')
         .send({
-          accesstoken: support.normalUser.accessToken
+          accesstoken: support.normalUser2.accessToken
         })
         .end(function (err, res) {
           should.not.exists(err);
