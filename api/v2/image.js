@@ -152,8 +152,8 @@ exports.sim = function (req, res, next) {
             return res.send({success: false, error_msg: '图片不存在'});
         }
         var options = {limit: limit, sort: '-_id'};
-        // TODO 考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法
-        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 76"}, options, ep.done('topics', function (topics) {
+        // TODO 考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法, 最终改了 gHash
+        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 25"}, options, ep.done('topics', function (topics) {
             return topics;
         }));
 
@@ -477,6 +477,9 @@ exports.show = function (req, res, next) {
         full_topic.liked = false;
         if (!!liked_topics && _.isArray(liked_topics)) {
             full_topic.liked = liked_topics.length > 0;
+        }
+        if (!!full_topic.image && full_topic.image.lastIndexOf('.') < 0) {
+            image.image_fixed = full_topic.image + config.qn_access.style[2];
         }
         res.send({success: true, data: full_topic});
     });

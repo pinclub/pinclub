@@ -3,10 +3,11 @@
 var _          = require('lodash');
 
 var image_show_fields = ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
-    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply', 'image', 'image_colors', 'image_fixed', 'image_source', 'type', 'board', 'like_count', 'geted_count'];
+    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply', 'image', 'image_colors',
+    'image_fixed', 'image_86', 'image_430', 'image_source', 'type', 'board', 'like_count', 'geted_count'];
 
 var image_copy_fields = ['id', 'author_id', 'content', 'title',
-    'good', 'top', 'image', 'image_colors', 'image_colors_rgb', 'image_fixed', 'image_source', 'type'];
+    'top', 'image', 'image_hash', 'image_colors', 'image_colors_rgb', 'image_fixed', 'image_86', 'image_430', 'image_source', 'type'];
 
 exports.topic = function (topic) {
     topic.author = _.pick(topic.author, ['loginname', 'avatar_url']);

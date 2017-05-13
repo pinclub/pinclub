@@ -7,7 +7,7 @@ var Reply = require('./reply');
 var tools = require('../common/tools');
 var at = require('../common/at');
 var _ = require('lodash');
-
+var structureHelper = require('../common/structure_helper');
 
 /**
  * 根据主题ID获取主题
@@ -178,6 +178,7 @@ exports.getTopicsByBoardId = function (id, cb) {
         for (var j = 0; j < topics.length; j++) {
             (function (i) {
                 var author_id = topics[i].user_id;
+                topics[i] = structureHelper.image(topics[i]);
                 User.getUserById(author_id, function (err, author) {
                     if (err) {
                         return cb(err);

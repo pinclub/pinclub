@@ -15,6 +15,7 @@ exports.upload = function (file, options, callback) {
 
     var newFilename = utility.md5(filename + String((new Date()).getTime())) + fileext;
     var resize86Filename = utility.md5(filename + String((new Date()).getTime())) + '_86' + fileext;
+    var resize430Filename = utility.md5(filename + String((new Date()).getTime())) + '_430' + fileext;
 
     var upload_path = config.upload.path + user_path;
     var base_url = config.upload.url + user_path;
@@ -24,6 +25,7 @@ exports.upload = function (file, options, callback) {
     }
     var filePath = path.join(upload_path, newFilename);
     var file86Path = path.join(upload_path, resize86Filename);
+    var file430Path = path.join(upload_path, resize430Filename);
     var fileUrl = base_url + newFilename;
 
     file.on('end', function () {
@@ -36,6 +38,10 @@ exports.upload = function (file, options, callback) {
             // DONE (hhdem) 上传图片时裁剪生成 86 像素宽的缩略图, 存储到upload下
             resizeImg(fs.readFileSync(filePath), {width: 86}).then(buf => {
                 fs.writeFileSync(file86Path, buf);
+            });
+
+            resizeImg(fs.readFileSync(filePath), {width: 430}).then(buf => {
+                fs.writeFileSync(file430Path, buf);
             });
 
             callback(null, {

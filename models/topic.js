@@ -31,6 +31,8 @@ var TopicSchema = new Schema({
     board: {type: ObjectId, ref: 'Board'},
     type: {type: String, default: 'text', enum: ['text', 'image']},
     image: {type: String},
+    image_86: {type: String},
+    image_430: {type: String},
     image_fixed: {type: String},
     image_hash: {type: String},
     image_colors: {type: [String]},

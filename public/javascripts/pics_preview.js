@@ -1,5 +1,3 @@
-
-
 // preview image modal
 $('#preview_modal').on('hidden.bs.modal', function (e) {
     // 在预览框消失之后恢复 body 的滚动能力
@@ -8,7 +6,6 @@ $('#preview_modal').on('hidden.bs.modal', function (e) {
 });
 $('#preview_modal').on('shown.bs.modal', function (e) {
     // 修复上次滚动留下的痕迹,可能会导致短暂的闪烁，不过可以接受
-    // TODO: to be promote
     $('#preview_modal').scrollTop(0);
     $('#preview_modal').css({    "z-index": "1041", "top": "0", "padding": "40px"});
     $('body').css('overflow-y', 'hidden');
@@ -64,14 +61,10 @@ $(document).on('click', '.preview_image_btn', function(event){
             gutter: 2
         });
         boardImages.forEach(function(image) {
-            if (dataset.id == image._id) {
+            if (dataset.id == image.id || dataset.id == image._id) {
                 image.selected = true;
             }
-            if (!!image.image) {
-                let extname = image.image.substring(image.image.lastIndexOf('.') + 1) ;
-                let filename_path = image.image.substring(0, image.image.lastIndexOf('.')) ;
-                image.image_86 = filename_path + '_86.' + extname;
-            }
+
             let itemHtml = $("#boardImageTemplate").tmpl(image);
             var jpicelements = $(itemHtml);
             gridBoardImagesMasonry.append(jpicelements)

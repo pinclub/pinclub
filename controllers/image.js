@@ -7,9 +7,9 @@
  */
 
 var validator = require('validator');
-var imghash = require('imghash');
 var getColors = require('get-image-colors');
 var path = require('path');
+var util = require('util');
 var rotator = require('auto-rotate');
 var mongoose = require('mongoose');
 var inspect = require('util').inspect;
@@ -27,6 +27,7 @@ var cache = require('../common/cache');
 var logger = require('../common/logger');
 var structureHelper = require('../common/structure_helper');
 
+var ghash = require('ghash');
 /**
  * Image page
  *
@@ -452,9 +453,12 @@ exports.de_collect = function (req, res, next) {
     });
 };
 
-// DONE(hhdem) 不对val进行inspect
-// TODO 上传图片要支持 7牛云, 增加对应的配置
+// DONE (hhdem) 不对val进行inspect
+// DONE (hhdem) 上传图片支持 7牛云, 增加对应的配置
+// DONE (hhdem) 更改hash参数生成方式为 ghash
+// DONE (hhdem) 上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取
 exports.upload = function (req, res, next) {
+    console.info('start uploading', new Date());
     var isFileLimit = false;
     var uploadResult;
     var topicImage = {};
@@ -480,95 +484,127 @@ exports.upload = function (req, res, next) {
             });
             return;
         }
+        var ep = new EventProxy();
+        let buffers = [];
+        // 获得 图片 buffer 进行hash计算
+        file.on('data', function(data) {
+            console.info('file data ', data);
+            buffers.push(data);
+        });
+
+        file.on('end', function() {
+            // DONE (hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
+            const fileBuffer = Buffer.concat(buffers);
+            ghash(fileBuffer).calculate(function (err, hash) {
+                console.info('start image hash', new Date());
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                topicImage.image_hash = tools.hexToBinary(hash.toString('hex'));
+            });
+            getColors(fileBuffer, mimetype).then(colors => {
+                console.info('start image colors', new Date());
+                let rgbColor = [];
+                let hexColor = [];
+                colors.forEach(function (color) {
+                    rgbColor.push(color.rgb());
+                    hexColor.push(color.toString());
+                });
+                topicImage.image_colors = hexColor;
+                topicImage.image_colors_rgb = rgbColor;
+            });
+        });
+
 
         store.upload(file, {filename: filename, userId: req.session.user._id}, function (err, result) {
+
             if (err) {
                 return next(err);
             }
             if (isFileLimit) {
                 return;
             }
+            console.info('start 7niu', new Date());
 
-            // TODO 此处需要考虑上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取, 前台只是需要个 id ,可以先生成id返回,之后再进行剩下的操作
-            // TODO 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
-            uploadResult = result;
-            let filepath = path.resolve(__dirname, '..'+uploadResult.url);
-            let extname = filepath.substring(filepath.lastIndexOf('.') + 1) ;
-            let filename_path = filepath.substring(0, filepath.lastIndexOf('.')) ;
-            let upload_path = uploadResult.url.substring(0, uploadResult.url.lastIndexOf('.')) ;
-            let filepath_fixed = filename_path + '_fixed.' + extname;
-            let upload_fixed = upload_path + '_fixed.' + extname;
-            // TODO 自动旋转图片方向, 此处代码需要优化性能, 所以先注释掉
-            topicImage.image_fixed = upload_fixed;
-            rotator.autoRotateFile(filepath, filepath_fixed)
-                .then(function(rotated) {
-                    console.log(rotated ? filepath + ' rotated to ' + filepath_fixed : filepath + ' no rotation was needed');
-                }).catch(function(err) {
-                    console.error('Got error: '+err);
-                });
-
-            imghash
-                .hash(filepath, 16, 'binary')
-                .then((hash) => {
-                    getColors(path.resolve(filepath)).then(colors => {
-
-                        let rgbColor = [];
-                        let hexColor = [];
-                        colors.forEach(function(color) {
-                            rgbColor.push(color.rgb());
-                            hexColor.push(color.toString());
-                        });
-                        topicImage.image_colors = hexColor;
-                        topicImage.image_colors_rgb = rgbColor;
-                        topicImage.image_hash = hash;
-                        topicImage.image = uploadResult.url;
-                        topicImage.type = 'image';
-                        topicImage.author_id = req.session.user;
-
-                        var ep = new EventProxy();
-                        ep.fail(next);
-                        ep.all('board_update', 'new_image', function(board, topicImage) {
-                            topicImage.board = board;
-                            res.json({
-                                success: true,
-                                data: [structureHelper.image(topicImage)]
-                            });
-                            //发送at消息
-                            at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author_id);
-                        });
-
-                        Board.getBoardById(topicImage.board, function (err, board) {
-                            if (err) {
-                                return next(err);
-                            }
-                            board.topic_count += 1;
-                            board.save();
-                            ep.emit('board_update', board);
-                        });
-
-                        Image.newAndSaveImage(topicImage, function (err, image) {
-                            if (err) {
-                                return next(err);
-                            }
-                            topicImage.id = image.id;
-                            // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
-                            User.getUserById(req.session.user._id, function (err, user) {
-                                user.score += 5;
-                                user.image_count += 1;
-                                user.save();
-                                req.session.user.image_count += 1;
-                                req.session.user = user;
-                                topicImage.author_id = user.id;
-                                topicImage.author = user;
-                                ep.emit('new_image', topicImage);
-
-                            });
-
-                        });
-
-
+            if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
+                // 7牛
+                topicImage.image_fixed = result.url + config.qn_access.style[3];
+                topicImage.image_430 = result.url + config.qn_access.style[1];
+                topicImage.image_86 = result.url + config.qn_access.style[0];
+                topicImage.image = result.url;
+            } else {
+                // 本地上传
+                uploadResult = result;
+                let filepath = path.resolve(__dirname, '..' + uploadResult.url);
+                let extname = filepath.substring(filepath.lastIndexOf('.') + 1);
+                let filename_path = filepath.substring(0, filepath.lastIndexOf('.'));
+                let upload_path = uploadResult.url.substring(0, uploadResult.url.lastIndexOf('.'));
+                let filepath_fixed = filename_path + '_fixed.' + extname;
+                let upload_fixed = upload_path + '_fixed.' + extname;
+                let upload_86 = upload_path + '_86.' + extname;
+                let upload_430 = upload_path + '_430.' + extname;
+                // TODO (hhdem) 自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中
+                topicImage.image_fixed = upload_fixed;
+                topicImage.image_86 = upload_86;
+                topicImage.image_430 = upload_430;
+                rotator.autoRotateFile(filepath, filepath_fixed)
+                    .then(function (rotated) {
+                        console.log(rotated ? filepath + ' rotated to ' + filepath_fixed : filepath + ' no rotation was needed');
+                    }).catch(function (err) {
+                        console.error('Got error: ' + err);
                     });
+
+                topicImage.image = uploadResult.url;
+
+            }
+
+            topicImage.type = 'image';
+            topicImage.author_id = req.session.user;
+
+            ep.fail(next);
+            ep.all('board_update', 'new_image', function (board, topicImage) {
+                console.info('start return success', new Date());
+                topicImage.board = board;
+                res.json({
+                    success: true,
+                    data: [structureHelper.image(topicImage)]
                 });
+                //发送at消息
+                at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author_id);
+            });
+
+            Board.getBoardById(topicImage.board, function (err, board) {
+                console.info('start board', new Date());
+                if (err) {
+                    return next(err);
+                }
+                board.topic_count += 1;
+                board.save();
+                ep.emit('board_update', board);
+            });
+
+            Image.newAndSaveImage(topicImage, function (err, image) {
+                console.info('start new image', new Date());
+                if (err) {
+                    return next(err);
+                }
+                topicImage.id = image.id;
+                // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
+                User.getUserById(req.session.user._id, function (err, user) {
+                    user.score += 5;
+                    user.image_count += 1;
+                    user.save();
+                    req.session.user.image_count += 1;
+                    req.session.user = user;
+                    topicImage.author_id = user.id;
+                    topicImage.author = user;
+                    ep.emit('new_image', topicImage);
+
+                });
+
+            });
+
         });
 
     });

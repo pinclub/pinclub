@@ -115,9 +115,11 @@ var config = {
     secretKey: 'your secret key',
     bucket: 'your bucket name',
     origin: 'http://your qiniu domain',
+    // 7牛中配置的样式, 分别为 [ 小, 中, 大, 原始 ]
+    style: ['_86', '_430', '_658', '_origin'],
     // 如果vps在国外，请使用 http://up.qiniug.com/ ，这是七牛的国际节点
     // 如果在国内，此项请留空
-    uploadURL: 'http://xxxxxxxx',
+    uploadURL: 'http://xxxxxxxx'
   },
 
   // 文件上传配置
