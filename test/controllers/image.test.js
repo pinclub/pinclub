@@ -58,7 +58,6 @@ describe('test/controllers/image.test.js', function () {
                     res.text.should.containEql('_86');
                     res.text.should.containEql('_430');
                     res.text.should.containEql('_fixed');
-                    res.text.should.containEql('image_colors');
                     done(err);
                 });
         });
