@@ -4,8 +4,8 @@ cache:
 
 
 stages:
-  - test
   - build
+  - test
   - deploy
 
 #test:
@@ -17,19 +17,18 @@ stages:
 #    - ./node_modules/.bin/istanbul cover _mocha
 #  tags:
 #    - jinwan-ci
-
-test:
-  stage: test
-  script:
-    - makeproject jiuyanlou test-cov
-  tags:
-    - jinwan-ci
-
 build:
   stage: build
   script:
     - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
     - makeproject jiuyanlou build
+  tags:
+    - jinwan-ci
+
+test:
+  stage: test
+  script:
+    - makeproject jiuyanlou test-cov
   tags:
     - jinwan-ci
 
