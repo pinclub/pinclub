@@ -5,6 +5,7 @@ node_modules
 .naeindex
 coverage.html
 .monitor
+testcov
 
 *.hashed.*
 *.min.*.js

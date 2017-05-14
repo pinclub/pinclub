@@ -110,7 +110,7 @@ describe('test/controllers/user.test.js', function () {
     it('should change user password', function (done) {
       userInfo = _.cloneDeep(userInfo);
       userInfo.action = 'change_password';
-      userInfo.old_pass = 'pass';
+      userInfo.old_pass = 'password';
       userInfo.new_pass = 'passwordchanged';
       request.post('/setting')
       .set('Cookie', support.normalUserCookie)

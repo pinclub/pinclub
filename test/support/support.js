@@ -13,7 +13,7 @@ function randomInt() {
 
 var createUser = exports.createUser = function (callback) {
     var key = new Date().getTime() + '_' + randomInt();
-    tools.bhash('pass', function (err, passhash) {
+    tools.bhash('password', function (err, passhash) {
         User.newAndSave('alsotang' + key, 'alsotang' + key, passhash, 'alsotang' + key + '@gmail.com', '', false, callback);
     });
 };
@@ -70,12 +70,15 @@ ep.fail(function (err) {
     console.error(err);
 });
 
-ep.all('user', 'user2', 'admin', function (user, user2, admin, board) {
+ep.all('user', 'user2', 'user3', 'admin', function (user, user2, user3, admin) {
     exports.normalUser = user;
     exports.normalUserCookie = mockUser(user);
 
     exports.normalUser2 = user2;
     exports.normalUser2Cookie = mockUser(user2);
+
+    exports.activedUser = user3;
+    exports.activedUserCookie = mockUser(user3);
 
     var adminObj = admin.toObject();
     adminObj.is_admin = true;
@@ -85,9 +88,27 @@ ep.all('user', 'user2', 'admin', function (user, user2, admin, board) {
     createTopic(user._id, ep.done('topic'));
     createBoard(user._id, '', ep.done('board'));
 });
+
+ep.on('needActive', function (user) {
+    user.active = true;
+    user.save(function(err){
+        ep.emit('user3', user);
+    });
+});
+
+ep.on('emptyAccessToken', function (user) {
+    user.accessToken = undefined;
+    user.active = true;
+    user.save(function(err){
+        ep.emit('user2', user);
+    });
+});
+
 createUser(ep.done('user'));
-createUser(ep.done('user2'));
+createUser(ep.done('emptyAccessToken'));
+createUser(ep.done('needActive'));
 createUser(ep.done('admin'));
+
 
 ep.all('board', function (board) {
     exports.testBoard = board;
