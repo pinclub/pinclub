@@ -458,7 +458,6 @@ exports.de_collect = function (req, res, next) {
 // DONE (hhdem) 更改hash参数生成方式为 ghash
 // DONE (hhdem) 上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取
 exports.upload = function (req, res, next) {
-    console.info('start uploading', new Date());
     var isFileLimit = false;
     var uploadResult;
     var topicImage = {};
@@ -477,7 +476,7 @@ exports.upload = function (req, res, next) {
             });
             return;
         });
-        if (!!topicImage.board && topicImage.board == 'undefined') {
+        if (!topicImage.board || (!!topicImage.board && topicImage.board == 'undefined')) {
             res.json({
                 success: false,
                 msg: '未选择对应的Board'

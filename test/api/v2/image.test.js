@@ -11,11 +11,13 @@ describe('test/api/v2/image.test.js', function () {
     before(function (done) {
         support.createUser(function (err, user) {
             mockUser = user;
-            support.createImage(user.id, function (err, image) {
-                mockImage = image;
-                support.createReply(image.id, user.id, function (err, reply) {
-                    support.createSingleUp(reply.id, user.id, function (err, reply) {
-                        done();
+            support.createBoard(user.id, '', function (err, board) {
+                support.createImage(user.id, board, function (err, image) {
+                    mockImage = image;
+                    support.createReply(image.id, user.id, function (err, reply) {
+                        support.createSingleUp(reply.id, user.id, function (err, reply) {
+                            done();
+                        });
                     });
                 });
             });
