@@ -62,6 +62,10 @@ describe('test/controllers/image.test.js', function () {
                     done(err);
                 });
         });
+
+        // TODO 增加 Image 图片上传测试用例: 上传后计数统计是否正确
+        // TODO 增加 Image 图片上传测试用例: 上传后 hash 值是否正确
+
     });
 
 });

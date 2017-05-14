@@ -152,7 +152,7 @@ exports.sim = function (req, res, next) {
             return res.send({success: false, error_msg: '图片不存在'});
         }
         var options = {limit: limit, sort: '-_id'};
-        // TODO 考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法, 最终改了 gHash
+        // DONE (hhdem) 考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法, 最终改了 gHash, 依然需要优化
         TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 25"}, options, ep.done('topics', function (topics) {
             return topics;
         }));

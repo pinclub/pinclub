@@ -49,4 +49,5 @@ describe('test/api/v2/image.test.js', function () {
         });
     });
 
+    // TODO 增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算
 });

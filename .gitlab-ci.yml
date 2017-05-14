@@ -18,7 +18,7 @@ stages:
 #  tags:
 #    - jinwan-ci
 
-deploy:
+deploy_staging:
   stage: deploy
   script:
     - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
@@ -26,6 +26,9 @@ deploy:
     - restart jiuyanlou app.js
     - npmrun apidoc jiuyanlou
     - npmrun todo jiuyanlou
+  environment:
+      name: staging
+      url: http://www.jiuyanlou.com
   only:
     - master
   tags:
