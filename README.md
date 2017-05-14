@@ -3,6 +3,7 @@ Pinclub
 
 [![node version][node-image]][node-url]
 [![build status](http://47.52.20.174/liubing/nodeclub/badges/master/build.svg)](http://47.52.20.174/liubing/nodeclub/commits/master)
+[![coverage report](http://47.52.20.174/liubing/nodeclub/badges/master/coverage.svg)](http://47.52.20.174/liubing/nodeclub/commits/master)
 
 [node-image]: https://img.shields.io/badge/node.js-%3E=_4.2-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/

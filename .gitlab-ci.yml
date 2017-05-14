@@ -5,7 +5,7 @@ cache:
 
 stages:
   - test
-  - eslint
+  - build
   - deploy
 
 #test:
@@ -18,11 +18,20 @@ stages:
 #  tags:
 #    - jinwan-ci
 
-deploy_staging:
-  stage: deploy
+test:
+  stage: test
+  script:
+    - makeproject jiuyanlou test-cov
+
+build:
+  stage: build
   script:
     - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
     - makeproject jiuyanlou build
+
+deploy_staging:
+  stage: deploy
+  script:
     - restart jiuyanlou app.js
     - npmrun apidoc jiuyanlou
     - npmrun todo jiuyanlou
