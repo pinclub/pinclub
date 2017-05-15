@@ -10,6 +10,8 @@ var UserModel = models.User;
 var ReplyProxy = require('../../proxy').Reply;
 var config = require('../../config');
 var eventproxy = require('eventproxy');
+var at = require('../../common/at');
+var renderHelper = require('../../common/render_helper');
 var structureHelper = require('../../common/structure_helper');
 var validator = require('validator');
 
@@ -127,6 +129,7 @@ exports.index = function (req, res, next) {
  *     HTTP/1.1 200 OK
  */
 exports.sim = function (req, res, next) {
+    var limit = parseInt(req.query.limit, 10) || 3;
     if (!req.query.id) {
         return res.status(500).send({success: false, error_msg: "必要参数id未传."});
     }
@@ -134,16 +137,12 @@ exports.sim = function (req, res, next) {
     if (!req.query.sid) {
         return res.status(500).send({success: false, error_msg: "必要参数sid未传."});
     }
-    var limit = 3;
-    if (req.query.limit && req.query.limit <= 10) {
-        limit = req.query.limit;
-    }
     var topicId = req.query.id;
     var sId = req.query.sid;
     var ep = new eventproxy();
     ep.fail(next);
 
-    TopicProxy.getTopicById(topicId, function (err, topic, tags) {
+    TopicProxy.getTopicById(topicId, function (err, topic) {
         if (err) {
             return next(err);
         }
@@ -153,17 +152,16 @@ exports.sim = function (req, res, next) {
         }
         var options = {limit: limit, sort: '-_id'};
         // DONE (hhdem) 考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法, 最终改了 gHash, 依然需要优化
-        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 25"}, options, ep.done('topics', function (topics) {
-            return topics;
-        }));
-
-    });
-    ep.all('topics', function (topics) {
-        topics = topics.map(function (topic) {
-            return structureHelper.image(topic);
+        TopicProxy.getTopicsByQuery({type:'image', _id:{$lt:sId}, $where: "hammingDistance(this.image_hash, '" + topic.image_hash + "') < 25"}, options, function (err, topics) {
+            if (err) {
+                return next(err);
+            }
+            topics = topics.map(function (topic) {
+                return structureHelper.image(topic);
+            });
+            res.send({success: true, data: topics});
         });
 
-        res.send({success: true, data: topics});
     });
 };
 
@@ -432,6 +430,21 @@ exports.show = function (req, res, next) {
         return res.send({success: false, error_msg: '不是有效的话题id'});
     }
 
+    ep.all('full_topic', 'boardImages', 'liked_topics', function (full_topic, boardImages, liked_topics) {
+
+        full_topic.board.images = boardImages;
+
+        full_topic = structureHelper.image(full_topic);
+        full_topic.liked = false;
+        if (!!liked_topics && _.isArray(liked_topics)) {
+            full_topic.liked = liked_topics.length > 0;
+        }
+        if (!!full_topic.image && full_topic.image.lastIndexOf('.') < 0) {
+            full_topic.image_fixed = full_topic.image + config.qn_access.style[2];
+        }
+        res.send({success: true, data: full_topic});
+    });
+
     TopicProxy.getFullImage(topicId, ep.done(function (msg, topic, replies) {
         if (!topic) {
             res.status(404);
@@ -468,21 +481,6 @@ exports.show = function (req, res, next) {
     } else {
         TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, [topicId], {}, ep.done('liked_topics'));
     }
-
-    ep.all('full_topic', 'boardImages', 'liked_topics', function (full_topic, boardImages, liked_topics) {
-
-        full_topic.board.images = boardImages;
-
-        full_topic = structureHelper.image(full_topic);
-        full_topic.liked = false;
-        if (!!liked_topics && _.isArray(liked_topics)) {
-            full_topic.liked = liked_topics.length > 0;
-        }
-        if (!!full_topic.image && full_topic.image.lastIndexOf('.') < 0) {
-            image.image_fixed = full_topic.image + config.qn_access.style[2];
-        }
-        res.send({success: true, data: full_topic});
-    });
 
     ep.fail(function(err){
         console.error(err);

@@ -501,6 +501,7 @@ exports.upload = function (req, res, next) {
                     return;
                 }
                 topicImage.image_hash = tools.hexToBinary(hash.toString('hex'));
+                ep.emit('gen_image_hash');
             });
             getColors(fileBuffer, mimetype).then(colors => {
                 console.info('start image colors', new Date());
@@ -512,6 +513,7 @@ exports.upload = function (req, res, next) {
                 });
                 topicImage.image_colors = hexColor;
                 topicImage.image_colors_rgb = rgbColor;
+                ep.emit('gen_image_color');
             });
         });
 
@@ -583,26 +585,29 @@ exports.upload = function (req, res, next) {
                 ep.emit('board_update', board);
             });
 
-            Image.newAndSaveImage(topicImage, function (err, image) {
-                console.info('start new image', new Date());
-                if (err) {
-                    return next(err);
-                }
-                topicImage.id = image.id;
-                // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
-                User.getUserById(req.session.user._id, function (err, user) {
-                    user.score += 5;
-                    user.image_count += 1;
-                    user.save();
-                    req.session.user.image_count += 1;
-                    req.session.user = user;
-                    topicImage.author_id = user.id;
-                    topicImage.author = user;
-                    ep.emit('new_image', topicImage);
+            ep.all('gen_image_hash', 'gen_image_color', function(){
+                Image.newAndSaveImage(topicImage, function (err, image) {
+                    console.info('start new image', new Date());
+                    if (err) {
+                        return next(err);
+                    }
+                    topicImage.id = image.id;
+                    // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
+                    User.getUserById(req.session.user._id, function (err, user) {
+                        user.score += 5;
+                        user.image_count += 1;
+                        user.save();
+                        req.session.user.image_count += 1;
+                        req.session.user = user;
+                        topicImage.author_id = user.id;
+                        topicImage.author = user;
+                        ep.emit('new_image', topicImage);
+
+                    });
 
                 });
-
             });
+
 
         });
 
