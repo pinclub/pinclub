@@ -1,5 +1,5 @@
 var _            = require('lodash');
-var EventProxy   = require('EventProxy');
+var EventProxy   = require('eventproxy');
 var UserProxy    = require('../../proxy').User;
 var TopicProxy   = require('../../proxy').Topic;
 var ReplyProxy   = require('../../proxy').Reply;
