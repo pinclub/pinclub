@@ -1,4 +1,4 @@
-var eventproxy = require('eventproxy');
+var EventProxy = require('eventproxy');
 var validator  = require('validator');
 var Topic      = require('../../proxy').Topic;
 var User       = require('../../proxy').User;
@@ -12,7 +12,7 @@ var create = function (req, res, next) {
   var content  = req.body.content || '';
   var reply_id = req.body.reply_id;
 
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   var str = validator.trim(content);

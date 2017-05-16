@@ -2,7 +2,7 @@ var Models         = require('../models');
 var User           = Models.User;
 var authMiddleWare = require('../middlewares/auth');
 var tools          = require('../common/tools');
-var eventproxy     = require('eventproxy');
+var EventProxy     = require('eventproxy');
 var uuid           = require('node-uuid');
 var validator      = require('validator');
 
@@ -59,7 +59,7 @@ exports.create = function (req, res, next) {
   var isnew = req.body.isnew;
   var loginname = validator.trim(req.body.name || '').toLowerCase();
   var password = validator.trim(req.body.pass || '');
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   if (!profile) {

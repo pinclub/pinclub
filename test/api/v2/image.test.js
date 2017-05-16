@@ -53,6 +53,17 @@ describe('test/api/v2/image.test.js', function () {
                     done();
                 });
         });
+
+        it('should return images when signed in', function (done) {
+            request.get('/api/v2/images')
+                .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.true();
+                    res.body.data.length.should.be.above(0);
+                    done();
+                });
+        });
     });
 
     // TODO 增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算
@@ -237,6 +248,58 @@ describe('test/api/v2/image.test.js', function () {
                     res.body.success.should.true();
                     res.text.should.containEql(mockImage.title);
                     res.text.should.containEql(mockImage.content);
+                    done();
+                });
+        });
+
+    });
+
+    describe('post /api/v2/images/get', function () {
+        var wouldBeGetToBoard;
+        before(function (done) {
+            support.createBoard(support.normalUser.id, '', function (err, board) {
+                wouldBeGetToBoard = board;
+                done();
+            });
+        });
+        it('should return false if not send topic_id', function (done) {
+            request.post('/api/v2/images/get')
+                .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.false();
+                    res.text.should.containEql('topic_id 不能为空');
+                    res.text.should.containEql('参数验证失败');
+                    done();
+                });
+        });
+        it('should return false if not send board_id', function (done) {
+            request.post('/api/v2/images/get')
+                .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
+                .send({
+                    topic_id: 'xxxxx'
+                })
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.false();
+                    res.text.should.containEql('board_id 不能为空');
+                    res.text.should.containEql('参数验证失败');
+                    done();
+                });
+        });
+
+        it('should return true after get an image', function (done) {
+            request.post('/api/v2/images/get')
+                .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
+                .send({
+                    topic_id: mockImage.id,
+                    board_id: wouldBeGetToBoard.id,
+                    desc: 'get image desc'
+                })
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.true();
+                    res.text.should.containEql('get image desc');
                     done();
                 });
         });

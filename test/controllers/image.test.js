@@ -9,14 +9,21 @@ var pedding = require('pedding');
 
 describe('test/controllers/image.test.js', function () {
 
-    var imagePath, mockUser, mockBoard;
+    var imagePath, mockUser, mockBoard, mockImage;
     before(function (done) {
         imagePath = path.join(__dirname, '/test.JPG');
         support.createUser(function (err, user) {
             mockUser = user;
             support.createBoard(user.id, '', function (err, board) {
                 mockBoard = board;
-                done();
+                support.createImage(user.id, board, function (err, image) {
+                    mockImage = image;
+                    support.createReply(image.id, user.id, function (err, reply) {
+                        support.createSingleUp(reply.id, user.id, function (err, reply) {
+                            done();
+                        });
+                    });
+                });
             });
         });
     });
@@ -67,4 +74,170 @@ describe('test/controllers/image.test.js', function () {
 
     });
 
+    describe('#delete', function () {
+        var wouldBeDeleteImage;
+        before(function (done) {
+            support.createImage(support.normalUser._id, mockBoard, function (err, image) {
+                wouldBeDeleteImage = image;
+                done(err);
+            });
+        });
+
+        it('should not delete a image when not author', function (done) {
+            request.post('/image/' + wouldBeDeleteImage._id + '/delete')
+                .set('Cookie', support.normalUser2Cookie)
+                .expect(403, function (err, res) {
+                    res.body.should.eql({success: false, message: '无权限'});
+                    done(err);
+                });
+        });
+
+        it('should delele a image', function (done) {
+            request.post('/image/' + wouldBeDeleteImage._id + '/delete')
+                .set('Cookie', support.normalUserCookie)
+                .expect(200, function (err, res) {
+                    res.body.should.eql({ success: true, message: '话题已被删除。' });
+                    done(err);
+                });
+        });
+    });
+
+    describe('#top', function () {
+        it('should top a image', function (done) {
+            request.post('/image/' + support.testTopic._id + '/top')
+                .set('Cookie', support.adminUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('此话题已置顶。');
+                    done(err);
+                });
+        });
+
+        it('should untop a image', function (done) {
+            request.post('/image/' + support.testTopic._id + '/top')
+                .set('Cookie', support.adminUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('此话题已取消置顶');
+                    done(err);
+                });
+        });
+    });
+
+    describe('#good', function () {
+        it('should good a image', function (done) {
+            request.post('/image/' + support.testTopic._id + '/good')
+                .set('Cookie', support.adminUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('此话题已加精。');
+                    done(err);
+                });
+        });
+
+        it('should ungood a image', function (done) {
+            request.post('/image/' + support.testTopic._id + '/good')
+                .set('Cookie', support.adminUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('此话题已取消加精。');
+                    done(err);
+                });
+        });
+    });
+
+    describe('#collect', function () {
+        it('should collect a image', function (done) {
+            request.post('/image/collect')
+                .send({
+                    image_id: support.testTopic._id,
+                })
+                .set('Cookie', support.normalUser2Cookie)
+                .expect(200, function (err, res) {
+                    res.body.should.eql({status: 'success'});
+                    done(err);
+                })
+        });
+
+        it('should not collect a image twice', function (done) {
+            request.post('/image/collect')
+                .send({
+                    image_id: support.testTopic._id,
+                })
+                .set('Cookie', support.normalUser2Cookie)
+                .expect(200, function (err, res) {
+                    res.body.should.eql({status: 'failed'});
+                    done(err);
+                })
+        })
+    })
+
+    describe('#de_collect', function () {
+        it('should decollect a image', function (done) {
+            request.post('/image/de_collect')
+                .send({
+                    image_id: support.testTopic._id,
+                })
+                .set('Cookie', support.normalUser2Cookie)
+                .expect(200, function (err, res) {
+                    res.body.should.eql({status: 'success'});
+                    done(err);
+                });
+        });
+
+        it('should not decollect a non-exist topic_collect', function (done) {
+            request.post('/image/de_collect')
+                .send({
+                    image_id: support.testTopic._id,
+                })
+                .set('Cookie', support.normalUser2Cookie)
+                .expect(200, function (err, res) {
+                    res.body.should.eql({status: 'failed'});
+                    done(err);
+                });
+        });
+    });
+
+    describe('#lock', function () {
+        it('should lock a image', function (done) {
+            request.post('/image/' + support.testTopic._id + '/lock')
+                .set('Cookie', support.adminUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('此话题已锁定。');
+                    done(err);
+                });
+        });
+
+        it('should not reply a locked image', function (done) {
+            var topic = support.testTopic;
+            request.post('/' + topic._id + '/reply')
+                .set('Cookie', support.normalUserCookie)
+                .send({
+                    r_content: 'test reply 1'
+                })
+                .expect(403)
+                .end(function (err, res) {
+                    res.text.should.equal('此主题已锁定。');
+                    done(err);
+                });
+        });
+
+        it('should unlock a image', function (done) {
+            request.post('/image/' + support.testTopic._id + '/lock')
+                .set('Cookie', support.adminUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('此话题已取消锁定。');
+                    done(err);
+                });
+        });
+
+        it('should reply a unlocked image', function (done) {
+            var topic = support.testTopic;
+            request.post('/' + topic._id + '/reply')
+                .set('Cookie', support.normalUserCookie)
+                .send({
+                    r_content: 'test reply 1'
+                })
+                .expect(302)
+                .end(function (err, res) {
+                    done(err);
+                });
+        });
+    });
 });

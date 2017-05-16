@@ -53,9 +53,6 @@ var uploader = new Q.Uploader({
                 },
                 {orientation: true} // Options
             );
-            //task.file = li;
-            var html =
-                '<div class="u-img">'+li+'</div><span class="u-loaded"></span><span class="u-total"></span>';
 
 
             //self.previewImage(boxImage, task, ops);
@@ -67,7 +64,7 @@ var uploader = new Q.Uploader({
     on: {
         //添加之前触发
         add: function (task) {
-            if (task.disabled) return alert("允许上传的文件格式为：" + this.ops.allows);
+            if (task.disabled) {return alert("允许上传的文件格式为：" + this.ops.allows)}
             $('#upload_view').show();
             $('#upload_area').hide();
         },
@@ -90,7 +87,7 @@ var uploader = new Q.Uploader({
         },
         //上传完成后触发
         complete: function (task) {
-            if (task.state != Q.Uploader.COMPLETE) return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!");
+            if (task.state != Q.Uploader.COMPLETE) {return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!")}
 
             var json = task.json;
             if (!json.success) {

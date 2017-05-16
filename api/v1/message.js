@@ -1,4 +1,4 @@
-var eventproxy = require('eventproxy');
+var EventProxy = require('eventproxy');
 var Message    = require('../../proxy').Message;
 var at           = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
@@ -7,7 +7,7 @@ var _          = require('lodash');
 var index = function (req, res, next) {
   var user_id = req.user._id;
   var mdrender = req.query.mdrender === 'false' ? false : true;
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   ep.all('has_read_messages', 'hasnot_read_messages', function (has_read_messages, hasnot_read_messages) {
@@ -22,7 +22,7 @@ var index = function (req, res, next) {
 
   ep.all('has_read', 'unread', function (has_read, unread) {
     [has_read, unread].forEach(function (msgs, idx) {
-      var epfill = new eventproxy();
+      var epfill = new EventProxy();
       epfill.fail(next);
       epfill.after('message_ready', msgs.length, function (docs) {
         docs = docs.filter(function (doc) {
@@ -56,7 +56,7 @@ exports.index = index;
 
 var markAll = function (req, res, next) {
   var user_id = req.user._id;
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
   Message.getUnreadMessageByUserId(user_id, ep.done('unread', function (docs) {
     docs.forEach(function (doc) {
@@ -83,7 +83,7 @@ exports.markAll = markAll;
 
 var markOne = function (req, res, next) {
   var msg_id = req.params.msg_id;
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
   Message.updateOneMessageToRead(msg_id, ep.done('marked_result', function (result) {
     return result;
@@ -103,7 +103,7 @@ exports.markOne = markOne;
 var count = function (req, res, next) {
   var userId = req.user.id;
 
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   Message.getMessagesCount(userId, ep.done(function (count) {

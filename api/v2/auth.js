@@ -1,9 +1,7 @@
-var _            = require('lodash');
-var eventproxy   = require('eventproxy');
+var EventProxy   = require('eventproxy');
 var jwt          = require('jsonwebtoken');
 var UserModel   = require('../../models').User;
 var UserProxy    = require('../../proxy').User;
-var TopicProxy   = require('../../proxy').Topic;
 var authMiddleWare = require('../../middlewares/auth');
 var tools        = require('../../common/tools');
 var config       = require('../../config');
@@ -46,7 +44,7 @@ exports.signIn = function (req, res, next) {
         }
     });
 
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     var loginname = req.body.loginname;
     var password = req.body.password;
 

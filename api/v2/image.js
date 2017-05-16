@@ -1,15 +1,11 @@
 var _ = require('lodash');
-var models = require('../../models');
-var TopicModel = models.Topic;
 var TopicProxy = require('../../proxy').Topic;
 var TopicLike = require('../../proxy').TopicLike;
 var TopicBoard = require('../../proxy').TopicBoard;
 var BoardProxy = require('../../proxy').Board;
 var UserProxy = require('../../proxy').User;
-var UserModel = models.User;
-var ReplyProxy = require('../../proxy').Reply;
 var config = require('../../config');
-var eventproxy = require('eventproxy');
+var EventProxy = require('EventProxy');
 var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
 var structureHelper = require('../../common/structure_helper');
@@ -76,7 +72,7 @@ exports.index = function (req, res, next) {
     query.type = type;
     var options = {skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at'};
 
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     ep.fail(next);
 
     ep.all('topics', 'liked_topics', function (topics, liked_topics) {
@@ -139,7 +135,7 @@ exports.sim = function (req, res, next) {
     }
     var topicId = req.query.id;
     var sId = req.query.sid;
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     ep.fail(next);
 
     TopicProxy.getTopicById(topicId, function (err, topic) {
@@ -188,7 +184,7 @@ exports.like = function (req, res, next) {
         return res.status(500).send({success: false, error_msg: "必要参数id未传."});
     }
 
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     ep.fail(next);
     var topicId = req.body.id;
     var currentUser = req.session.user;
@@ -255,8 +251,8 @@ exports.like = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            if (removeResult.result.n == 0) {
-                return res.json({success: false})
+            if (removeResult.result.n === 0) {
+                return res.json({success: false});
             }
 
             UserProxy.getUserById(currentUser.id, function (err, user) {
@@ -316,7 +312,7 @@ exports.getImage = function (req, res, next) {
             }
         }
     });
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     var topic_id = req.body.topic_id;
     var board_id = req.body.board_id;
     var desc = req.body.desc;
@@ -423,7 +419,7 @@ exports.show = function (req, res, next) {
     var topicId = String(req.params.id);
 
     var mdrender = req.query.mdrender === 'false' ? false : true;
-    var ep = new eventproxy();
+    var ep = new EventProxy();
 
     if (!validator.isMongoId(topicId)) {
         res.status(400);
@@ -473,7 +469,7 @@ exports.show = function (req, res, next) {
             return reply;
         });
 
-        ep.emit('full_topic', topic)
+        ep.emit('full_topic', topic);
     }));
 
     if (!req.session.user) {

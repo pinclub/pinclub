@@ -4,9 +4,8 @@ var TopicProxy = require('../../proxy').Topic;
 var TopicCollect = require('../../proxy').TopicCollect;
 var UserProxy = require('../../proxy').User;
 var UserModel = models.User;
-var ReplyProxy = require('../../proxy').Reply;
 var config = require('../../config');
-var eventproxy = require('eventproxy');
+var EventProxy = require('eventproxy');
 var _ = require('lodash');
 var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
@@ -73,7 +72,7 @@ var index = function (req, res, next) {
     query.deleted = false;
     var options = {skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at'};
 
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     ep.fail(next);
 
     TopicModel.find(query, '', options, ep.done('topics'));
@@ -107,7 +106,7 @@ var show = function (req, res, next) {
     var topicId = String(req.params.id);
 
     var mdrender = req.query.mdrender === 'false' ? false : true;
-    var ep = new eventproxy();
+    var ep = new EventProxy();
 
     if (!validator.isMongoId(topicId)) {
         res.status(400);
@@ -146,21 +145,21 @@ var show = function (req, res, next) {
             return reply;
         });
 
-        ep.emit('full_topic', topic)
+        ep.emit('full_topic', topic);
     }));
 
 
     if (!req.user) {
-        ep.emitLater('is_collect', null)
+        ep.emitLater('is_collect', null);
     } else {
-        TopicCollect.getTopicCollect(req.user._id, topicId, ep.done('is_collect'))
+        TopicCollect.getTopicCollect(req.user._id, topicId, ep.done('is_collect'));
     }
 
     ep.all('full_topic', 'is_collect', function (full_topic, is_collect) {
         full_topic.is_collect = !!is_collect;
 
         res.send({success: true, data: full_topic});
-    })
+    });
 
 };
 
@@ -199,7 +198,7 @@ var create = function (req, res, next) {
             return next(err);
         }
 
-        var proxy = new eventproxy();
+        var proxy = new EventProxy();
         proxy.fail(next);
 
         proxy.all('score_saved', function () {
@@ -275,7 +274,7 @@ exports.update = function (req, res, next) {
                 });
             });
         } else {
-            res.status(403)
+            res.status(403);
             return res.send({success: false, error_msg: '对不起，你不能编辑此话题。'});
         }
     });

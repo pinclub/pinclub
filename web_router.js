@@ -33,7 +33,6 @@ var router = express.Router();
 
 // pic home page
 router.get('/', site.index_pic);
-router.get('/pics/partial', site.pic_list_partial);
 
 // sitemap
 router.get('/sitemap.xml', site.sitemap);
@@ -97,15 +96,20 @@ router.post('/topic/:tid/edit', auth.userRequired, topic.update);
 router.post('/topic/collect', auth.userRequired, topic.collect); // 关注某话题
 router.post('/topic/de_collect', auth.userRequired, topic.de_collect); // 取消关注某话题
 
-// 新建图片界面
-router.get('/image/create', auth.userRequired, image.create);
-
 // reply controller
 router.post('/:topic_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复
 router.get('/reply/:reply_id/edit', auth.userRequired, reply.showEdit); // 修改自己的评论页
 router.post('/reply/:reply_id/edit', auth.userRequired, reply.update); // 修改某评论
 router.post('/reply/:reply_id/delete', auth.userRequired, reply.delete); // 删除某评论
 router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点赞
+
+//
+router.post('/image/:tid/delete', auth.userRequired, image.delete);
+router.post('/image/collect', auth.userRequired, image.collect); // 关注某图片话题
+router.post('/image/de_collect', auth.userRequired, image.de_collect); // 取消关注某图片话题
+router.post('/image/:tid/top', auth.adminRequired, image.top);  // 将某图片话题置顶
+router.post('/image/:tid/good', auth.adminRequired, image.good); // 将某图片话题加精
+router.post('/image/:tid/lock', auth.adminRequired, image.lock); // 锁定图片主题，不能再回复
 
 // upload
 router.post('/upload', auth.userRequired, topic.upload); //上传图片

@@ -6,13 +6,8 @@
  * Module dependencies.
  */
 
-var validator = require('validator');
 var getColors = require('get-image-colors');
 var path = require('path');
-var util = require('util');
-var rotator = require('auto-rotate');
-var mongoose = require('mongoose');
-var inspect = require('util').inspect;
 var at = require('../common/at');
 var User = require('../proxy').User;
 var Image = require('../proxy').Topic;
@@ -22,251 +17,16 @@ var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
 var store = require('../common/store');
 var config = require('../config');
-var _ = require('lodash');
-var cache = require('../common/cache');
-var logger = require('../common/logger');
 var structureHelper = require('../common/structure_helper');
 
 var ghash = require('ghash');
+
 /**
- * Image page
  *
- * @param  {HttpRequest} req
- * @param  {HttpResponse} res
- * @param  {Function} next
+ * @param req
+ * @param res
+ * @param next
  */
-exports.index = function (req, res, next) {
-    function isUped(user, reply) {
-        if (!reply.ups) {
-            return false;
-        }
-        return reply.ups.indexOf(user._id) !== -1;
-    }
-
-    var image_id = req.params.tid;
-    var currentUser = req.session.user;
-
-    if (image_id.length !== 24) {
-        return res.render404('此图片不存在或已被删除。');
-    }
-    var events = ['image', 'other_images', 'no_reply_images', 'is_collect'];
-    var ep = EventProxy.create(events,
-        function (image, other_images, no_reply_images, is_collect) {
-            res.render('image/index', {
-                image: image,
-                author_other_images: other_images,
-                no_reply_images: no_reply_images,
-                is_uped: isUped,
-                is_collect: is_collect,
-            });
-        });
-
-    ep.fail(next);
-
-    Image.getFullTopic(image_id, ep.done(function (message, image, author, replies) {
-        if (message) {
-            logger.error('getFullImage error image_id: ' + image_id)
-            return res.renderError(message);
-        }
-
-        image.visit_count += 1;
-        image.save();
-
-        image.author = author;
-        image.replies = replies;
-
-        // 点赞数排名第三的回答，它的点赞数就是阈值
-        image.reply_up_threshold = (function () {
-            var allUpCount = replies.map(function (reply) {
-                return reply.ups && reply.ups.length || 0;
-            });
-            allUpCount = _.sortBy(allUpCount, Number).reverse();
-
-            var threshold = allUpCount[2] || 0;
-            if (threshold < 3) {
-                threshold = 3;
-            }
-            return threshold;
-        })();
-
-        ep.emit('image', image);
-
-        // get other_Images
-        var options = {limit: 5, sort: '-last_reply_at'};
-        var query = {author_id: image.author_id, _id: {'$nin': [image._id]}};
-        Image.getTopicsByQuery(query, options, ep.done('other_images'));
-
-        // get no_reply_images
-        cache.get('no_reply_images', ep.done(function (no_reply_images) {
-            if (no_reply_images) {
-                ep.emit('no_reply_images', no_reply_images);
-            } else {
-                Image.getTopicsByQuery(
-                    {reply_count: 0, tab: {$ne: 'job'}},
-                    {limit: 5, sort: '-create_at'},
-                    ep.done('no_reply_images', function (no_reply_images) {
-                        cache.set('no_reply_images', no_reply_images, 60 * 1);
-                        return no_reply_images;
-                    }));
-            }
-        }));
-    }));
-
-    if (!currentUser) {
-        ep.emit('is_collect', null);
-    } else {
-        ImageCollect.getTopicCollect(currentUser._id, image_id, ep.done('is_collect'))
-    }
-};
-
-exports.create = function (req, res, next) {
-    res.render('image/edit', {
-        tabs: config.tabs
-    });
-};
-
-
-exports.put = function (req, res, next) {
-    var title = validator.trim(req.body.title);
-    var tab = validator.trim(req.body.tab);
-    var content = validator.trim(req.body.t_content);
-
-    // 得到所有的 tab, e.g. ['ask', 'share', ..]
-    var allTabs = config.tabs.map(function (tPair) {
-        return tPair[0];
-    });
-
-    // 验证
-    var editError;
-    if (title === '') {
-        editError = '标题不能是空的。';
-    } else if (title.length < 5 || title.length > 100) {
-        editError = '标题字数太多或太少。';
-    } else if (!tab || allTabs.indexOf(tab) === -1) {
-        editError = '必须选择一个版块。';
-    } else if (content === '') {
-        editError = '内容不可为空';
-    }
-    // END 验证
-
-    if (editError) {
-        res.status(422);
-        return res.render('image/edit', {
-            edit_error: editError,
-            title: title,
-            content: content,
-            tabs: config.tabs
-        });
-    }
-
-    Image.newAndSave(title, content, tab, req.session.user._id, function (err, image) {
-        if (err) {
-            return next(err);
-        }
-
-        var proxy = new EventProxy();
-
-        proxy.all('score_saved', function () {
-            res.redirect('/image/' + image._id);
-        });
-        proxy.fail(next);
-        User.getUserById(req.session.user._id, proxy.done(function (user) {
-            user.score += 5;
-            user.image_count += 1;
-            user.save();
-            req.session.user = user;
-            proxy.emit('score_saved');
-        }));
-
-        //发送at消息
-        at.sendMessageToMentionUsers(content, image._id, req.session.user._id);
-    });
-};
-
-exports.showEdit = function (req, res, next) {
-    var image_id = req.params.tid;
-
-    Image.getTopicById(image_id, function (err, image, tags) {
-        if (!image) {
-            res.render404('此话题不存在或已被删除。');
-            return;
-        }
-
-        if (String(image.author_id) === String(req.session.user._id) || req.session.user.is_admin) {
-            res.render('image/edit', {
-                action: 'edit',
-                image_id: image._id,
-                title: image.title,
-                content: image.content,
-                tab: image.tab,
-                tabs: config.tabs
-            });
-        } else {
-            res.renderError('对不起，你不能编辑此图片。', 403);
-        }
-    });
-};
-
-exports.update = function (req, res, next) {
-    var image_id = req.params.tid;
-    var title = req.body.title;
-    var tab = req.body.tab;
-    var content = req.body.t_content;
-
-    Image.getTopicById(image_id, function (err, image, tags) {
-        if (!image) {
-            res.render404('此话题不存在或已被删除。');
-            return;
-        }
-
-        if (image.author_id.equals(req.session.user._id) || req.session.user.is_admin) {
-            title = validator.trim(title);
-            tab = validator.trim(tab);
-            content = validator.trim(content);
-
-            // 验证
-            var editError;
-            if (title === '') {
-                editError = '标题不能是空的。';
-            } else if (title.length < 5 || title.length > 100) {
-                editError = '标题字数太多或太少。';
-            } else if (!tab) {
-                editError = '必须选择一个版块。';
-            }
-            // END 验证
-
-            if (editError) {
-                return res.render('image/edit', {
-                    action: 'edit',
-                    edit_error: editError,
-                    image_id: image._id,
-                    content: content,
-                    tabs: config.tabs
-                });
-            }
-
-            //保存话题
-            image.title = title;
-            image.content = content;
-            image.tab = tab;
-            image.update_at = new Date();
-
-            Image.save(function (err) {
-                if (err) {
-                    return next(err);
-                }
-                //发送at消息
-                at.sendMessageToMentionUsers(content, image._id, req.session.user._id);
-
-                res.redirect('/image/' + image._id);
-
-            });
-        } else {
-            res.renderError('对不起，你不能编辑此话题。', 403);
-        }
-    });
-};
-
 exports.delete = function (req, res, next) {
     //删除话题, 话题作者Image_count减1
     //删除回复，回复作者reply_count减1
@@ -431,8 +191,8 @@ exports.de_collect = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            if (removeResult.result.n == 0) {
-                return res.json({status: 'failed'})
+            if (removeResult.result.n === 0) {
+                return res.json({status: 'failed'});
             }
 
             User.getUserById(req.session.user._id, function (err, user) {
@@ -485,6 +245,32 @@ exports.upload = function (req, res, next) {
         }
         var ep = new EventProxy();
         let buffers = [];
+
+        // 生成 hash 和 colors 之后保存图片信息
+        ep.all('board_update', 'gen_image_hash', 'gen_image_color', function(board){
+            Image.newAndSaveImage(topicImage, function (err, image) {
+                console.info('start new image', new Date());
+                if (err) {
+                    return next(err);
+                }
+                topicImage.id = image.id;
+                topicImage.board = board;
+                // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
+                User.getUserById(req.session.user._id, function (err, user) {
+                    user.score += 5;
+                    user.image_count += 1;
+                    user.save();
+                    req.session.user.image_count += 1;
+                    req.session.user = user;
+                    topicImage.author_id = user.id;
+                    topicImage.author = user;
+                    ep.emit('new_image', topicImage);
+
+                });
+
+            });
+        });
+
         // 获得 图片 buffer 进行hash计算
         file.on('data', function(data) {
             console.info('file data ', data);
@@ -517,6 +303,17 @@ exports.upload = function (req, res, next) {
             });
         });
 
+        ep.fail(next);
+
+        ep.all('new_image', function (topicImage) {
+            console.info('start return success', new Date());
+            res.json({
+                success: true,
+                data: [structureHelper.image(topicImage)]
+            });
+            //发送at消息
+            at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author_id);
+        });
 
         store.upload(file, {filename: filename, userId: req.session.user._id}, function (err, result) {
 
@@ -539,9 +336,7 @@ exports.upload = function (req, res, next) {
                 uploadResult = result;
                 let filepath = path.resolve(__dirname, '..' + uploadResult.url);
                 let extname = filepath.substring(filepath.lastIndexOf('.') + 1);
-                let filename_path = filepath.substring(0, filepath.lastIndexOf('.'));
                 let upload_path = uploadResult.url.substring(0, uploadResult.url.lastIndexOf('.'));
-                let filepath_fixed = filename_path + '_fixed.' + extname;
                 let upload_fixed = upload_path + '_fixed.' + extname;
                 let upload_86 = upload_path + '_86.' + extname;
                 let upload_430 = upload_path + '_430.' + extname;
@@ -549,12 +344,6 @@ exports.upload = function (req, res, next) {
                 topicImage.image_fixed = upload_fixed;
                 topicImage.image_86 = upload_86;
                 topicImage.image_430 = upload_430;
-                rotator.autoRotateFile(filepath, filepath_fixed)
-                    .then(function (rotated) {
-                        console.log(rotated ? filepath + ' rotated to ' + filepath_fixed : filepath + ' no rotation was needed');
-                    }).catch(function (err) {
-                        console.error('Got error: ' + err);
-                    });
 
                 topicImage.image = uploadResult.url;
 
@@ -563,17 +352,6 @@ exports.upload = function (req, res, next) {
             topicImage.type = 'image';
             topicImage.author_id = req.session.user;
 
-            ep.fail(next);
-            ep.all('board_update', 'new_image', function (board, topicImage) {
-                console.info('start return success', new Date());
-                topicImage.board = board;
-                res.json({
-                    success: true,
-                    data: [structureHelper.image(topicImage)]
-                });
-                //发送at消息
-                at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author_id);
-            });
 
             Board.getBoardById(topicImage.board, function (err, board) {
                 console.info('start board', new Date());
@@ -584,30 +362,6 @@ exports.upload = function (req, res, next) {
                 board.save();
                 ep.emit('board_update', board);
             });
-
-            ep.all('gen_image_hash', 'gen_image_color', function(){
-                Image.newAndSaveImage(topicImage, function (err, image) {
-                    console.info('start new image', new Date());
-                    if (err) {
-                        return next(err);
-                    }
-                    topicImage.id = image.id;
-                    // DONE (hhdem) 上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做
-                    User.getUserById(req.session.user._id, function (err, user) {
-                        user.score += 5;
-                        user.image_count += 1;
-                        user.save();
-                        req.session.user.image_count += 1;
-                        req.session.user = user;
-                        topicImage.author_id = user.id;
-                        topicImage.author = user;
-                        ep.emit('new_image', topicImage);
-
-                    });
-
-                });
-            });
-
 
         });
 

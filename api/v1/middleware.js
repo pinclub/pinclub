@@ -1,10 +1,10 @@
 var UserModel  = require('../../models').User;
-var eventproxy = require('eventproxy');
+var EventProxy = require('eventproxy');
 var validator  = require('validator');
 
 // 非登录用户直接屏蔽
 var auth = function (req, res, next) {
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   var accessToken = String(req.body.accesstoken || req.query.accesstoken || '');
@@ -29,7 +29,7 @@ exports.auth = auth;
 
 // 非登录用户也可通过
 var tryAuth = function (req, res, next) {
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   var accessToken = String(req.body.accesstoken || req.query.accesstoken || '');

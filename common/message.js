@@ -1,13 +1,11 @@
 var models       = require('../models');
-var eventproxy   = require('eventproxy');
+var EventProxy   = require('eventproxy');
 var Message      = models.Message;
-var User         = require('../proxy').User;
-var messageProxy = require('../proxy/message');
 var _            = require('lodash');
 
 exports.sendReplyMessage = function (master_id, author_id, topic_id, reply_id, callback) {
   callback = callback || _.noop;
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(callback);
 
   var message       = new Message();
@@ -25,7 +23,7 @@ exports.sendReplyMessage = function (master_id, author_id, topic_id, reply_id, c
 
 exports.sendAtMessage = function (master_id, author_id, topic_id, reply_id, callback) {
   callback = callback || _.noop;
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(callback);
 
   var message       = new Message();

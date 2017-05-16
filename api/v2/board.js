@@ -1,10 +1,7 @@
-var models = require('../../models');
-var BoardModel = models.Board;
 var BoardProxy = require('../../proxy').Board;
 var UserProxy = require('../../proxy').User;
 var config = require('../../config');
-var eventproxy = require('eventproxy');
-var _ = require('lodash');
+var EventProxy = require('eventproxy');
 var validator = require('validator');
 
 /**
@@ -43,7 +40,7 @@ var index = function (req, res, next) {
     }
     query.user_id = currentUser._id;
     var options = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     ep.fail(next);
 
     BoardProxy.getBoardsByQuery(query, options, function (err, boards) {
@@ -78,10 +75,6 @@ var create = function (req, res, next) {
 
     var title = validator.trim(req.body.title || '');
     var type = validator.trim(req.body.type || '');
-    // 得到所有的 tab, e.g. ['ask', 'share', ..]
-    var allTabs = config.tabs.map(function (tPair) {
-        return tPair[0];
-    });
 
     // 验证
     var editError;
@@ -102,7 +95,7 @@ var create = function (req, res, next) {
             return next(err);
         }
 
-        var proxy = new eventproxy();
+        var proxy = new EventProxy();
         proxy.fail(next);
 
         proxy.all('score_saved', function () {

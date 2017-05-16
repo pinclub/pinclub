@@ -3,6 +3,9 @@ var request = require('supertest')(app);
 var should = require('should');
 var support = require('../../support/support');
 
+var config = require('../../../config');
+var jwt = require('jsonwebtoken');
+
 describe('test/api/v2/board.test.js', function () {
     var mockUser, mockImage;
 
@@ -43,6 +46,32 @@ describe('test/api/v2/board.test.js', function () {
     });
 
     describe('post /api/v2/boards', function () {
+        var expiredUser;
+        var errorAccessToken;
+        var blockUser;
+        before(function (done) {
+            support.createUser(function (err, user) {
+                user.is_block = true;
+                user.save(function(){
+                    blockUser = user;
+                    support.createUser(function (err, user) {
+                        errorAccessToken = user.accessToken;
+                        let accessToken = jwt.sign({
+                            loginname: user.loginname,
+                            _id: user._id
+                        }, config.jwt_token, {expiresIn: 0});
+                        user.accessToken = accessToken;
+                        user.save(function(){
+                            expiredUser = user;
+                            done();
+                        });
+
+                    });
+                });
+
+            });
+
+        });
         it('should return new board', function (done) {
             request.post('/api/v2/boards')
                 .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
@@ -64,6 +93,49 @@ describe('test/api/v2/board.test.js', function () {
                     should.not.exists(err);
                     res.body.success.should.false();
                     res.body.error_msg.should.equal('标题不能为空');
+                    done();
+                });
+        });
+
+        it('should not create board when accessToken is expired', function (done) {
+            request.post('/api/v2/boards')
+                .set('Authorization', 'Bearer ' + expiredUser.accessToken)
+                .send({
+                    title: 'new board'
+                })
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.false();
+                    res.body.error_msg.should.equal('您的Token已过期');
+                    done();
+                });
+        });
+
+        it('should not create board when accessToken is wrong', function (done) {
+            request.post('/api/v2/boards')
+                .set('Authorization', 'Bearer ' + errorAccessToken)
+                .send({
+                    title: 'new board'
+                })
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.false();
+                    res.body.error_msg.should.equal('错误的accessToken');
+                    done();
+                });
+        });
+
+        it('should not create board when account is locked', function (done) {
+
+            request.post('/api/v2/boards')
+                .set('Authorization', 'Bearer ' + blockUser.accessToken)
+                .send({
+                    title: 'new board'
+                })
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.false();
+                    res.body.error_msg.should.equal('您的账户被禁用');
                     done();
                 });
         });

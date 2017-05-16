@@ -4,6 +4,8 @@ Pinclub
 [![node version][node-image]][node-url]
 [![build status](http://git.jinwanzhilian.com/liubing/nodeclub/badges/master/build.svg)](http://git.jinwanzhilian.com/liubing/nodeclub/commits/master)
 [![coverage report](http://git.jinwanzhilian.com/liubing/nodeclub/badges/master/coverage.svg)](http://git.jinwanzhilian.com/liubing/nodeclub/commits/master)
+[![Code Climate](https://codeclimate.com/github/pinclub/pinclub.svg)](https://codeclimate.com/github/pinclub/pinclub)
+[![Gitter](https://badges.gitter.im/pinclub/pinclub.svg)](https://gitter.im/pinclub/Lobby)
 
 [node-image]: https://img.shields.io/badge/node.js-%3E=_4.2-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/

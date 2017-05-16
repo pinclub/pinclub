@@ -53,7 +53,6 @@ $('#pic-page-marker').on('lazyshow', function () {
         url: "/api/v2/images?type=image&limit=5&page=" + pic_page
     }).done(function (responseText) {
         var itemLength = responseText.data.length;
-        var picelements = '';
         responseText.data.forEach(function (item) {
             var itemHtml = $("#picBoxTmp").tmpl({item: item});
             lastItemId['all'] = item.id;
@@ -324,7 +323,7 @@ function similarPics(picid) {
     }
 
     if (!!lastItemId[picid]) {
-        sid = lastItemId[picid]
+        sid = lastItemId[picid];
     }
     var data = {
         id: picid,

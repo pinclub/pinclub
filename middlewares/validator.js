@@ -15,11 +15,11 @@ module.exports = function () {
             };
         },
         customValidators: {
-            isString: function (value) { return _.isString(value) },
-            isEmail: function (value) { return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value) },
-            isNumber: function (value) { return _.isNumber(value) },
-            isObject: function (value) { return _.isObject(value) },
-            isArray: function (value) { return _.isArray(value) },
+            isString: function (value) { return _.isString(value); },
+            isEmail: function (value) { return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value); },
+            isNumber: function (value) { return _.isNumber(value); },
+            isObject: function (value) { return _.isObject(value); },
+            isArray: function (value) { return _.isArray(value); },
             inArray: function (param) {
                 var argumentsArray = [].slice.apply(arguments);
                 var validatorName = argumentsArray[1];
@@ -29,15 +29,15 @@ module.exports = function () {
                     validatorOptions.unshift(item);
 
                     switch(validatorOptions[1]) {
-                        case 'isString': return _.isString(item); break;
-                        case 'isEmail': return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value); break;
-                        case 'isNumber': return _.isNumber(item); break;
-                        case 'isObject': return _.isObject(item); break;
-                        case 'isArray': return _.isArray(item); break;
+                        case 'isString': return _.isString(item);
+                        case 'isEmail': return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(item);
+                        case 'isNumber': return _.isNumber(item);
+                        case 'isObject': return _.isObject(item);
+                        case 'isArray': return _.isArray(item);
                         case 'isBoolean':
-                            switch (typeof value) {
-                                case 'string': return value === 'true' || value === 'false'; break;
-                                case 'boolean': return value === true || value === false; break;
+                            switch (typeof item) {
+                                case 'string': return item === 'true' || item === 'false';
+                                case 'boolean': return item === true || item === false;
                                 default: return false;
                             }
                             break;
@@ -50,10 +50,8 @@ module.exports = function () {
                 switch (typeof value) {
                     case 'string':
                         return value === 'true' || value === 'false';
-                        break;
                     case 'boolean':
                         return value === true || value === false;
-                        break;
                     default:
                         return false;
                 }

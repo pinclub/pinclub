@@ -1,6 +1,6 @@
 var TopicCollect = require('../models').TopicCollect;
 var UserModel = require('../models').User;
-var TopicModel = require('../models').Topic
+var TopicModel = require('../models').Topic;
 
 // 修复用户的topic_collect计数
 TopicCollect.aggregate(
@@ -25,11 +25,11 @@ TopicCollect.aggregate(
 
         user.collect_topic_count = count;
         user.save(function () {
-          console.log(user.loginname, count)
+          console.log(user.loginname, count);
         });
-      })
-    })
-  })
+      });
+    });
+  });
 
   // 修复帖子的topic_collect计数
   TopicCollect.aggregate(
@@ -54,8 +54,8 @@ TopicCollect.aggregate(
 
           topic.collect_topic_count = count;
           topic.save(function () {
-            console.log(topic.id, count)
+            console.log(topic.id, count);
           });
-        })
-      })
-    })
+        });
+      });
+    });

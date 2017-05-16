@@ -2,7 +2,7 @@ var mongoose   = require('mongoose');
 var UserModel  = mongoose.model('User');
 var Message    = require('../proxy').Message;
 var config     = require('../config');
-var eventproxy = require('eventproxy');
+var EventProxy = require('eventproxy');
 var UserProxy  = require('../proxy').User;
 
 /**
@@ -60,7 +60,7 @@ exports.gen_session = gen_session;
 
 // 验证用户是否登录
 exports.authUser = function (req, res, next) {
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   // Ensure current_user always has defined.

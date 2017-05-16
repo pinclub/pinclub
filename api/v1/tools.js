@@ -1,7 +1,7 @@
-var eventproxy = require('eventproxy');
+var EventPproxy = require('eventproxy');
 
 var accesstoken = function (req, res, next) {
-  var ep = new eventproxy();
+  var ep = new EventPproxy();
   ep.fail(next);
 
   res.send({

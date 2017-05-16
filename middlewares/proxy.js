@@ -1,7 +1,7 @@
 var urllib  = require('url');
 var request = require('request');
-var logger = require('../common/logger')
-var _ = require('lodash')
+var logger = require('../common/logger');
+var _ = require('lodash');
 
 
 var ALLOW_HOSTNAME = [

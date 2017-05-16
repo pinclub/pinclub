@@ -1,5 +1,5 @@
 var validator      = require('validator');
-var eventproxy     = require('eventproxy');
+var EventProxy     = require('eventproxy');
 var config         = require('../config');
 var User           = require('../proxy').User;
 var mail           = require('../common/mail');
@@ -19,7 +19,7 @@ exports.signup = function (req, res, next) {
   var pass      = validator.trim(req.body.pass);
   var rePass    = validator.trim(req.body.re_pass);
 
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
   ep.on('prop_err', function (msg) {
     res.status(422);
@@ -109,7 +109,7 @@ var notJump = [
 exports.login = function (req, res, next) {
   var loginname = validator.trim(req.body.name).toLowerCase();
   var pass      = validator.trim(req.body.pass);
-  var ep        = new eventproxy();
+  var ep        = new EventProxy();
 
   ep.fail(next);
 
@@ -263,7 +263,7 @@ exports.updatePass = function (req, res, next) {
   var key   = validator.trim(req.body.key) || '';
   var name  = validator.trim(req.body.name) || '';
 
-  var ep = new eventproxy();
+  var ep = new EventProxy();
   ep.fail(next);
 
   if (psw !== repsw) {

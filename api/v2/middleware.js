@@ -1,5 +1,5 @@
 var UserModel = require('../../models').User;
-var eventproxy = require('eventproxy');
+var EventProxy = require('eventproxy');
 var validator = require('validator');
 var jwt = require('jsonwebtoken');
 var config = require('../../config');
@@ -8,7 +8,7 @@ var config = require('../../config');
 var auth = function (req, res, next) {
     // JWT
     let bearerHeader = req.headers["authorization"];
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     ep.fail(next);
     // 使用 jwt 的形式做校验
     if (typeof bearerHeader !== 'undefined') {
@@ -37,14 +37,15 @@ var auth = function (req, res, next) {
                     return res.send({success: false, error_msg: '您的账户被禁用'});
                 }
                 req.session.user = user;
+                req.user = user;
                 next();
             }));
         });
-    } else if (req.session.user) {
+    } else if (req.session.user || req.user) {
         // session 中有用户信息
         next();
     } else {
-        return res.send({success: false, error_msg: '无权限操作, 请确定是否登录或token是否正确. '});
+        return res.status(401).send({success: false, error_msg: '无权限操作, 请确定是否登录或token是否正确. '});
     }
     // JWT End
 
@@ -70,7 +71,7 @@ exports.auth = auth;
 
 // 非登录用户也可通过
 var tryAuth = function (req, res, next) {
-    var ep = new eventproxy();
+    var ep = new EventProxy();
     ep.fail(next);
 
     var accessToken = String(req.body.accesstoken || req.query.accesstoken || '');
@@ -78,7 +79,7 @@ var tryAuth = function (req, res, next) {
 
     UserModel.findOne({accessToken: accessToken}, ep.done(function (user) {
         if (!user) {
-            return next()
+            return next();
         }
         if (user.is_block) {
             res.status(403);
