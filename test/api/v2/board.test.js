@@ -24,7 +24,7 @@ describe('test/api/v2/board.test.js', function () {
     describe('get /api/v2/boards', function () {
         it('should return boards', function (done) {
             request.get('/api/v2/boards')
-                .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
+                .set('Authorization', 'Bearer ' + mockUser.accessToken)
                 .end(function (err, res) {
                     should.not.exists(err);
                     res.body.success.should.true();

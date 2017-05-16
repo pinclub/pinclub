@@ -13,7 +13,7 @@ describe('test/controllers/static.test.js', function () {
   it('should get /robots.txt', function (done) {
     request.get('/robots.txt').expect(200)
       .end(function (err, res) {
-        res.text.should.containEql('User-Agent');
+        res.text.should.containEql('Pinclub');
         done(err);
       });
   });
