@@ -4,9 +4,7 @@ var should = require('should');
 var support = require('../../support/support');
 
 describe('test/api/v2/auth.test.js', function () {
-    var mockUser, mockImage;
-
-    var createdImageId = null;
+    var mockUser;
 
     before(function (done) {
         support.createUser(function (err, user) {
