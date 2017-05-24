@@ -34,7 +34,7 @@ testfile:
 		--timeout $(TEST_TIMEOUT) \
 		$(FILE)
 
-test-cov cov: install pretest
+test-cov cov: install build
 	@NODE_ENV=test node \
 		node_modules/.bin/istanbul cover --preserve-comments --dir ./public/testcov \
 		./node_modules/.bin/_mocha \
