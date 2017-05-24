@@ -3,11 +3,12 @@ var counter = require('../../common/counter');
 var support = require('../support/support');
 var should = require('should');
 var request = require('supertest')(app);
-var should = require('should');
 
 describe('test/common/counter.test.js', function () {
 
     var mockUser;
+    var mockImage;
+    var mockBoard;
     var mockUserCookie;
     var wouldBeDeleteTopic;
 
@@ -17,7 +18,13 @@ describe('test/common/counter.test.js', function () {
             mockUserCookie = support.mockUser(user);
             support.createTopic(mockUser._id, function (err, topic) {
                 wouldBeDeleteTopic = topic;
-                done(err);
+                support.createBoard(support.normalUser._id, '', function (err, board) {
+                    mockBoard = board;
+                    support.createImage(support.normalUser._id, mockBoard, function (err, image) {
+                        mockImage = image;
+                        done(err);
+                    });
+                });
             });
         });
     });
@@ -217,18 +224,6 @@ describe('test/common/counter.test.js', function () {
     });
 
     describe('image counter', function () {
-
-        var mockImage, mockBoard;
-
-        before(function (done) {
-            support.createBoard(support.normalUser._id, '', function (err, board) {
-                mockBoard = board;
-                support.createImage(support.normalUser._id, mockBoard, function (err, image) {
-                    mockImage = image;
-                    done(err);
-                });
-            });
-        });
 
         it('should add geted_count', function (done) {
             counter.topic(mockImage.id, 'getted', function (err, image) {
