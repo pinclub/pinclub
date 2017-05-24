@@ -14,19 +14,6 @@ describe('test/api/v2/auth.test.js', function () {
     });
 
     describe('post /api/v2/auth/signin', function () {
-        it('should signin success with loginname and password', function (done) {
-            request.post('/api/v2/auth/signin')
-                .send({
-                    loginname: support.activedUser.loginname,
-                    password: 'password'
-                })
-                .end(function (err, res) {
-                    should.not.exists(err);
-                    res.body.success.should.true();
-                    res.text.should.containEql('accessToken');
-                    done();
-                });
-        });
 
         it('should signin success with email and password', function (done) {
             request.post('/api/v2/auth/signin')
@@ -45,7 +32,7 @@ describe('test/api/v2/auth.test.js', function () {
         it('should signin success with loginname and password and empty accessToken', function (done) {
             request.post('/api/v2/auth/signin')
                 .send({
-                    loginname: support.normalUser2.loginname,
+                    loginname: support.activedUser.loginname,
                     password: 'password'
                 })
                 .end(function (err, res) {

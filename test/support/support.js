@@ -3,8 +3,7 @@ var Topic = require('../../proxy/topic');
 var Board = require('../../proxy/board');
 var Reply = require('../../proxy/reply');
 var ready = require('ready');
-var eventproxy = require('eventproxy');
-var utility = require('utility');
+var EventProxy = require('eventproxy');
 var tools = require('../../common/tools');
 
 function randomInt() {
@@ -49,7 +48,7 @@ var createReply = exports.createReply = function (topicId, authorId, callback) {
     Reply.newAndSave('I am content', topicId, authorId, callback);
 };
 
-var createSingleUp = exports.createSingleUp = function (replyId, userId, callback) {
+exports.createSingleUp = function (replyId, userId, callback) {
     Reply.getReply(replyId, function (err, reply) {
         reply.ups = [];
         reply.ups.push(userId);
@@ -67,7 +66,7 @@ exports.mockUser = mockUser;
 
 ready(exports);
 
-var ep = new eventproxy();
+var ep = new EventProxy();
 ep.fail(function (err) {
     console.error(err);
 });
@@ -91,6 +90,27 @@ ep.all('user', 'user2', 'user3', 'admin', function (user, user2, user3, admin) {
     createBoard(user._id, '', ep.done('board'));
 });
 
+ep.all('board', function (board) {
+    exports.testBoard = board;
+    createImage(exports.normalUser._id, board, ep.done('image'));
+});
+
+ep.all('image', function (image) {
+    exports.testImage = image;
+    createReply(image._id, exports.normalUser._id, ep.done('replyimage'));
+});
+
+ep.all('topic', function (topic) {
+    exports.testTopic = topic;
+    createReply(topic._id, exports.normalUser._id, ep.done('reply'));
+});
+
+ep.all('reply', 'replyimage', function (reply, replyimage) {
+    exports.testReply = reply;
+    exports.testReplyImage = replyimage;
+    exports.ready(true);
+});
+
 ep.on('needActive', function (user) {
     user.active = true;
     user.save(function(err){
@@ -112,23 +132,3 @@ createUser(ep.done('needActive'));
 createUser(ep.done('admin'));
 
 
-ep.all('board', function (board) {
-    exports.testBoard = board;
-    createImage(exports.normalUser._id, board, ep.done('image'));
-});
-
-ep.all('image', function (image) {
-    exports.testImage = image;
-    createReply(image._id, exports.normalUser._id, ep.done('replyimage'));
-});
-
-ep.all('topic', function (topic) {
-    exports.testTopic = topic;
-    createReply(topic._id, exports.normalUser._id, ep.done('reply'));
-});
-
-ep.all('reply', 'replyimage', function (reply, replyimage) {
-    exports.testReply = reply;
-    exports.testReplyImage = replyimage;
-    exports.ready(true);
-});

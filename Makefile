@@ -1,5 +1,5 @@
 TESTS = $(shell find test -type f -name "*.test.js")
-TEST_TIMEOUT = 10000
+TEST_TIMEOUT = 20000
 MOCHA_REPORTER = spec
 # NPM_REGISTRY = "--registry=http://registry.npm.taobao.org"
 NPM_REGISTRY = ""
@@ -34,7 +34,7 @@ testfile:
 		--timeout $(TEST_TIMEOUT) \
 		$(FILE)
 
-test-cov cov: install build
+test-cov cov: install pretest
 	@NODE_ENV=test node \
 		node_modules/.bin/istanbul cover --preserve-comments --dir ./public/testcov \
 		./node_modules/.bin/_mocha \

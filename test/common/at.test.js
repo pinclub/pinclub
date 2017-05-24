@@ -164,6 +164,7 @@ aldjf
 
   describe('sendMessageToMentionUsers()', function () {
     it('should send message to all mention users', function (done) {
+      this.timeout(30000);
       done = pedding(done, 2);
       var atUserIds = [String(adminUser._id), String(normalUser2._id)];
 
