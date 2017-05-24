@@ -19,6 +19,7 @@ var store = require('../common/store');
 var config = require('../config');
 var structureHelper = require('../common/structure_helper');
 
+var counter = require('../common/counter');
 var ghash = require('ghash');
 
 /**
@@ -46,17 +47,28 @@ exports.delete = function (req, res, next) {
             res.status(422);
             return res.send({success: false, message: '此话题不存在或已被删除。'});
         }
-        author.score -= 5;
-        author.image_count -= 1;
-        author.save();
 
-        image.deleted = true;
-        image.save(function (err) {
-            if (err) {
-                return res.send({success: false, message: err.message});
-            }
-            res.send({success: true, message: '话题已被删除。'});
+        counter.user(author, 'image', 'sub', function(err, user) {
+            image.deleted = true;
+            image.save(function (err) {
+                if (err) {
+                    return res.send({success: false, message: err.message});
+                }
+                res.send({success: true, message: '话题已被删除。'});
+            });
         });
+
+        // author.score -= 5;
+        // author.image_count -= 1;
+        // author.save();
+        //
+        // image.deleted = true;
+        // image.save(function (err) {
+        //     if (err) {
+        //         return res.send({success: false, message: err.message});
+        //     }
+        //     res.send({success: true, message: '话题已被删除。'});
+        // });
     });
 };
 
@@ -162,18 +174,28 @@ exports.collect = function (req, res, next) {
                 }
                 res.json({status: 'success'});
             });
-            User.getUserById(req.session.user._id, function (err, user) {
+
+            counter.user(req.session.user._id, 'image', 'collect', function (err, user) {
                 if (err) {
                     return next(err);
                 }
-                user.collect_image_count += 1;
-                req.session.user.collect_image_count += 1;
-                user.save();
+                req.session.user = user;
+                image.collect_count += 1;
+                image.save();
             });
 
-            req.session.user.collect_image_count += 1;
-            image.collect_count += 1;
-            image.save();
+            // User.getUserById(req.session.user._id, function (err, user) {
+            //     if (err) {
+            //         return next(err);
+            //     }
+            //     user.collect_image_count += 1;
+            //     req.session.user.collect_image_count += 1;
+            //     user.save();
+            // });
+            //
+            // req.session.user.collect_image_count += 1;
+            // image.collect_count += 1;
+            // image.save();
         });
     });
 };
@@ -195,20 +217,32 @@ exports.de_collect = function (req, res, next) {
                 return res.json({status: 'failed'});
             }
 
-            User.getUserById(req.session.user._id, function (err, user) {
+            counter.user(req.session.user._id, 'image', 'decollect', function (err, user) {
                 if (err) {
                     return next(err);
                 }
-                user.collect_image_count -= 1;
-                req.session.user.collect_image_count -= 1;
                 req.session.user = user;
-                user.save();
+
+                image.collect_count -= 1;
+                image.save();
+
+                res.json({status: 'success'});
             });
 
-            image.collect_count -= 1;
-            image.save();
-
-            res.json({status: 'success'});
+            // User.getUserById(req.session.user._id, function (err, user) {
+            //     if (err) {
+            //         return next(err);
+            //     }
+            //     user.collect_image_count -= 1;
+            //     req.session.user.collect_image_count -= 1;
+            //     req.session.user = user;
+            //     user.save();
+            // });
+            //
+            // image.collect_count -= 1;
+            // image.save();
+            //
+            // res.json({status: 'success'});
         });
     });
 };
@@ -340,7 +374,7 @@ exports.upload = function (req, res, next) {
                 let upload_fixed = upload_path + '_fixed.' + extname;
                 let upload_86 = upload_path + '_86.' + extname;
                 let upload_430 = upload_path + '_430.' + extname;
-                // TODO (hhdem) 自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中
+                // DONE (hhdem) 自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中
                 topicImage.image_fixed = upload_fixed;
                 topicImage.image_86 = upload_86;
                 topicImage.image_430 = upload_430;

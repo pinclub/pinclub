@@ -18,7 +18,7 @@ pretest:
 		mkdir public/upload; \
 	fi
 
-test: install pretest
+test: install build
 	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
 		--reporter $(MOCHA_REPORTER) \
 		-r should \
@@ -53,9 +53,12 @@ run:
 	@node app.js
 
 start: install build
-	@NODE_ENV=production ./node_modules/.bin/pm2 start app.js -i 0 --name "cnode" --max-memory-restart 400M
+	@NODE_ENV=production ./node_modules/.bin/pm2 start app.js -i 0 --name "pinclub" --max-memory-restart 400M
 
 restart: install build
-	@NODE_ENV=production ./node_modules/.bin/pm2 restart "cnode"
+	@NODE_ENV=production ./node_modules/.bin/pm2 restart "pinclub"
 
-.PHONY: install test testfile cov test-cov build run start restart
+initdbfunc: install build
+    @NODE_ENV=init ./node_modules/.bin/pm2 restart "pinclub"
+
+.PHONY: install test testfile cov test-cov build run start restart initdbfunc

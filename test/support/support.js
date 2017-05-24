@@ -63,6 +63,8 @@ function mockUser(user) {
     return 'mock_user=' + JSON.stringify(user) + ';';
 }
 
+exports.mockUser = mockUser;
+
 ready(exports);
 
 var ep = new eventproxy();

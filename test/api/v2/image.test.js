@@ -9,8 +9,6 @@ var store = require('../../../common/store');
 describe('test/api/v2/image.test.js', function () {
     var mockBoard, mockUser, mockImage, simImagePath1, simImagePath2;
 
-    var createdImageId = null;
-
     before(function (done) {
         simImagePath1 = path.join(__dirname, '/sim1.JPG');
         simImagePath2 = path.join(__dirname, '/sim2.JPG');
@@ -66,7 +64,6 @@ describe('test/api/v2/image.test.js', function () {
         });
     });
 
-    // TODO 增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算
     describe('get /api/v2/images/sim', function () {
         it('should return false when not pass any params', function (done) {
             request.get('/api/v2/images/sim')
@@ -104,6 +101,7 @@ describe('test/api/v2/image.test.js', function () {
                 });
         });
 
+        // DONE (hhdem) 增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算
         it('should return a image similar ', function (done) {
             mm(store, 'upload', function (file, options, callback) {
                 callback(null, {

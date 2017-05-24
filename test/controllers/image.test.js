@@ -1,19 +1,19 @@
-var should = require('should');
 var path = require('path');
 var app = require('../../app');
 var request = require('supertest')(app);
 var support = require('../support/support');
 var mm = require('mm');
 var store = require('../../common/store');
-var pedding = require('pedding');
+var should = require('should');
 
 describe('test/controllers/image.test.js', function () {
 
-    var imagePath, mockUser, mockBoard, mockImage;
+    var imagePath, mockUser, mockBoard, mockImage, mockUserCookie;
     before(function (done) {
         imagePath = path.join(__dirname, '/test.JPG');
         support.createUser(function (err, user) {
             mockUser = user;
+            mockUserCookie = support.mockUser(user);
             support.createBoard(user.id, '', function (err, board) {
                 mockBoard = board;
                 support.createImage(user.id, board, function (err, image) {
@@ -58,18 +58,25 @@ describe('test/controllers/image.test.js', function () {
                 .field('desc', 'image desc')
                 .field('board', mockBoard.id)
                 .attach('test.JPG', imagePath)
-                .set('Cookie', support.normalUser2Cookie)
+                .set('Cookie', mockUserCookie)
                 .end(function (err, res) {
                     res.body.success.should.true();
                     res.text.should.containEql('I am board');
                     res.text.should.containEql('_86');
                     res.text.should.containEql('_430');
                     res.text.should.containEql('_fixed');
-                    done(err);
+                    // DONE (hhdem) 增加 Image 图片上传测试用例: 上传后计数统计是否正确
+                    request.get('/api/v1/user/' + mockUser.loginname)
+                        .end(function (err, res) {
+                            should.not.exists(err);
+                            res.body.success.should.true();
+                            res.body.data.image_count.should.equal(1);
+                            res.body.data.score.should.equal(5);
+                            done();
+                        });
                 });
         });
 
-        // TODO 增加 Image 图片上传测试用例: 上传后计数统计是否正确
         // TODO 增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 
     });
@@ -152,7 +159,7 @@ describe('test/controllers/image.test.js', function () {
                 .expect(200, function (err, res) {
                     res.body.should.eql({status: 'success'});
                     done(err);
-                })
+                });
         });
 
         it('should not collect a image twice', function (done) {
@@ -164,9 +171,9 @@ describe('test/controllers/image.test.js', function () {
                 .expect(200, function (err, res) {
                     res.body.should.eql({status: 'failed'});
                     done(err);
-                })
-        })
-    })
+                });
+        });
+    });
 
     describe('#de_collect', function () {
         it('should decollect a image', function (done) {

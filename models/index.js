@@ -1,15 +1,39 @@
 var mongoose = require('mongoose');
+var path = require('path');
 var config = require('../config');
 var logger = require('../common/logger');
+var restore = require('mongodb-restore');
+// var backup = require('mongodb-backup');
 
-mongoose.connect(config.db, {
+mongoose.connect(config.db + config.dbname, {
     server: {poolSize: 20}
 }, function (err) {
     if (err) {
-        logger.error('connect to %s error: ', config.db, err.message);
+        logger.error('connect to %s error: ', config.db + config.dbname, err.message);
         process.exit(1);
     }
+    if (process.env.NODE_ENV === 'init' || process.env.NODE_ENV === 'test') {
+
+        // backup(
+        //     {
+        //         uri: 'mongodb://localhost:27017/node_test'
+        //         ,	root: __dirname,
+        //         collections: ['system.js']
+        //     }
+        // );
+
+        restore({
+            uri: config.db + config.dbname, // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
+            root: path.join(__dirname, '../bin/dbstore/' + config.dbname),
+            drop: true,
+            callback: function (err) {
+                console.info(err);
+            }
+        });
+    }
 });
+
+
 
 // models
 require('./user');

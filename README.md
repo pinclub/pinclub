@@ -17,6 +17,12 @@ Pinclub 是基于 Nodeclub 进行的二次开发. 增加了瀑布流展示方式
 Pinclub's base code is forked from [Nodeclub](https://github.com/cnodejs/nodeclub) project. Pinclub add waterfall layout using Masonry plugin. The style of Frontend is mainly refer to [Huaban.com](http://huaban.com), thanks.
 For support simulate search function simply add an mongodb function to achieve the [Hamming Distance algorithm](https://zh.wikipedia.org/wiki/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB).
 
+## 状态 / Status
+
+Pinclub 目前处于开发阶段，尚未发布 Stable 版本.
+
+Pinclub is developing statge, not stable enough.
+
 ## 图片相似度算法说明
 
 在 Topic 模型中加入了 image 的相关属性值, 其中就包括 image_hash, 使用 imghash 模块生成了 16 bits 的二进制字符串.
@@ -25,12 +31,31 @@ For support simulate search function simply add an mongodb function to achieve t
 
 ```
 function (a, b) {
+    if (typeof(a) === "undefined" || typeof(b) === "undefined") return 64;
     var aa = a.split("");
     var bb = b.split("");
     var count = 0;
     for (var i = 0; i < aa.length; i++) if (aa[i] !== bb[i]) count++;
         return count;
 }
+```
+
+两种方式初始化，通过 mongo 命令行创建，或在项目路径下运行 /bin/ 创建
+创建脚本：
+```
+db.system.js.save(
+   {
+     _id: "hammingDistance",
+     value : function (a, b) {
+                 if (typeof(a) === "undefined" || typeof(b) === "undefined") return 64;
+                 var aa = a.split("");
+                 var bb = b.split("");
+                 var count = 0;
+                 for (var i = 0; i < aa.length; i++) if (aa[i] !== bb[i]) count++;
+                     return count;
+             }
+   }
+)
 ```
 
 ## TODO

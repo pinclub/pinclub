@@ -1,114 +1,114 @@
 var EventProxy = require('eventproxy');
-var Message    = require('../../proxy').Message;
-var at           = require('../../common/at');
+var Message = require('../../proxy').Message;
+var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
-var _          = require('lodash');
+var _ = require('lodash');
 
 var index = function (req, res, next) {
-  var user_id = req.user._id;
-  var mdrender = req.query.mdrender === 'false' ? false : true;
-  var ep = new EventProxy();
-  ep.fail(next);
+    var user_id = req.user._id;
+    var mdrender = req.query.mdrender === 'false' ? false : true;
+    var ep = new EventProxy();
+    ep.fail(next);
 
-  ep.all('has_read_messages', 'hasnot_read_messages', function (has_read_messages, hasnot_read_messages) {
-    res.send({
-      success: true,
-      data: {
-        has_read_messages: has_read_messages,
-        hasnot_read_messages: hasnot_read_messages
-      }
-    });
-  });
-
-  ep.all('has_read', 'unread', function (has_read, unread) {
-    [has_read, unread].forEach(function (msgs, idx) {
-      var epfill = new EventProxy();
-      epfill.fail(next);
-      epfill.after('message_ready', msgs.length, function (docs) {
-        docs = docs.filter(function (doc) {
-          return !doc.is_invalid;
+    ep.all('has_read_messages', 'hasnot_read_messages', function (has_read_messages, hasnot_read_messages) {
+        res.send({
+            success: true,
+            data: {
+                has_read_messages: has_read_messages,
+                hasnot_read_messages: hasnot_read_messages
+            }
         });
-        docs = docs.map(function (doc) {
-          doc.author = _.pick(doc.author, ['loginname', 'avatar_url']);
-          doc.topic  = _.pick(doc.topic, ['id', 'author', 'title', 'last_reply_at']);
-          doc.reply  = _.pick(doc.reply, ['id', 'content', 'ups', 'create_at']);
-          if (mdrender) {
-            doc.reply.content = renderHelper.markdown(at.linkUsers(doc.reply.content));
-          }
-          doc        = _.pick(doc, ['id', 'type', 'has_read', 'author', 'topic', 'reply', 'create_at']);
-
-          return doc;
-        });
-        ep.emit(idx === 0 ? 'has_read_messages' : 'hasnot_read_messages', docs);
-      });
-      msgs.forEach(function (doc) {
-        Message.getMessageById(doc._id, epfill.group('message_ready'));
-      });
     });
-  });
 
-  Message.getReadMessagesByUserId(user_id, ep.done('has_read'));
+    ep.all('has_read', 'unread', function (has_read, unread) {
+        [has_read, unread].forEach(function (msgs, idx) {
+            var epfill = new EventProxy();
+            epfill.fail(next);
+            epfill.after('message_ready', msgs.length, function (docs) {
+                docs = docs.filter(function (doc) {
+                    return !doc.is_invalid;
+                });
+                docs = docs.map(function (doc) {
+                    doc.author = _.pick(doc.author, ['loginname', 'avatar_url']);
+                    doc.topic = _.pick(doc.topic, ['id', 'author', 'title', 'last_reply_at']);
+                    doc.reply = _.pick(doc.reply, ['id', 'content', 'ups', 'create_at']);
+                    if (mdrender) {
+                        doc.reply.content = renderHelper.markdown(at.linkUsers(doc.reply.content));
+                    }
+                    doc = _.pick(doc, ['id', 'type', 'has_read', 'author', 'topic', 'reply', 'create_at']);
 
-  Message.getUnreadMessageByUserId(user_id, ep.done('unread'));
+                    return doc;
+                });
+                ep.emit(idx === 0 ? 'has_read_messages' : 'hasnot_read_messages', docs);
+            });
+            msgs.forEach(function (doc) {
+                Message.getMessageById(doc._id, epfill.group('message_ready'));
+            });
+        });
+    });
+
+    Message.getReadMessagesByUserId(user_id, ep.done('has_read'));
+
+    Message.getUnreadMessageByUserId(user_id, ep.done('unread'));
 };
 
 exports.index = index;
 
 var markAll = function (req, res, next) {
-  var user_id = req.user._id;
-  var ep = new EventProxy();
-  ep.fail(next);
-  Message.getUnreadMessageByUserId(user_id, ep.done('unread', function (docs) {
-    docs.forEach(function (doc) {
-      doc.has_read = true;
-      doc.save();
-    });
-    return docs;
-  }));
+    var user_id = req.user._id;
+    var ep = new EventProxy();
+    ep.fail(next);
+    Message.getUnreadMessageByUserId(user_id, ep.done('unread', function (docs) {
+        docs.forEach(function (doc) {
+            doc.has_read = true;
+            doc.save();
+        });
+        return docs;
+    }));
 
-  ep.all('unread', function (unread) {
-    unread = unread.map(function (doc) {
-      doc = _.pick(doc, ['id']);
-      return doc;
+    ep.all('unread', function (unread) {
+        unread = unread.map(function (doc) {
+            doc = _.pick(doc, ['id']);
+            return doc;
+        });
+        res.send({
+            success: true,
+            marked_msgs: unread
+        });
     });
-    res.send({
-      success: true,
-      marked_msgs: unread
-    });
-  });
 };
 
 exports.markAll = markAll;
 
 
 var markOne = function (req, res, next) {
-  var msg_id = req.params.msg_id;
-  var ep = new EventProxy();
-  ep.fail(next);
-  Message.updateOneMessageToRead(msg_id, ep.done('marked_result', function (result) {
-    return result;
-  }));
+    var msg_id = req.params.msg_id;
+    var ep = new EventProxy();
+    ep.fail(next);
+    Message.updateOneMessageToRead(msg_id, ep.done('marked_result', function (result) {
+        return result;
+    }));
 
-  ep.all('marked_result', function (result) {
-    res.send({
-      success: true,
-      marked_msg_id: msg_id
+    ep.all('marked_result', function (result) {
+        res.send({
+            success: true,
+            marked_msg_id: msg_id
+        });
     });
-  });
 };
 
 exports.markOne = markOne;
 
 
 var count = function (req, res, next) {
-  var userId = req.user.id;
+    var userId = req.user.id;
 
-  var ep = new EventProxy();
-  ep.fail(next);
+    var ep = new EventProxy();
+    ep.fail(next);
 
-  Message.getMessagesCount(userId, ep.done(function (count) {
-    res.send({success: true, data: count});
-  }));
+    Message.getMessagesCount(userId, ep.done(function (count) {
+        res.send({success: true, data: count});
+    }));
 };
 
 exports.count = count;

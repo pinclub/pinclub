@@ -19,6 +19,8 @@ var _ = require('lodash');
 var cache = require('../common/cache');
 var logger = require('../common/logger');
 
+var counter = require('../common/counter');
+
 /**
  * Topic page
  *
@@ -161,13 +163,18 @@ exports.put = function (req, res, next) {
             res.redirect('/topic/' + topic._id);
         });
         proxy.fail(next);
-        User.getUserById(req.session.user._id, proxy.done(function (user) {
-            user.score += 5;
-            user.topic_count += 1;
+        counter.user(req.session.user._id, 'topic', 'add', function(err, user) {
             user.save();
             req.session.user = user;
             proxy.emit('score_saved');
-        }));
+        });
+        // User.getUserById(req.session.user._id, proxy.done(function (user) {
+        //     user.score += 5;
+        //     user.topic_count += 1;
+        //     user.save();
+        //     req.session.user = user;
+        //     proxy.emit('score_saved');
+        // }));
 
         //发送at消息
         at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
@@ -277,16 +284,14 @@ exports.delete = function (req, res, next) {
             res.status(422);
             return res.send({success: false, message: '此话题不存在或已被删除。'});
         }
-        author.score -= 5;
-        author.topic_count -= 1;
-        author.save();
-
-        topic.deleted = true;
-        topic.save(function (err) {
-            if (err) {
-                return res.send({success: false, message: err.message});
-            }
-            res.send({success: true, message: '话题已被删除。'});
+        counter.user(author, 'topic', 'sub', function(err, user) {
+            topic.deleted = true;
+            topic.save(function (err) {
+                if (err) {
+                    return res.send({success: false, message: err.message});
+                }
+                res.send({success: true, message: '话题已被删除。'});
+            });
         });
     });
 };
@@ -393,17 +398,26 @@ exports.collect = function (req, res, next) {
                 }
                 res.json({status: 'success'});
             });
-            User.getUserById(req.session.user._id, function (err, user) {
+
+            counter.user(req.session.user._id, 'topic', 'collect', function (err, user) {
                 if (err) {
                     return next(err);
                 }
-                user.collect_topic_count += 1;
-                user.save();
+                req.session.user.collect_topic_count += 1;
+                topic.collect_count += 1;
+                topic.save();
             });
-
-            req.session.user.collect_topic_count += 1;
-            topic.collect_count += 1;
-            topic.save();
+            // User.getUserById(req.session.user._id, function (err, user) {
+            //     if (err) {
+            //         return next(err);
+            //     }
+            //     user.collect_topic_count += 1;
+            //     user.save();
+            // });
+            //
+            // req.session.user.collect_topic_count += 1;
+            // topic.collect_count += 1;
+            // topic.save();
         });
     });
 };
@@ -425,19 +439,32 @@ exports.de_collect = function (req, res, next) {
                 return res.json({status: 'failed'});
             }
 
-            User.getUserById(req.session.user._id, function (err, user) {
+            counter.user(req.session.user._id, 'topic', 'decollect', function (err, user) {
                 if (err) {
                     return next(err);
                 }
                 user.collect_topic_count -= 1;
                 req.session.user = user;
-                user.save();
+
+                topic.collect_count -= 1;
+                topic.save();
+
+                res.json({status: 'success'});
             });
-
-            topic.collect_count -= 1;
-            topic.save();
-
-            res.json({status: 'success'});
+            //
+            // User.getUserById(req.session.user._id, function (err, user) {
+            //     if (err) {
+            //         return next(err);
+            //     }
+            //     user.collect_topic_count -= 1;
+            //     req.session.user = user;
+            //     user.save();
+            // });
+            //
+            // topic.collect_count -= 1;
+            // topic.save();
+            //
+            // res.json({status: 'success'});
         });
     });
 };

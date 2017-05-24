@@ -9,6 +9,17 @@ var image_show_fields = ['id', 'author_id', 'tab', 'content', 'title', 'last_rep
 var image_copy_fields = ['id', 'author_id', 'content', 'title',
     'top', 'image', 'image_hash', 'image_colors', 'image_colors_rgb', 'image_fixed', 'image_86', 'image_430', 'image_source', 'type'];
 
+var user_show_fields = ['loginname', 'avatar_url', 'githubUsername',
+    'create_at', 'score', 'topic_count', 'image_count', 'board_count', 'reply_count', 'follower_count', 'following_count', 'collect_tag_count',
+    'collect_topic_count', 'like_image_count', 'get_image_count', 'topic_collect_count'];
+
+var topic_user_fields = ['id', 'author', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
+    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply', 'image'];
+
+exports.user = function (user) {
+    return _.pick(user, user_show_fields);
+};
+
 exports.topic = function (topic) {
     topic.author = _.pick(topic.author, ['loginname', 'avatar_url']);
 
@@ -17,8 +28,7 @@ exports.topic = function (topic) {
         topic.reply.author = _.pick(topic.reply.author, ['loginname', 'avatar_url']);
         topic.reply.create_at_ago = topic.reply.create_at_ago();
     }
-    return _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
-        'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply', 'image']);
+    return _.pick(topic, topic_user_fields);
 };
 
 exports.image = function (topic) {
@@ -38,6 +48,10 @@ exports.reply = function (reply) {
     reply = _.pick(reply, ['id', 'author', 'content', 'ups', 'create_at', 'reply_id']);
     return reply;
 };
+
+exports.topic_user_fields = topic_user_fields;
+
+exports.user_show_fields = user_show_fields;
 
 exports.image_show_fields = image_show_fields;
 

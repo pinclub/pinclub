@@ -4,6 +4,7 @@ var TopicLike = require('../../proxy').TopicLike;
 var TopicBoard = require('../../proxy').TopicBoard;
 var BoardProxy = require('../../proxy').Board;
 var UserProxy = require('../../proxy').User;
+var counter = require('../../common/counter');
 var config = require('../../config');
 var EventProxy = require('eventproxy');
 var at = require('../../common/at');
@@ -205,7 +206,7 @@ exports.like = function (req, res, next) {
                 //res.json({success: false});
                 //return;
             }
-            ep.emit('like_topic', topic);
+            return ep.emit('like_topic', topic);
             //TopicLike.newAndSave(currentUser.id, topic._id, function (err) {
             //    if (err) {
             //        return next(err);
@@ -242,8 +243,11 @@ exports.like = function (req, res, next) {
             user.save();
         });
 
-        topic.like_count += 1;
-        topic.save();
+        counter.topic(topic, 'like', function (err, image) {
+            if (err) {
+                return next(err);
+            }
+        });
     });
 
     ep.on('unlike_topic', function(topic) {
@@ -263,11 +267,12 @@ exports.like = function (req, res, next) {
                 req.session.user.like_image_count -= 1;
                 user.save();
             });
-
-            topic.like_count -= 1;
-            topic.save();
-
-            res.json({success: true});
+            counter.topic(topic, 'unlike', function (err, image) {
+                if (err) {
+                    return next(err);
+                }
+                res.json({success: true});
+            });
         });
     });
 
@@ -285,7 +290,7 @@ exports.like = function (req, res, next) {
  *
  * @apiUse ApiHeaderType
  * @apiParam {String} topic_id 要 Get 的图片 id
- * @apiParam {String} board 放入 Board 的 id
+ * @apiParam {String} board_id 放入 Board 的 id
  * @apiParam {String} [desc] 描述
  * @apiParam {String[]} [tags] 标签
  *
@@ -377,15 +382,23 @@ exports.getImage = function (req, res, next) {
         req.session.user.get_image_count += 1;
         ep.emit('user_count');
     });
-    TopicProxy.getTopicById(topic_id, function (err, topic) {
-        // DONE (hhdem) 增加 err 的错误校验, 返回对应的错误信息
+
+    counter.topic(topic_id, 'getted', function (err, image) {
         if (err) {
             return next(err);
         }
-        topic.geted_count += 1;
-        topic.save();
-        ep.emit('topic_count', topic);
+        ep.emit('topic_count', image);
     });
+
+    // TopicProxy.getTopicById(topic_id, function (err, topic) {
+    //     // DONE (hhdem) 增加 err 的错误校验, 返回对应的错误信息
+    //     if (err) {
+    //         return next(err);
+    //     }
+    //     topic.geted_count += 1;
+    //     topic.save();
+    //     ep.emit('topic_count', topic);
+    // });
     // 返回处理结果
     ep.all('new_topic_board_saved', 'user_count', 'topic_count', function(newImage){
         newImage.author = currentUser;
