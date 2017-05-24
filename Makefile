@@ -31,7 +31,7 @@ testfile:
 		--reporter $(MOCHA_REPORTER) \
 		-r should \
 		-r test/env \
-		--timeout $(TEST_TIMEOUT) \
+		-t $(TEST_TIMEOUT) \
 		$(FILE)
 
 test-cov cov: install pretest
@@ -42,7 +42,7 @@ test-cov cov: install pretest
 		-r should \
 		-r test/env \
 		--reporter $(MOCHA_REPORTER) \
-		--timeout $(TEST_TIMEOUT) \
+		-t $(TEST_TIMEOUT) \
 		$(TESTS)
 
 
