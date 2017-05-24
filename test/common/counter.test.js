@@ -236,7 +236,7 @@ describe('test/common/counter.test.js', function () {
                 request.get('/api/v2/images/' + mockImage.id)
                     .end(function (err, res) {
                         should.not.exists(err);
-                        console.debug('should add geted_count --- >>> ', res.text);
+                        console.log('should add geted_count --- >>> ', res.text);
                         res.body.success.should.true();
                         res.body.data.geted_count.should.equal(1);
                         done();
