@@ -28,7 +28,7 @@ build:
 test:
   stage: test
   script:
-    - makeproject jiuyanlou test-cov
+    - makeproject jiuyanlou test
   tags:
     - jinwan-ci
 
