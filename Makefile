@@ -35,7 +35,7 @@ testfile:
 		$(FILE)
 
 test-cov cov: install pretest
-	@NODE_ENV=test node \
+	@NODE_ENV=init node \
 		node_modules/.bin/istanbul cover --preserve-comments --dir ./public/testcov \
 		./node_modules/.bin/_mocha \
 		-- \
