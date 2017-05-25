@@ -311,8 +311,9 @@ exports.upload = function (req, res, next) {
             buffers.push(data);
         });
 
+        // 文件内容传输完成后，计算图片的 hash 值和主色调列表
         file.on('end', function() {
-            // DONE (hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
+            // TODO (hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
             const fileBuffer = Buffer.concat(buffers);
             ghash(fileBuffer).calculate(function (err, hash) {
                 console.info('start image hash', new Date());

@@ -2026,3 +2026,47 @@ a.img img {
     width: auto;
   }
 }
+
+.color-stack {
+  display: inline-block;
+  white-space: nowrap;
+  margin-right: 5px;
+}
+
+.color-stack .color-item {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  box-sizing: content-box;
+  margin-right: -8px;
+  background-color: #fff;
+  border-right: 1px solid #fff;
+  border-radius: 2px;
+  -webkit-transition: margin 0.1s ease-in-out;
+  transition: margin 0.1s ease-in-out;
+}
+
+.color-stack:hover .color-item {
+  margin-right: -2px;
+}
+
+.color-stack:hover .color-item:last-child {
+  margin-right: 0px;
+}
+
+.color-stack .color-item.index4 {
+  z-index: 2;
+}
+.color-stack .color-item.index3 {
+  z-index: 3;
+}
+.color-stack .color-item.index2 {
+  z-index: 4;
+}
+.color-stack .color-item.index1 {
+  z-index: 5;
+}
+.color-stack .color-item.index0 {
+  z-index: 6;
+}

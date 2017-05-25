@@ -21,13 +21,15 @@ For support simulate search function simply add an mongodb function to achieve t
 
 Pinclub 目前处于开发阶段，尚未发布 Stable 版本.
 
-Pinclub is developing statge, not stable enough.
+Pinclub is at developing statge, not stable enough.
 
-## 图片相似度算法说明
+## 图片相似度算法说明 / About HammingDistance
 
 在 Topic 模型中加入了 image 的相关属性值, 其中就包括 image_hash, 使用 imghash 模块生成了 16 bits 的二进制字符串.
 
 在 Mongodb 中创建了一个 function 命名为 hammingDistance, 代码如下:
+
+At the Topic modal, we add a property named image_hash, to save the image hash of pictures, and we build a function in Mongodb, blow is the code segment of it:
 
 ```
 function (a, b) {
@@ -40,7 +42,8 @@ function (a, b) {
 }
 ```
 
-两种方式初始化，通过 mongo 命令行创建，或在项目路径下运行 /bin/ 创建
+通过 mongo 命令行创建 Function
+
 创建脚本：
 ```
 db.system.js.save(
@@ -58,7 +61,7 @@ db.system.js.save(
 )
 ```
 
-## TODO
+## TODO / How to Contribute
 
 如果你想贡献一份力量, 请查看 [TODO](https://github.com/pinclub/pinclub/blob/master/TODO.md) 列表
 
@@ -118,4 +121,4 @@ Nodeclub 有任何意见或建议都欢迎提 issue，或者直接提给 [@alsot
 
 ## License
 
-MIT
+Pinclub is released under the MIT License. Have at it.

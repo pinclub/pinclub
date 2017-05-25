@@ -115,5 +115,8 @@ var create = function (req, res, next) {
     });
 };
 
+// TODO 关注 board
+// TODO 取消关注 board
+
 exports.index = index;
 exports.create = create;

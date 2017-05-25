@@ -6,6 +6,7 @@ node_modules
 coverage.html
 .monitor
 testcov
+.nyc_output
 
 *.hashed.*
 *.min.*.js
