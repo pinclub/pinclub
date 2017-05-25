@@ -7,9 +7,11 @@ var request = require('supertest')(app);
 describe('test/common/counter.test.js', function () {
 
     var mockUser;
+    var mockUser2;
     var mockImage;
     var mockBoard;
     var mockUserCookie;
+    var mockUserCookie2;
     var wouldBeDeleteTopic;
 
     before(function (done) {
@@ -18,11 +20,15 @@ describe('test/common/counter.test.js', function () {
             mockUserCookie = support.mockUser(user);
             support.createTopic(mockUser._id, function (err, topic) {
                 wouldBeDeleteTopic = topic;
-                support.createBoard(support.normalUser._id, '', function (err, board) {
-                    mockBoard = board;
-                    support.createImage(support.normalUser._id, mockBoard, function (err, image) {
-                        mockImage = image;
-                        done(err);
+                support.createUser(function (err, user) {
+                    mockUser2 = user;
+                    mockUserCookie2 = support.mockUser(user);
+                    support.createBoard(mockUser2._id, '', function (err, board) {
+                        mockBoard = board;
+                        support.createImage(mockUser2._id, mockBoard, function (err, image) {
+                            mockImage = image;
+                            done(err);
+                        });
                     });
                 });
             });
@@ -231,7 +237,6 @@ describe('test/common/counter.test.js', function () {
                 request.get('/api/v2/images/' + mockImage.id)
                     .end(function (err, res) {
                         should.not.exists(err);
-                        console.log('should add geted_count --- >>> ', res.text);
                         res.body.success.should.true();
                         res.body.data.geted_count.should.equal(1);
                         done();

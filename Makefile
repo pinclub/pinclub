@@ -23,7 +23,7 @@ test: install build
 		--reporter $(MOCHA_REPORTER) \
 		-r should \
 		-r test/env \
-		--timeout $(TEST_TIMEOUT) \
+		-t $(TEST_TIMEOUT) \
 		$(TESTS)
 
 testfile:
@@ -35,13 +35,16 @@ testfile:
 		$(FILE)
 
 test-cov cov: install pretest
+	@./node_modules/.bin/nyc --reporter=html --report-dir ./public/testcov make test
+
+test-cov2 cov2: install pretest
 	@NODE_ENV=init node \
 		node_modules/.bin/istanbul cover --preserve-comments --dir ./public/testcov \
 		./node_modules/.bin/_mocha \
 		-- \
+		--reporter $(MOCHA_REPORTER) \
 		-r should \
 		-r test/env \
-		--reporter $(MOCHA_REPORTER) \
 		-t $(TEST_TIMEOUT) \
 		$(TESTS)
 
