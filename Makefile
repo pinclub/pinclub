@@ -37,18 +37,6 @@ testfile:
 test-cov cov: install pretest
 	@./node_modules/.bin/nyc --reporter=html --reporter=text-summary --report-dir ./public/testcov make test
 
-test-cov2 cov2: install pretest
-	@NODE_ENV=init node \
-		node_modules/.bin/istanbul cover --preserve-comments --dir ./public/testcov \
-		./node_modules/.bin/_mocha \
-		-- \
-		--reporter $(MOCHA_REPORTER) \
-		-r should \
-		-r test/env \
-		-t $(TEST_TIMEOUT) \
-		$(TESTS)
-
-
 build:
 	@./node_modules/loader-builder/bin/builder picviews .
 
