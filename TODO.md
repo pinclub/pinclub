@@ -18,13 +18,13 @@
 | image.js | 292 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
 | image.js | 378 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
 | topic.js | 30 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
-| api/v1/message.test.js | 27 | [@hhdem](https://github.com/hhdem) ~~accessToken 的问题导致测试用例失败~~
 | api/v2/image.test.js | 104 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算~~
+| api/v1/message.test.js | 27 | [@hhdem](https://github.com/hhdem) ~~accessToken 的问题导致测试用例失败~~
+| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | common/counter.test.js | 54 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 创建主题后增加用户积分和主题数~~
 | common/counter.test.js | 92 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 删除主题后减少用户积分和主题数~~
 | common/counter.test.js | 180 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 收藏主题后增加用户收藏主题数~~
 | common/counter.test.js | 212 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 取消收藏主题后减少用户收藏主题数~~
-| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | index.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 13 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
@@ -47,8 +47,19 @@
 |:------|:------:|:------
 | v2/board.js | 118 |  关注 board
 | v2/board.js | 119 |  取消关注 board
+| board.js | 1 |  用户Board列表
+| board.js | 6 |  用户Board信息查看
+| board.js | 11 |  用户Board信息修改
+| board.js | 16 |  用户Board信息删除
+| dashboard.js | 1 |  管理员维护界面 Dashboard
+| dashboard.js | 6 |  管理员维护界面 tag 列表
+| dashboard.js | 11 |  管理员维护界面 board 列表
+| dashboard.js | 16 |  管理员维护界面 用户 列表
 | image.js | 316 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
 | controllers/image.test.js | 80 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 | index_pic.html | 14 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
+| board/_board_create_search.html | 1 |  Tag添加
+| dashboard/index.html | 1 |  管理员面板页面
 | topic/_pic_create_modal.html | 5 | [@hhdem](https://github.com/hhdem) chrome 插件直接采集
+| user/boards.html | 1 |  用户 Board 列表页面
 | user/index.html | 3 |  我的页面中增加 Board 管理
