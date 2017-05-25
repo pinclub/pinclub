@@ -35,7 +35,7 @@ testfile:
 		$(FILE)
 
 test-cov cov: install pretest
-	@./node_modules/.bin/nyc --reporter=html --report-dir ./public/testcov make test
+	@./node_modules/.bin/nyc --reporter=html --reporter=mocha --reporter=text-summary --report-dir ./public/testcov make test
 
 test-cov2 cov2: install pretest
 	@NODE_ENV=init node \
