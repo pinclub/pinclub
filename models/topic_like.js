@@ -7,12 +7,12 @@ var Schema    = mongoose.Schema;
 var ObjectId  = Schema.ObjectId;
 
 var TopicLikeSchema = new Schema({
-    user_id: { type: ObjectId },
-    topic_id: { type: ObjectId },
+    user: { type: ObjectId, ref: 'User' },
+    topic: { type: ObjectId, ref: 'Topic' },
     create_at: { type: Date, default: Date.now }
 });
 
 TopicLikeSchema.plugin(BaseModel);
-TopicLikeSchema.index({user_id: 1, topic_id: 1}, {unique: true});
+TopicLikeSchema.index({user: 1, topic: 1}, {unique: true});
 
 mongoose.model('TopicLike', TopicLikeSchema);

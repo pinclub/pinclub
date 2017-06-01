@@ -25,6 +25,7 @@
             <!-- 瀑布流图片列表 -->
         </div>
     </div>
+    <!--TODO 关注board按钮实现 -->
     <a data-id="${board.id}" href="#" onclick="return false;" class="follow-btn btn"><span class="text">关注 Board (${board.topic_count})</span></a>
 </script>
 
@@ -33,6 +34,33 @@
         <img src="${image_86?image_86:image}" width="86">
         <div class="cover"></div>
     </a>
+</script>
+
+<!-- 预览图片时弹出的底侧图片信息 -->
+<script id="imageInfoTemplate" type="text/x-jquery-tmpl">
+    <div class="info">
+        <a href="/${author.loginname}" title="${author.loginname}" rel="nofollow" class="img x">
+            <img src="${author.avatar_url}" data-baiduimageplus-ignore="1" class="avt">
+        </a>
+        <div class="main">
+            <a href="/${author.loginname}" rel="nofollow">${author.loginname}</a>
+        </div>
+        <div class="sub">
+            创建于<span data-ts="1495091308" class="ts-words space"> 1 周前</span>
+        </div>
+    </div>
+    <div class="description">${title}</div>
+    <div class="comments"></div>
+    <div class="likes clearfix">
+        {{if like_users.length>0}}
+            <h4>${like_count}喜欢</h4>
+            {{each like_users}}
+                <a href="/${loginname}" title="${loginname}" class="img x">
+                    <img width="46" height="46" src="${avatar}" data-baiduimageplus-ignore="1" data-pin-nopin="true">
+                </a>
+            {{/each}}
+        {{/if}}
+    </div>
 </script>
 
 <!-- Upload 图片的 Modal 层 -->
@@ -70,6 +98,7 @@
     </div>
 </div>
 
+<!-- 查看图片图层 -->
 <div id="preview_modal" role="dialog" aria-hidden="true" aria-labelledby="previewModalLabel">
     <div class="close-layer"><i></i></div>
     <div class="pin-view" role="document">
@@ -111,6 +140,9 @@
                                 href="/go/?pin_id=1090982775" rel="nofollow" target="_blank" class="source btn"><i
                                 class="class"></i>查看来源 dribbble.com</a></div>
                     </div>
+                </div>
+                <div class="info-piece piece">
+
                 </div>
             </div>
             <div class="side-part">

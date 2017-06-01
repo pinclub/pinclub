@@ -1,8 +1,10 @@
 var BoardProxy = require('../../proxy').Board;
 var UserProxy = require('../../proxy').User;
+var BoardCollect = require('../proxy').BoardCollect;
 var config = require('../../config');
 var EventProxy = require('eventproxy');
 var validator = require('validator');
+var counter = require('../common/counter');
 
 /**
  * @api {get} /v2/boards 获得Board列表
@@ -116,7 +118,80 @@ var create = function (req, res, next) {
 };
 
 // TODO 关注 board
+var collect = function (req, res, next) {
+    var board_id = req.body.board_id;
+
+    BoardProxy.getBoard(board_id, function (err, board) {
+        if (err) {
+            return next(err);
+        }
+        if (!board) {
+            res.json({status: 'failed'});
+        }
+
+        BoardCollect.getBoardCollect(req.session.user._id, board_id, function (err, doc) {
+            if (err) {
+                return next(err);
+            }
+            if (doc) {
+                res.json({status: 'failed'});
+                return;
+            }
+
+            BoardCollect.newAndSave(req.session.user._id, board_id, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.json({status: 'success'});
+            });
+
+            counter.user(req.session.user._id, 'board', 'collect', function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                req.session.user.collect_board_count += 1;
+                board.collect_count += 1;
+                board.save();
+            });
+        });
+    });
+};
+
 // TODO 取消关注 board
+var decollect = function (req, res, next) {
+    var board_id = req.body.board_id;
+    BoardProxy.getBoard(board_id, function (err, board) {
+        if (err) {
+            return next(err);
+        }
+        if (!board) {
+            res.json({status: 'failed'});
+        }
+        BoardCollect.remove(req.session.user._id, board_id, function (err, removeResult) {
+            if (err) {
+                return next(err);
+            }
+            if (removeResult.result.n === 0) {
+                return res.json({status: 'failed'});
+            }
+
+            counter.user(req.session.user._id, 'board', 'decollect', function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                user.collect_board_count -= 1;
+                req.session.user = user;
+
+                board.collect_count -= 1;
+                board.save();
+
+                res.json({status: 'success'});
+            });
+        });
+    });
+};
 
 exports.index = index;
 exports.create = create;
+exports.collect = collect;
+exports.decollect = decollect;

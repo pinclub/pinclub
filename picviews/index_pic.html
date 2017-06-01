@@ -22,7 +22,7 @@
                         <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
                     </div>
                     <div class="profile-stats">
-                        <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.topic_count + current_user.get_image_count %></strong>图片</a>
+                        <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.image_count + current_user.get_image_count %></strong>图片</a>
                         <a href="/user/<%= current_user.loginname %>/board" class="middle"><strong><%= current_user.board_count %></strong>画板</a>
                         <a href="/user/<%= current_user.loginname %>/followers"><strong><%= current_user.score %></strong>积分</a>
                     </div>
@@ -43,15 +43,19 @@
                         <div class="links">
                             <a href="/signin" class="btn"><strong>
                                 登录</strong><span></span></a>
-
                             <a href="/signup" class="btn wbtn"><strong>
                                 注册</strong><span></span></a>
-
-                            <a href="/auth/github" class="btn wbtn"><strong>
-                                通过 GitHub 登录</strong><span></span></a>
                         </div>
                     </div>
-
+                    <div class="attribution" style="padding: 20px 25px;">
+                        <a href="/auth/github" class="btn wbtn" style="float: left;"><strong>
+                            GitHub</strong><span></span></a>
+                        <div class="buttons small " >
+                            <!--TODO Signin with wechat and QQ account-->
+                            <a href="/auth/wechat" title="微信帐号登录" rel="nofollow" class="wechat" target="_blank"></a>
+                            <a href="/auth/qzone" title="QQ帐号登录" rel="nofollow" class="qzone"></a>
+                        </div>
+                    </div>
                 <% } %>
                 </div>
             </div>

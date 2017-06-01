@@ -6,3 +6,10 @@ exports.github = function (req, res, next) {
   }
   next();
 };
+
+exports.wechat = function (req, res, next) {
+    if (config.GITHUB_OAUTH.appID === 'your WECHAT_APP_ID') {
+        return res.send('call the admin to set wechat oauth.');
+    }
+    next();
+};

@@ -11,20 +11,20 @@
 | counter.js | 160 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | store_local.js | 45 | [@hhdem](https://github.com/hhdem) ~~上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法~~
 | store_local.js | 53 | [@hhdem](https://github.com/hhdem) ~~上传图片时裁剪生成 86 像素宽的缩略图, 存储到upload下~~
-| image.js | 250 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
-| image.js | 251 | [@hhdem](https://github.com/hhdem) ~~上传图片支持 7牛云, 增加对应的配置~~
-| image.js | 252 | [@hhdem](https://github.com/hhdem) ~~更改hash参数生成方式为 ghash~~
-| image.js | 253 | [@hhdem](https://github.com/hhdem) ~~上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取~~
-| image.js | 292 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
-| image.js | 378 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
+| image.js | 239 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
+| image.js | 240 | [@hhdem](https://github.com/hhdem) ~~上传图片支持 7牛云, 增加对应的配置~~
+| image.js | 241 | [@hhdem](https://github.com/hhdem) ~~更改hash参数生成方式为 ghash~~
+| image.js | 242 | [@hhdem](https://github.com/hhdem) ~~上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取~~
+| image.js | 281 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
+| image.js | 367 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
 | topic.js | 30 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
-| api/v2/image.test.js | 104 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算~~
 | api/v1/message.test.js | 27 | [@hhdem](https://github.com/hhdem) ~~accessToken 的问题导致测试用例失败~~
-| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
+| api/v2/image.test.js | 104 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算~~
 | common/counter.test.js | 54 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 创建主题后增加用户积分和主题数~~
 | common/counter.test.js | 92 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 删除主题后减少用户积分和主题数~~
 | common/counter.test.js | 180 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 收藏主题后增加用户收藏主题数~~
 | common/counter.test.js | 212 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 取消收藏主题后减少用户收藏主题数~~
+| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | index.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 13 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
@@ -46,7 +46,7 @@
 | Filename | line # | TODO
 |:------|:------:|:------
 | v2/board.js | 118 |  关注 board
-| v2/board.js | 119 |  取消关注 board
+| v2/board.js | 123 |  取消关注 board
 | board.js | 1 |  用户Board列表
 | board.js | 6 |  用户Board信息查看
 | board.js | 11 |  用户Board信息修改
@@ -55,11 +55,13 @@
 | dashboard.js | 6 |  管理员维护界面 tag 列表
 | dashboard.js | 11 |  管理员维护界面 board 列表
 | dashboard.js | 16 |  管理员维护界面 用户 列表
-| image.js | 316 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
+| image.js | 305 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
 | controllers/image.test.js | 80 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 | index_pic.html | 14 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
+| index_pic.html | 54 |  Signin with wechat and QQ account
 | board/_board_create_search.html | 1 |  Tag添加
 | dashboard/index.html | 1 |  管理员面板页面
 | topic/_pic_create_modal.html | 5 | [@hhdem](https://github.com/hhdem) chrome 插件直接采集
+| topic/_pic_list.html | 28 |  关注board按钮实现
 | user/boards.html | 1 |  用户 Board 列表页面
 | user/index.html | 3 |  我的页面中增加 Board 管理

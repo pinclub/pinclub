@@ -8,7 +8,8 @@ var BoardSchema = new Schema({
     title: { type: String },
     create_at: { type: Date, default: Date.now },
     type: {type: String},
-    topic_count: {type: Number, default: 0}
+    topic_count: {type: Number, default: 0},
+    collect_count: {type: Number, default: 0}
 });
 
 BoardSchema.plugin(BaseModel);

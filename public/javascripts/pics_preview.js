@@ -42,11 +42,21 @@ $(document).on('click', '.preview_image_btn', function(event){
         var result = response.data;
         var boardImages = result.board.images;
         var itemHtml = $("#boardInfoTemplate").tmpl(result);
-
+        // set the board title to global title
+        let sitename = $('title').html();
+        if (sitename.indexOf(' - ') > 0) {
+            sitename = sitename.split(' - ')[1];
+        }
+        $('title').html(result.board.title + ' - ' + sitename);
+        // Board 部分内容
         $('#preview_modal .side-part .board-piece').html(itemHtml);
         $('#preview_modal .close-layer').css({"position": "fixed"});
+        // 显示Get和like数量
         $('#preview_modal .repin-btn .num').html(result.geted_count);
         $('#preview_modal .like-btn .num').html(result.like_count);
+
+        var imageInfoHtml = $("#imageInfoTemplate").tmpl(result);
+        $('#preview_modal .main-part .info-piece').html(imageInfoHtml);
 
         if (result.liked) {
             likeBtn.addClass('unlike');

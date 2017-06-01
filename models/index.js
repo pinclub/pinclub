@@ -39,6 +39,7 @@ mongoose.connect(config.db + config.dbname, {
 require('./user');
 require('./topic');
 require('./board');
+require('./board_collect');
 require('./reply');
 require('./topic_collect');
 require('./topic_like');
@@ -48,6 +49,7 @@ require('./message');
 exports.User = mongoose.model('User');
 exports.Topic = mongoose.model('Topic');
 exports.Board = mongoose.model('Board');
+exports.BoardCollect = mongoose.model('BoardCollect');
 exports.Reply = mongoose.model('Reply');
 exports.TopicCollect = mongoose.model('TopicCollect');
 exports.TopicLike = mongoose.model('TopicLike');

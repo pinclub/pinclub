@@ -77,7 +77,7 @@ exports.index = function (req, res, next) {
     ep.fail(next);
 
     ep.all('topics', 'liked_topics', function (topics, liked_topics) {
-        let liked_t_ids = _.map(liked_topics, 'topic_id');
+        let liked_t_ids = _.map(liked_topics, 'topic');
         topics = topics.map(function (topic) {
             let structedTopic = structureHelper.image(topic);
             liked_t_ids.forEach(function(lti){
@@ -439,12 +439,14 @@ exports.show = function (req, res, next) {
         return res.send({success: false, error_msg: '不是有效的话题id'});
     }
 
-    ep.all('full_topic', 'boardImages', 'liked_topics', function (full_topic, boardImages, liked_topics) {
+    ep.all('full_topic', 'boardImages', 'liked_topics', 'like_users', function (full_topic, boardImages, liked_topics, like_users) {
 
         full_topic.board.images = boardImages;
 
         full_topic = structureHelper.image(full_topic);
         full_topic.liked = false;
+        let liked_users = _.map(like_users, 'user');
+        full_topic.like_users = liked_users;
         if (!!liked_topics && _.isArray(liked_topics)) {
             full_topic.liked = liked_topics.length > 0;
         }
@@ -490,6 +492,8 @@ exports.show = function (req, res, next) {
     } else {
         TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, [topicId], {}, ep.done('liked_topics'));
     }
+
+    TopicLike.getLikeUsers(topicId, ep.done('like_users'));
 
     ep.fail(function(err){
         console.error(err);

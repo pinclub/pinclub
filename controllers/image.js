@@ -58,17 +58,6 @@ exports.delete = function (req, res, next) {
             });
         });
 
-        // author.score -= 5;
-        // author.image_count -= 1;
-        // author.save();
-        //
-        // image.deleted = true;
-        // image.save(function (err) {
-        //     if (err) {
-        //         return res.send({success: false, message: err.message});
-        //     }
-        //     res.send({success: true, message: '话题已被删除。'});
-        // });
     });
 };
 

@@ -40,16 +40,20 @@ Counter.prototype = {
         this.obj.collect_topic_count += score;
         return this;
     },
+    collectBoardCount : function(score){
+        this.obj.collect_board_count += score;
+        return this;
+    },
     collectImageCount : function(score){
         this.obj.collect_image_count += score;
         return this;
     },
 
-    // topic
     collectCount : function(score){
         this.obj.collect_count += score;
         return this;
     },
+    // topic
     likeCount : function(score){
         this.obj.like_count += score;
         return this;
@@ -104,7 +108,13 @@ function userObject (user, modal, type, callback){
         }
     }
     if (modal === 'board') {
-        counter.boardCount(optCount);
+        if (type === 'collect') {
+            counter.collectBoardCount(optCount);
+        } else if (type === 'decollect') {
+            counter.collectBoardCount(-optCount);
+        } else {
+            counter.boardCount(optCount);
+        }
     }
 
     counter.save(callback);
