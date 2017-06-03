@@ -5,7 +5,7 @@ exports.getBoardCollect = function (userId, boardId, callback) {
     BoardCollect.findOne({user: userId, board: boardId}, callback);
 };
 
-exports.getTopicCollectsByUserId = function (userId, opt, callback) {
+exports.getBoardCollectsByUserId = function (userId, opt, callback) {
     var defaultOpt = {sort: '-create_at'};
     opt = _.assign(defaultOpt, opt);
     BoardCollect.find({user: userId}, '', opt, callback);

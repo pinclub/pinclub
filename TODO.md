@@ -2,13 +2,16 @@
 | Filename | line # | DONE
 |:------|:------:|:------
 | v2/auth.js | 101 | [@hhdem](https://github.com/hhdem) ~~提醒激活不然无法继续进行下一步操作~~
+| v2/board.js | 122 | [@hhdem](https://github.com/hhdem) ~~关注 board~~
+| v2/board.js | 182 | [@hhdem](https://github.com/hhdem) ~~取消关注 board~~
+| v2/board.js | 238 | [@hhdem](https://github.com/hhdem) ~~关注列表~~
 | v2/image.js | 97 | [@hhdem](https://github.com/hhdem) ~~此处需要优化, 不要每次都获得全部喜欢的图片列表, 改为根据返回的图片列表, 查询是否like~~
 | v2/image.js | 151 | [@hhdem](https://github.com/hhdem) ~~考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法, 最终改了 gHash, 依然需要优化~~
 | v2/image.js | 283 | [@hhdem](https://github.com/hhdem) ~~修改为每次GET操作都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象~~
 | v2/image.js | 331 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | v2/image.js | 376 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | v2/image.js | 414 | [@hhdem](https://github.com/hhdem) ~~增加Board信息的返回,以及统计信息~~
-| counter.js | 160 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
+| counter.js | 170 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | store_local.js | 45 | [@hhdem](https://github.com/hhdem) ~~上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法~~
 | store_local.js | 53 | [@hhdem](https://github.com/hhdem) ~~上传图片时裁剪生成 86 像素宽的缩略图, 存储到upload下~~
 | image.js | 239 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
@@ -45,8 +48,6 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| v2/board.js | 118 |  关注 board
-| v2/board.js | 123 |  取消关注 board
 | board.js | 1 |  用户Board列表
 | board.js | 6 |  用户Board信息查看
 | board.js | 11 |  用户Board信息修改

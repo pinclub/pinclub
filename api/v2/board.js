@@ -1,10 +1,11 @@
+var _ = require('lodash');
 var BoardProxy = require('../../proxy').Board;
 var UserProxy = require('../../proxy').User;
-var BoardCollect = require('../proxy').BoardCollect;
+var BoardCollect = require('../../proxy').BoardCollect;
 var config = require('../../config');
 var EventProxy = require('eventproxy');
 var validator = require('validator');
-var counter = require('../common/counter');
+var counter = require('../../common/counter');
 
 /**
  * @api {get} /v2/boards 获得Board列表
@@ -117,16 +118,37 @@ var create = function (req, res, next) {
     });
 };
 
-// TODO 关注 board
+/**
+ * DONE (hhdem) 关注 board
+ * @api {post} /v2/boards/collect 关注对应 board
+ * @apiDescription
+ * 关注对应 board
+ * @apiName collectBoards
+ * @apiGroup board
+ *
+ * @apiUse ApiHeaderType
+ * @apiParam {String} board_id board id
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/boards
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
 var collect = function (req, res, next) {
     var board_id = req.body.board_id;
-
+    if (!validator.isMongoId(board_id)) {
+        res.status(500);
+        return res.send({success: false, error_msg: '不是有效的board_id'});
+    }
     BoardProxy.getBoard(board_id, function (err, board) {
         if (err) {
             return next(err);
         }
         if (!board) {
-            res.json({status: 'failed'});
+            res.status(404).json({success: false});
         }
 
         BoardCollect.getBoardCollect(req.session.user._id, board_id, function (err, doc) {
@@ -134,7 +156,7 @@ var collect = function (req, res, next) {
                 return next(err);
             }
             if (doc) {
-                res.json({status: 'failed'});
+                res.json({success: false, error_msg: 'You already collect this board.'});
                 return;
             }
 
@@ -142,37 +164,58 @@ var collect = function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                res.json({status: 'success'});
-            });
-
-            counter.user(req.session.user._id, 'board', 'collect', function (err, user) {
-                if (err) {
-                    return next(err);
-                }
-                req.session.user.collect_board_count += 1;
-                board.collect_count += 1;
-                board.save();
+                counter.user(req.session.user._id, 'board', 'collect', function (err, user) {
+                    if (err) {
+                        return next(err);
+                    }
+                    req.session.user.collect_board_count += 1;
+                    board.collect_count += 1;
+                    board.save();
+                    res.json({success: true});
+                });
             });
         });
     });
 };
 
-// TODO 取消关注 board
+/**
+ * DONE (hhdem) 取消关注 board
+ * @api {post} /v2/boards/de_collect 取消关注Board
+ * @apiDescription
+ * 取消关注对应的Board
+ * @apiName decollectBoards
+ * @apiGroup board
+ *
+ * @apiUse ApiHeaderType
+ * @apiParam {String} board_id ID
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/boards
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
 var decollect = function (req, res, next) {
     var board_id = req.body.board_id;
+    if (!validator.isMongoId(board_id)) {
+        res.status(500);
+        return res.send({success: false, error_msg: '不是有效的board_id'});
+    }
     BoardProxy.getBoard(board_id, function (err, board) {
         if (err) {
             return next(err);
         }
         if (!board) {
-            res.json({status: 'failed'});
+            res.status(404).json({success: false});
         }
         BoardCollect.remove(req.session.user._id, board_id, function (err, removeResult) {
             if (err) {
                 return next(err);
             }
             if (removeResult.result.n === 0) {
-                return res.json({status: 'failed'});
+                return res.json({success: false});
             }
 
             counter.user(req.session.user._id, 'board', 'decollect', function (err, user) {
@@ -185,12 +228,72 @@ var decollect = function (req, res, next) {
                 board.collect_count -= 1;
                 board.save();
 
-                res.json({status: 'success'});
+                res.json({success: true});
             });
         });
     });
 };
 
+/**
+ * DONE (hhdem) 关注列表
+ * @api {get} /v2/boards/collect/:loginname 用户关注列表
+ * @apiDescription
+ * 用户关注列表
+ * @apiName userCollectBoards
+ * @apiGroup board
+ *
+ * @apiParam {String} loginname 用户登录名
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/boards
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
+function collectList(req, res, next) {
+    var loginname = req.params.loginname;
+    var ep        = new EventProxy();
+
+    ep.fail(next);
+
+    UserProxy.getUserByLoginName(loginname, ep.done(function (user) {
+        if (!user) {
+            return res.status(404).json({success: false, error_msg: '用户不存在'});
+        }
+
+        // api 返回 100 条就好了
+        BoardCollect.getBoardCollectsByUserId(user._id, {limit: 100}, ep.done('collected_boards'));
+
+        ep.all('collected_boards', function (collected_topics) {
+
+            var ids = collected_topics.map(function (doc) {
+                return String(doc.board);
+            });
+            var query = { _id: { '$in': ids } };
+            BoardProxy.getBoardsByQuery(query, {}, ep.done('boards', function (boards) {
+                boards = _.sortBy(boards, function (board) {
+                    return ids.indexOf(String(board._id));
+                });
+                return boards;
+            }));
+
+        });
+
+        ep.all('boards', function (boards) {
+            boards = boards.map(function (board) {
+                board.author = _.pick(board.author, ['loginname', 'avatar_url']);
+                return _.pick(board, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
+                    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author']);
+            });
+            res.send({success: true, data: boards});
+
+        });
+    }));
+}
+
+exports.collectList = collectList;
 exports.index = index;
 exports.create = create;
 exports.collect = collect;
