@@ -107,7 +107,7 @@ var config = {
     WECHAT_OAUTH: {
         appID: 'your Wechat_app_id',
         appSecret: 'your Wechat_app_secret',
-        callbackURL: 'http://jiuyanlou.com/ok',
+        callbackURL: 'http://jiuyanlou.com/auth/wechat/callback',
         state: 'STATE',
         getToken: 'getToken',
         saveToken: 'saveToken'
