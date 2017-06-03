@@ -43,7 +43,7 @@ $(document).on('click', '.preview_image_btn', function(event){
         var boardImages = result.board.images;
         var itemHtml = $("#boardInfoTemplate").tmpl(result);
         // set the board title to global title
-        let sitename = $('title').html();
+        var sitename = $('title').html();
         if (sitename.indexOf(' - ') > 0) {
             sitename = sitename.split(' - ')[1];
         }
