@@ -61,13 +61,15 @@ db.system.js.save(
 )
 ```
 
-## Chrome 插件获取外部图片
+## Chrome 插件获取外部图片 / Chrome plugin to Get picture
 
 如果目标网站做了引用保护，则无法完成图片的 Get 操作
 
-![插件下载地址](http://www.jiuyanlou.com/public/chromeplugin/pinclub_chrome_plugin_jiuyanlou.crx)
-![插件应用商店地址](https://chrome.google.com/webstore/detail/pinclub-quick-add/adeaflopkflkeldipfolpccbkpmboebd)
-![插件项目地址](https://github.com/pinclub/pinclub_chrome_plugin)
+[插件下载地址 / Download Chrome plugin](http://www.jiuyanlou.com/public/chromeplugin/pinclub_chrome_plugin_jiuyanlou.crx)
+
+[插件应用商店地址 / Download Chrome plugin from web store](https://chrome.google.com/webstore/detail/pinclub-quick-add/adeaflopkflkeldipfolpccbkpmboebd)
+
+[插件项目地址 / Plugin Project](https://github.com/pinclub/pinclub_chrome_plugin)
 
 ## TODO / How to Contribute
 
