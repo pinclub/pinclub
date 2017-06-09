@@ -3,7 +3,7 @@
 .done(assets, config.site_static_host, config.mini_assets)
 %>
 <div id="content_pic">
-    <div class="panel">
+    <div class="panel" style="-webkit-box-shadow: none;box-shadow: none;">
         <div id="pic_list" class="grid">
             <div class="grid-sizer"></div>
             <!-- DONE(hhdem) 用户信息显示的样式调整, 参考花瓣网 -->
@@ -21,7 +21,7 @@
                     <div class="profile-stats">
                         <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.image_count + current_user.get_image_count %></strong>图片</a>
                         <a href="/user/<%= current_user.loginname %>/board" class="middle"><strong><%= current_user.board_count %></strong>画板</a>
-                        <a href="/user/<%= current_user.loginname %>/followers"><strong><%= current_user.score %></strong>积分</a>
+                        <a href="/user/<%= current_user.loginname %>/score"><strong><%= current_user.score %></strong>积分</a>
                     </div>
                     <div class="profile-acts convo">
                         <div class="links">

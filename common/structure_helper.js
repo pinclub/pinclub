@@ -33,6 +33,9 @@ exports.topic = function (topic) {
 
 exports.image = function (topic) {
     topic.author = _.pick(topic.author, ['loginname', 'avatar_url']);
+    if (!!topic.board && !topic.board.id && !!topic.board._id) {
+        topic.board.id = topic.board._id.toString();
+    }
     topic.board = _.pick(topic.board, ['id', 'title', 'topic_count', 'user_id', 'images']);
 
     topic.reply = _.pick(topic.reply, ['content', 'author', 'create_at_ago', 'id']);

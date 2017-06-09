@@ -377,3 +377,24 @@ exports.deleteAll = function (req, res, next) {
         ReplyModel.update({}, {$pull: {'ups': user._id}}, {multi: true}, ep.done('del_ups'));
     }));
 };
+
+// 进入用户Get的图片列表页面
+exports.get = function (req, res, next) {
+    res.render('static/function_building', {
+        title: 'Get 图片列表'
+    });
+};
+
+// 进入用户 Board 列表页面
+exports.board = function (req, res, next) {
+    res.render('static/function_building', {
+        title: '用户Board列表'
+    });
+};
+
+// 进入用户 积分明细页面 的图片列表页面
+exports.score = function (req, res, next) {
+    res.render('static/function_building', {
+        title: '积分明细页面'
+    });
+};

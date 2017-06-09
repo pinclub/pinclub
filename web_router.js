@@ -15,6 +15,7 @@ var user = require('./controllers/user');
 var message = require('./controllers/message');
 var topic = require('./controllers/topic');
 var image = require('./controllers/image');
+var board = require('./controllers/board');
 var reply = require('./controllers/reply');
 var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
@@ -73,6 +74,9 @@ router.post('/user/set_star', auth.adminRequired, user.toggleStar); // 把某用
 router.post('/user/cancel_star', auth.adminRequired, user.toggleStar);  // 取消某用户的达人身份
 router.post('/user/:name/block', auth.adminRequired, user.block);  // 禁言某用户
 router.post('/user/:name/delete_all', auth.adminRequired, user.deleteAll);  // 删除某用户所有发言
+router.get('/user/:name/get', auth.userRequired, user.get);  // 删除某用户所有发言
+router.get('/user/:name/board', auth.userRequired, user.board);  // 删除某用户所有发言
+router.get('/user/:name/score', auth.userRequired, user.score);  // 删除某用户所有发言
 
 // message controler
 router.get('/my/messages', auth.userRequired, message.index); // 用户个人的所有消息页
@@ -115,6 +119,10 @@ router.post('/image/:tid/lock', auth.adminRequired, image.lock); // 锁定图片
 router.get('/image/create/bookmarklet', auth.userSigninRequired, image.create);
 // 通过Chrome 插件跳转到Get页面
 router.post('/image/create/bookmarklet', auth.userSigninRequired, image.createFromChrome);
+
+// board 列表
+router.get('/boards', board.list);
+router.get('/boards/:board_id', board.show);
 
 // upload
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
