@@ -1,1 +1,90 @@
 <!-- TODO 管理员面板页面 -->
+<%- Loader('/public/stylesheets/admin.min.css')
+.css('/public/stylesheets/dashboard.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<div id='dashboard' class="content">
+    <div class='container-fluid container-limited'>
+        <div class="admin-dashboard prepend-top-default">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4>统计数据</h4></div>
+                        <div class="panel-body">
+                            <p>
+                                Users
+                                <span class="light pull-right"><%= users.length %></span>
+                            </p>
+                            <p>
+                                Topics
+                                <span class="light pull-right"><%= topics.length %></span>
+                            </p>
+                            <p>
+                                Images
+                                <span class="light pull-right"><%= images.length %></span>
+                            </p>
+                            <p>
+                                Boards
+                                <span class="light pull-right"><%= boards.length %></span>
+                            </p>
+                            <p>
+                                Teams
+                                <span class="light pull-right"><%= teams.length %></span>
+                            </p>
+                            <p>
+                                Reply
+                                <span class="light pull-right"><%= reply_count %></span>
+                            </p>
+                            <p>
+                                Active Users
+                                <span class="light pull-right"><%= active_user_count %></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4>系统信息</h4></div>
+                        <div class="panel-body">
+                            <p>
+                                操作系统
+                                <span class="light pull-right"><%= system.platform %> <%= system.cpuarch %> (<%= system.cpus.length %> CPU) <%= system.release %></span>
+                            </p>
+                            <p>
+                                系统内存
+                                <span class="light pull-right"><%= Math.round(system.freemem / 1024 / 1024) %> / <%= Math.round(system.totalmem / 1024 / 1024) %> M</span>
+                            </p>
+                            <p>
+                                系统负载
+                                <span class="light pull-right"><%= Math.round(system.loadavg[0], 2) %> / <%= Math.round(system.loadavg[1], 2) %> / <%= Math.round(system.loadavg[2], 2) %></span>
+                            </p>
+                            <p>
+                                运行时长
+                                <span class="light pull-right"><%= Math.round(system.uptime / 60) %> mins</span>
+                            </p>
+                            <p>
+                                Node Version
+                                <span class="light pull-right"><%= system.node_version %></span>
+                            </p>
+                            <p>
+                                Mongo Version
+                                <span class="light pull-right"><%= system.mongodb_version %></span>
+                            </p>
+                            <p>
+                                Redis Version
+                                <span class="light pull-right"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4>内容趋势</h4></div>
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

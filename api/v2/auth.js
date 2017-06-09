@@ -5,6 +5,7 @@ var UserProxy    = require('../../proxy').User;
 var authMiddleWare = require('../../middlewares/auth');
 var tools        = require('../../common/tools');
 var config       = require('../../config');
+var structureHelper = require('../../common/structure_helper');
 
 /**
  * @api {post} /v2/auth/signin 登录
@@ -59,8 +60,8 @@ exports.signIn = function (req, res, next) {
             return res.status(403).json({success: false, err_message: '调用登录接口失败', err: login_error}).end();
         });
 
-        ep.on('login_success', function (accessToken) {
-            return res.status(200).json({success: true, accessToken: accessToken});
+        ep.on('login_success', function (user) {
+            return res.status(200).json({success: true, accessToken: user.accessToken, user: structureHelper.user(user)});
         });
 
         ep.on('generate_token', function(user){
@@ -105,6 +106,7 @@ exports.signIn = function (req, res, next) {
                 authMiddleWare.gen_session(user, res);
 
                 if (!!user.accessToken) {
+                    // 如果没有token 则生成 token
                     jwt.verify(user.accessToken, config.jwt_token, function (err, decoded) {
                         if (err) {
                             if (err.name === 'TokenExpiredError') {
@@ -112,10 +114,9 @@ exports.signIn = function (req, res, next) {
                             }
                             return ep.emit('login_error', '对已存在token做校验时报错');
                         }
-                        ep.emit('login_success', user.accessToken);
+                        ep.emit('login_success', user);
                     });
                 } else {
-                    // 如果没有token 则生成 token
                     ep.emit('generate_token', user);
                 }
 

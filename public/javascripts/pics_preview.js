@@ -41,6 +41,7 @@ $(document).on('click', '.preview_image_btn', function(event){
         console.log(response);
         var result = response.data;
         var boardImages = result.board.images;
+        var profileSourceHtml = $("#profileSourceTemplate").tmpl(result);
         var itemHtml = $("#boardInfoTemplate").tmpl(result);
         // set the board title to global title
         var sitename = $('title').html();
@@ -54,6 +55,9 @@ $(document).on('click', '.preview_image_btn', function(event){
         // 显示Get和like数量
         $('#preview_modal .repin-btn .num').html(result.geted_count);
         $('#preview_modal .like-btn .num').html(result.like_count);
+
+        // Profile_source
+        $('#preview_modal .tool-bar-bottom .right-part').html(profileSourceHtml);
 
         var imageInfoHtml = $("#imageInfoTemplate").tmpl(result);
         $('#preview_modal .main-part .info-piece').html(imageInfoHtml);
@@ -88,6 +92,9 @@ $(document).on('click', '.preview_image_btn', function(event){
 
 // 点击 Get 图片到自己的 Board, 弹出 Modal 层
 $(document).on('click', '#preview_modal_rpin_btn', function (event) {
+    if (!auth()) {
+        return;
+    }
     if (!event.currentTarget.dataset.id || !event.currentTarget.dataset.src) {
         return;
     }

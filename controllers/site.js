@@ -67,7 +67,7 @@ exports.index_pic = function (req, res, next) {
             proxy.emit('no_reply_topics', no_reply_topics);
         } else {
             Topic.getTopicsByQuery(
-                {reply_count: 0, tab: {$ne: 'job'}},
+                {reply_count: 0, tab: {$ne: 'job'}, type: 'text'},
                 {limit: 5, sort: '-create_at'},
                 proxy.done('no_reply_topics', function (no_reply_topics) {
                     cache.set('no_reply_topics', no_reply_topics, 60 * 1);
@@ -135,7 +135,7 @@ exports.sitemap = function (req, res, next) {
                     return next(err);
                 }
                 topics.forEach(function (topic) {
-                    urlset.ele('url').ele('loc', 'http://cnodejs.org/topic/' + topic._id);
+                    urlset.ele('url').ele('loc', 'http://jiuyanlou.com/topic/' + topic._id);
                 });
 
                 var sitemapData = urlset.end();

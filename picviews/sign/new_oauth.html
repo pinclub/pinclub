@@ -2,7 +2,7 @@
   <div class='panel'>
     <div class='header'>
       <ul class='breadcrumb'>
-        <li><a href='/'>主页</a><span class='divider'>/</span></li>
+        <li><a href='/'>主页</a></li>
         <li class='active'>注册新账号</li>
       </ul>
     </div>
@@ -12,7 +12,7 @@
       <input type='hidden' name='_csrf' value='<%= csrf %>'/>
       <input type='hidden' name='isnew' value='1'/>
 
-      <div class='control-group'>
+      <div class='form-group'>
         <label class='control-label'>通过 GitHub 帐号</label>
 
         <div class='controls'>
@@ -23,17 +23,17 @@
 
       <form id='signin_form' class='form-horizontal' action=<%= actionPath
       %> method='post'>
-      <div class='control-group'>
+      <div class='form-group'>
         <label class='controls'>或者</label>
       </div>
-      <div class='control-group'>
+      <div class='form-group'>
         <label class='control-label' for='name'>用户名</label>
 
         <div class='controls'>
           <input class='input-xlarge' id='name' name='name' size='30' type='text'/>
         </div>
       </div>
-      <div class='control-group'>
+      <div class='form-group'>
         <label class='control-label' for='pass'>密码</label>
 
         <div class='controls'>

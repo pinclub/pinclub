@@ -54,7 +54,7 @@ div pre.prettyprint {
 }
 
 form {
-    margin-bottom: 0;
+    margin: 0px;
 }
 
 textarea {
@@ -63,4 +63,21 @@ textarea {
 
 input, textarea {
     background: hsla(0, 0%, 0%, 0);
+}
+
+img {
+    width: auto \9;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}
+
+ul {
+    padding-left: 0;
+}
+
+dd, dt, li {
+    line-height: 30px;
 }

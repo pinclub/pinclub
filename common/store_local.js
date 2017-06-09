@@ -45,7 +45,7 @@ exports.upload = function (file, options, callback) {
     // DONE(hhdem) 上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法
     file.pipe(fs.createWriteStream(filePath))
         .on('close', function () {
-            if (!!isImage) {
+            if (!!isImage && (_.toLower(fileext) === '.jpg' || _.toLower(fileext) === '.jpeg')) {
                 rotator.autoRotateFile(filePath, fileFixedPath)
                     .then(function (rotated) {
                         console.log(rotated ? filePath + ' rotated to ' + fileFixedPath : filePath + ' no rotation was needed');
@@ -60,14 +60,28 @@ exports.upload = function (file, options, callback) {
                         });
 
                         callback(null, {
-                            url: fileUrl
+                            url: fileUrl,
+                            rotated: true
                         });
                     }).catch(function (err) {
                         console.error('Got error: ' + err);
                     });
+            } else if (!!isImage) {
+                resizeImg(fs.readFileSync(filePath), {width: 86}).then(buf => {
+                    fs.writeFileSync(file86Path, buf);
+                });
+
+                resizeImg(fs.readFileSync(filePath), {width: 430}).then(buf => {
+                    fs.writeFileSync(file430Path, buf);
+                });
+                callback(null, {
+                    url: fileUrl,
+                    rotated: false
+                });
             } else {
                 callback(null, {
-                    url: fileUrl
+                    url: fileUrl,
+                    rotated: false
                 });
             }
         });

@@ -4,7 +4,7 @@
   <div class='panel'>
     <div class='header'>
       <ul class='breadcrumb'>
-        <li><a href='/'>主页</a><span class='divider'>/</span></li>
+        <li><a href='/'>主页</a></li>
         <li class='active'>设置</li>
       </ul>
     </div>
@@ -21,62 +21,65 @@
       </div>
       <% } %>
       <form id='setting_form' class='form-horizontal' action='/setting' method='post'>
-        <div class='control-group'>
+        <fieldset readonly>
+        <div class='form-group'>
           <label class='control-label' for='name'>用户名</label>
 
           <div class='controls'>
-            <input class='input-xlarge readonly' id='name' name='name' size='30' type='text' readonly='true'
+            <input class='form-control ' id='name' name='name' size='30' type='text' readonly='true'
                    value="<%= loginname %>"/>
           </div>
         </div>
-        <div class='control-group'>
+        <div class='form-group'>
           <label class='control-label' for='email'>电子邮件</label>
 
           <div class='controls'>
-            <input class='input-xlarge readonly' id='email' name='email' size='30' type='text'
+            <input class='form-control ' id='email' name='email' size='30' type='text'
                    readonly='true' value="<%= email %>"/>
 
             <p>同时决定了 Gravatar 头像</p>
           </div>
         </div>
-        <div class='control-group'>
+          </fieldset>
+          <fieldset>
+        <div class='form-group'>
           <label class='control-label' for='url'>个人网站</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='url' name='url' size='30' type='text' value="<%= typeof(url) !== 'undefined' ? url : '' %>"/>
+            <input class='form-control' id='url' name='url' size='30' type='text' value="<%= typeof(url) !== 'undefined' ? url : '' %>"/>
           </div>
         </div>
-        <div class='control-group'>
+        <div class='form-group'>
           <label class='control-label' for='location'>所在地点</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='location' name='location' size='30' type='text'
+            <input class='form-control' id='location' name='location' size='30' type='text'
                    value="<%= typeof(location) !== 'undefined' ? location : '' %>"/>
           </div>
         </div>
 
-        <div class='control-group'>
+        <div class='form-group'>
           <label class='control-label' for='weibo'>微博</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='weibo' name='weibo' size='30' type='text' value="<%= typeof(weibo) !== 'undefined' ? weibo : '' %>"
+            <input class='form-control' id='weibo' name='weibo' size='30' type='text' value="<%= typeof(weibo) !== 'undefined' ? weibo : '' %>"
                    placeholder="e.g. http://weibo.com/cnodejs"/>
           </div>
         </div>
-        <div class='control-group'>
+        <div class='form-group'>
           <label class='control-label' for='github'>GitHub</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='github' name='github' size='30' type='text'
+            <input class='form-control' id='github' name='github' size='30' type='text'
                    value="<%= typeof(githubUsername) !== 'undefined' ? '@' + githubUsername : '' %>" placeholder="@username" readonly="readonly" />
             <p>请通过 GitHub 登陆 CNode 来修改此处</p>
           </div>
         </div>
-        <div class='control-group'>
+        <div class='form-group'>
           <label class='control-label' for='signature'>个性签名</label>
 
           <div class='controls'>
-            <textarea class='input-xlarge' id='signature' name='signature' size='30'><%= typeof(signature) !== 'undefined' ? signature : "" %></textarea>
+            <textarea class='form-control' id='signature' name='signature' size='30'><%= typeof(signature) !== 'undefined' ? signature : "" %></textarea>
           </div>
         </div>
         <input type='hidden' id='action' name='action' value='change_setting'/>
@@ -85,6 +88,7 @@
         <div class='form-actions'>
           <input type='submit' class='span-primary submit_btn' data-loading-text="保存中.." value='保存设置'/>
         </div>
+        </fieldset>
       </form>
     </div>
   </div>
@@ -95,18 +99,18 @@
     </div>
     <div class='innerTopic'>
       <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
-        <div class='control-group'>
+        <div class='form-group'>
           <label class='control-label' for='old_pass'>当前密码</label>
 
           <div class='controls'>
-            <input class='input-xlarge' type='password' id='old_pass' name='old_pass' size='30'/>
+            <input class='form-control' type='password' id='old_pass' name='old_pass' size='30'/>
           </div>
         </div>
-        <div class='control-group'>
+        <div class='form-group'>
           <label class='control-label' for='new_pass'>新密码</label>
 
           <div class='controls'>
-            <input class='input-xlarge' type='password' id='new_pass' name='new_pass' size='30'/>
+            <input class='form-control' type='password' id='new_pass' name='new_pass' size='30'/>
           </div>
         </div>
         <input type='hidden' id='action' name='action' value='change_password'/>

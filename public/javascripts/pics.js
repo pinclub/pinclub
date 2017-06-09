@@ -235,6 +235,9 @@ $('#pic-page-marker').on('lazyshow', function () {
 
 // 绑定like按钮的点击事件
 $(document).on('click', '.like-btn', function (event) {
+    if (!auth()) {
+        return;
+    }
     if (!event.currentTarget.dataset.id) {
         return;
     }
@@ -252,6 +255,9 @@ $(document).on('click', '.more-similar-btn', function (event) {
 
 // 点击 Get 图片到自己的 Board, 弹出 Modal 层
 $(document).on('click', '#pic_list .get-pic-btn', function (event) {
+    if (!auth()) {
+        return;
+    }
     if (!event.currentTarget.dataset.id || !event.currentTarget.dataset.src) {
         return;
     }
@@ -262,6 +268,7 @@ $(document).on('click', '#pic_list .get-pic-btn', function (event) {
     $('#get-preview-image').html('<img src="'+event.currentTarget.dataset.src+'">');
     $('#get-image-submit').attr('data-id', event.currentTarget.dataset.id);
     $('#get-image-submit').attr('data-image', event.currentTarget.dataset.src);
+    $('#get_image_modal').modal('show');
 });
 
 // 保存要Get的图片信息
@@ -277,7 +284,7 @@ $(document).on('click', '#get-image-submit', function (event) {
     }).done(function (response) {
         console.log(response);
         if (response.success) {
-            // TODO 插入图片列表中
+            // DONE (hhdem) get的图片，免刷新直接插入图片列表中
             var itemHtml = $("#picBoxTmp").tmpl({item: response.data, highlight: true});
             var jpicelements = $(itemHtml);
             gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
@@ -286,8 +293,40 @@ $(document).on('click', '#get-image-submit', function (event) {
             });
             $('#get_image_modal').modal('hide');
         }
+    }).error(function(res){
+        if (res.status == 401) {
+            $('#get_image_modal').modal('hide');
+            $('#signin_modal').modal('show');
+        }
     });
 });
+
+// chrome插件的弹出页面，进行Get图片操作
+$(document).on('click', '#get-image-chrome-submit', function (event) {
+    console.log(event.currentTarget.dataset);
+    $('#get-image-chrome-submit').button('loading');
+    var getImageChromeObj = {};
+    getImageChromeObj.desc = $('#get-image-desc').val();
+    getImageChromeObj.media = event.currentTarget.dataset.src;
+    getImageChromeObj.profile_source = event.currentTarget.dataset.url;
+    getImageChromeObj.board_id = $('.right-part .boardlist .selected').attr("data-id");
+    $.ajax({
+        type: "POST",
+        url: "/image/create/bookmarklet",
+        data: getImageChromeObj
+    }).done(function (response) {
+        console.info(response);
+        if (!response.success) {
+            $('#get_image_chrome_error_modal').modal('show');
+            return;
+        }
+        window.close();
+    }).error(function(res){
+        console.error(res);
+        $('#get_image_chrome_error_modal').modal('show');
+    });
+});
+
 //
 //// 绑定Board 查询事件
 //$(document).on('keyup', '.pin-create .right-part .search-input', function (event) {
@@ -371,6 +410,7 @@ function likePic(picid) {
         data: data
     }).done(function (response) {
         if(!response.success) {
+
             return console.error("Error：", response);
         }
         var likeA = $('#'+picid + ' .actions .right a');
@@ -384,6 +424,10 @@ function likePic(picid) {
             likePreviewBtn.removeClass('unlike');
         } else {
             likePreviewBtn.addClass('unlike');
+        }
+    }).error(function(res){
+        if (res.status == 401) {
+            $('#signin_modal').modal('show');
         }
     });
 }

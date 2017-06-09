@@ -19,9 +19,9 @@ var auth = function (req, res, next) {
         jwt.verify(bearerToken, config.jwt_token, function (err, decoded) {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
-                    return res.send({success: false, error_msg: '您的Token已过期'});
+                    return res.send({success: false, code: 401, error_msg: '您的Token已过期'});
                 }
-                return res.send({success: false, error_msg: '登录出错'});
+                return res.send({success: false, code: 401, error_msg: '登录出错'});
             }
             ep.emit('auth_success');
         });
@@ -30,11 +30,11 @@ var auth = function (req, res, next) {
             UserModel.findOne({accessToken: bearerToken}, ep.done(function (user) {
                 if (!user) {
                     res.status(401);
-                    return res.send({success: false, error_msg: '错误的accessToken'});
+                    return res.send({success: false, code: 401, error_msg: '错误的accessToken'});
                 }
                 if (user.is_block) {
                     res.status(403);
-                    return res.send({success: false, error_msg: '您的账户被禁用'});
+                    return res.send({success: false, code: 403, error_msg: '您的账户被禁用'});
                 }
                 req.session.user = user;
                 req.user = user;
@@ -45,7 +45,7 @@ var auth = function (req, res, next) {
         // session 中有用户信息
         next();
     } else {
-        return res.status(401).send({success: false, error_msg: '无权限操作, 请确定是否登录或token是否正确. '});
+        return res.status(401).send({success: false, code: 401, error_msg: '无权限操作, 请确定是否登录或token是否正确. '});
     }
     // JWT End
 
@@ -83,7 +83,7 @@ var tryAuth = function (req, res, next) {
         }
         if (user.is_block) {
             res.status(403);
-            return res.send({success: false, error_msg: '您的账户被禁用'});
+            return res.send({success: false, code: 403, error_msg: '您的账户被禁用'});
         }
         req.user = user;
         next();

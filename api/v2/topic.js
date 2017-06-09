@@ -178,6 +178,12 @@ var show = function (req, res, next) {
 
 exports.show = show;
 
+/**
+ * TODO 创建 topic 时可以选择管理员维护的 area，在列表和详细信息查看中加入 area 标签显示
+ * TODO 创建 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
+ * TODO 创建 topic 时可以关联已发布的图片，或Board
+ * TODO 微信小程序记录轨迹
+ */
 var create = function (req, res, next) {
     var title = validator.trim(req.body.title || '');
     var tab = validator.trim(req.body.tab || '');
@@ -233,8 +239,12 @@ var create = function (req, res, next) {
     });
 };
 
-exports.create = create;
+/**
+ * TODO 修改 topic 时可以选择管理员维护的 area，在列表和详细信息查看中加入 area 标签显示
+ * TODO 修改 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
+ */
 
+exports.create = create;
 exports.update = function (req, res, next) {
     var topic_id = _.trim(req.body.topic_id);
     var title = _.trim(req.body.title);

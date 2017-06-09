@@ -481,7 +481,7 @@ exports.upload = function (req, res, next) {
             });
         });
 
-        store.upload(file, {filename: filename}, function (err, result) {
+        store.upload(file, {filename: filename, userId: req.session.user._id}, function (err, result) {
             if (err) {
                 return next(err);
             }

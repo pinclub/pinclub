@@ -16,7 +16,7 @@
 }
 
 @media (max-width: 400px) {
-  .navbar .brand {
+  .navbar .navbar-brand {
       float: none;
       margin: 0 auto;
   }
@@ -52,7 +52,7 @@
       min-width: 0;
   }
 
-  .navbar .nav.pull-right {
+  .navbar-nav.pull-right {
       float: none;
       clear: both;
   }

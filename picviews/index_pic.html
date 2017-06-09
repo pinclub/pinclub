@@ -14,10 +14,7 @@
                     <!-- TODO (hhdem) 点击统计信息进入用户面板页面 -->
                     <div class="profile-basic">
                         <a href="/user/<%= current_user.loginname %>" title="<%= current_user.loginname %>" class="img x loaded">
-                            <img width="54"
-                              height="54"
-                              src="<%= current_user.avatar_url %>"
-                              data-baiduimageplus-ignore="1"></a>
+                            <img width="54" height="54" src="<%= current_user.avatar_url %>" data-baiduimageplus-ignore="1"></a>
                         <a href="/user/<%= current_user.loginname %>" class="userlink">hhdem</a>
                         <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
                     </div>
@@ -41,7 +38,7 @@
                     </div>
                     <div class="profile-acts convo">
                         <div class="links">
-                            <a href="/signin" class="btn"><strong>
+                            <a href="#" class="btn" data-toggle="modal" data-target="#signin_modal"><strong>
                                 登录</strong><span></span></a>
                             <a href="/signup" class="btn wbtn"><strong>
                                 注册</strong><span></span></a>
@@ -66,6 +63,7 @@
 <div id="content_text">
     <div class="panel">
         <div class="header">
+            <!-- TODO Tab页切换修改为ajax请求-->
             <% [['all', '全部'], ['good', '精华']].concat(tabs).forEach(function (pair) {
             var value = pair[0];
             var text = pair[1]; %>
@@ -74,7 +72,7 @@
             <% }) %>
         </div>
         <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
-        <div class="innerTopic no-padding">
+        <div class="innerTopic no-padding no-margin">
             <%- partial('topic/list', {
             topics: topics,
             pages: pages,

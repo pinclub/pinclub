@@ -1,0 +1,65 @@
+<%- Loader('/public/stylesheets/pics.min.css')
+.css('/public/stylesheets/pics.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+
+<!-- 模板文件 -->
+<%- partial('../topic/_templates') %>
+
+<div id='content'>
+    <div class="modal-content" style="width: 600px;margin: 0 auto;height: 500px;">
+        <div class="modal-header">
+            <h5 class="modal-title">Get图片</h5>
+        </div>
+        <div class="modal-body">
+            <div id="get_image_view">
+                <div class="pin-create">
+                    <div class="preview">
+                        <div id="get-preview-image" class="image">
+                            <img id="get-image-src" src="<%= src %>">
+                        </div>
+                        <textarea id="get-image-desc" placeholder="点击添加描述..."
+                                  class="description"><%= desc %></textarea>
+                    </div>
+                    <div class="right-part">
+                        <%- partial('../board/_board_create_search') %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="get-image-chrome-close" class="btn closebtn" onclick="window.close();">Close</button>
+            <button type="button" id="get-image-chrome-submit" class="btn " data-src="<%= src %>" data-url="<%= profile_source %>">Get Image
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="get_image_chrome_error_modal" role="dialog" aria-hidden="true" aria-labelledby="exampleErrorModalLabel">
+    <div class="modal-content" style="width: 400px;margin: 0 auto;top: 30%;">
+        <div class="modal-header">
+            <h5 class="modal-title">出错了......</h5>
+        </div>
+        <div class="modal-body">
+            Get 图片时出错了, OMG......, 再试一次
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="get-image-chrome-error-close" class="btn closebtn" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+<%- Loader('/public/pics.min.js')
+.js('/public/libs/masonry.pkgd.js')
+.js('/public/libs/imagesloaded.pkgd.min.js')
+.js('/public/libs/load-image.all.min.js')
+.js('/public/javascripts/pics.js')
+.js('/public/javascripts/board.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+
+<% if (typeof(user) !== 'undefined' || current_user) { %>
+<%- Loader('/public/boards.min.js')
+.js('/public/javascripts/board_init.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<% } %>

@@ -31,6 +31,19 @@ exports.userRequired = function (req, res, next) {
   next();
 };
 
+/**
+ * 需要登录，弹出登录框
+ */
+exports.userSigninRequired = function (req, res, next) {
+    if (!req.session || !req.session.user || !req.session.user._id) {
+        req.session._loginReferer = req.headers.referer;
+        res.render('sign/signin');
+        return;
+    }
+
+    next();
+};
+
 exports.blockUser = function () {
   return function (req, res, next) {
     if (req.path === '/signout') {

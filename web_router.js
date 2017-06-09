@@ -22,6 +22,7 @@ var auth = require('./middlewares/auth');
 var limit = require('./middlewares/limit');
 var github = require('./controllers/github');
 var search = require('./controllers/search');
+var dashboard = require('./controllers/dashboard');
 var passport = require('passport');
 var configMiddleware = require('./middlewares/conf');
 var config = require('./config');
@@ -110,6 +111,10 @@ router.post('/image/de_collect', auth.userRequired, image.de_collect); // 取消
 router.post('/image/:tid/top', auth.adminRequired, image.top);  // 将某图片话题置顶
 router.post('/image/:tid/good', auth.adminRequired, image.good); // 将某图片话题加精
 router.post('/image/:tid/lock', auth.adminRequired, image.lock); // 锁定图片主题，不能再回复
+// 通过Chrome 插件跳转到Get页面
+router.get('/image/create/bookmarklet', auth.userSigninRequired, image.create);
+// 通过Chrome 插件跳转到Get页面
+router.post('/image/create/bookmarklet', auth.userSigninRequired, image.createFromChrome);
 
 // upload
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
@@ -135,8 +140,14 @@ router.post('/auth/github/create', limit.peripperday('create_user_per_ip', confi
 // wechat oauth
 router.get('/auth/wechat', configMiddleware.wechat, passport.authenticate('wechat'));
 
-
 router.get('/search', search.index);
+
+// admin dashboard
+router.get('/admin/dashboard', auth.adminRequired, dashboard.dashboard);
+router.get('/admin/tags', auth.adminRequired, dashboard.tags);
+router.get('/admin/boards', auth.adminRequired, dashboard.boards);
+router.get('/admin/users', auth.adminRequired, dashboard.users);
+router.get('/admin/areas', auth.adminRequired, dashboard.areas);
 
 if (!config.debug) { // 这个兼容破坏了不少测试
 	router.get('/:name', function (req, res) {

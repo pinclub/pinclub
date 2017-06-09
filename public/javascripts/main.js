@@ -50,4 +50,44 @@ $(document).ready(function () {
         var label = $this.data('label');
         ga('send', 'event', 'banner', 'click', label, 1.00, {'nonInteraction': 1});
     });
+
+    // ajax 登录
+    $('#signin_modal_button').click(function(e) {
+        var loginname = $('#signin_modal_name').val();
+        var password = $('#signin_modal_pass').val();
+        $.ajax({
+            type: "POST",
+            url: "/api/v2/auth/signin",
+            data: {
+                loginname: loginname,
+                password: password
+            }
+        }).done(function (response) {
+            localStorage.jiuyanlouUser = response.user;
+            location.reload();
+        }).error(function(response){
+            console.error('signin error ', response);
+        });
+    });
 });
+
+function auth() {
+    if (!localStorage.jiuyanlouUser) {
+        $('.modal').modal('hide');
+        $('#signin_modal').modal('show');
+        return false;
+    }
+    return true;
+}
+
+function signout() {
+    $.ajax({
+        type: "POST",
+        url: "/signout"
+    }).done(function (response) {
+        localStorage.removeItem('jiuyanlouUser');
+        location.reload();
+    }).error(function(response){
+        console.error('signout error ', response);
+    });
+}

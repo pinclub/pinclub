@@ -112,7 +112,7 @@ var create = function (req, res, next) {
             user.score += 5;
             user.board_count += 1;
             user.save();
-            req.user = user;
+            req.session.user = req.user = user;
             proxy.emit('score_saved');
         }));
     });
