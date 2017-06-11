@@ -37,6 +37,10 @@ exports.create = function (req, res, next) {
             notEmpty: {
                 options: [true],
                 errorMessage: 'type 不能为空'
+            },
+            matches: {
+                options: ['public|private|internal'],
+                errorMessage: 'type 必须为 public,private,internal'
             }
         }
     });
@@ -112,7 +116,7 @@ exports.show = function (req, res, next) {
             }
             if (!forum) {
                 res.status(404);
-                return res.send({success: false, error_msg: '话题不存在'});
+                return res.send({success: false, error_msg: '板块不存在'});
             }
             if (!!msg) {
                 res.status(404);

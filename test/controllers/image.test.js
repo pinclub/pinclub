@@ -77,6 +77,45 @@ describe('test/controllers/image.test.js', function () {
                 });
         });
 
+        it('should show a get image page', function (done) {
+            request.get('/image/create/bookmarklet?media=https://www.baidu.com/img/baidu_jgylogo3.gif')
+                .set('Cookie', support.normalUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('Get 图片时出错了, OMG......, 再试一次');
+                    done(err);
+                });
+        });
+
+        it('should create new Image Object after uploaded a file', function (done) {
+            mm(store, 'upload', function (file, options, callback) {
+                callback(null, {
+                    url: 'upload_success_url.JPG'
+                });
+            });
+            request.post('/image/create/bookmarklet')
+                .send({
+                    profile_source: 'www.baidu.com',
+                    media: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
+                    board_id: mockBoard.id
+                })
+                .set('Cookie', mockUserCookie)
+                .end(function (err, res) {
+                    res.body.success.should.true();
+                    res.text.should.containEql('I am board');
+                    res.text.should.containEql('_86');
+                    res.text.should.containEql('_430');
+                    res.text.should.containEql('_fixed');
+                    // DONE (hhdem) 增加 Image 图片上传测试用例: 上传后计数统计是否正确
+                    request.get('/api/v1/user/' + mockUser.loginname)
+                        .end(function (err, res) {
+                            should.not.exists(err);
+                            res.body.success.should.true();
+                            res.body.data.image_count.should.equal(2);
+                            res.body.data.score.should.equal(10);
+                            done();
+                        });
+                });
+        });
         // TODO 增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 
     });
