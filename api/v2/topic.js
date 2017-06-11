@@ -67,16 +67,18 @@ var index = function (req, res, next) {
     var type = req.query.type || 'text';
     var page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;
-    var tab = req.query.tab || 'all';
+    var forum = req.query.forum;
     var limit = Number(req.query.limit) || config.list_topic_count;
 
     var query = {};
-    if (tab && tab !== 'all') {
-        if (tab === 'good') {
+    if (forum && forum !== 'all') {
+        if (forum === 'good') {
             query.good = true;
         } else {
-            query.tab = tab;
+            query.forum = forum;
         }
+    } else if (forum === 'all') {
+        delete query.forum;
     }
     query.deleted = false;
     query.type = type;

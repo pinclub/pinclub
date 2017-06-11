@@ -32,17 +32,16 @@
                     <fieldset>
                         <div class="form-group">
                             <div class="controls">
-                                <span class="tab-selector">选择版块：</span>
-                                <select name="tab" id="tab-value">
-                                    <option value="">请选择</option>
+                                <select name="forum" id="tab-value" class="form-control">
+                                    <option value="">请选择所属板块</option>
                                     <%
                                     var tabValue = '';
                                     if (typeof(tab) !== 'undefined') {
                                     tabValue = tab;
                                     }
-                                    tabs.forEach(function (pair) {
-                                    var value = pair[0];
-                                    var text = pair[1];
+                                    forums.forEach(function (forum) {
+                                    var value = forum._id;
+                                    var text = forum.title;
                                     %>
                                     <option value="<%=value%>"
                                     <%= tabValue === value ? 'selected': '' %>><%=text%></option>

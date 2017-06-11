@@ -11,7 +11,7 @@ var _            = require('lodash');
 var cache        = require('../common/cache');
 var logger = require('../common/logger');
 
-// TODO 所有Forum列表
+// DONE (hhdem) 所有Forum列表
 exports.list = function (req, res, next) {
     var options = { sort: '-order', limit: 10};
     Forum.getForumsByQuery({}, options, function (err, forums) {
@@ -24,7 +24,7 @@ exports.list = function (req, res, next) {
     });
 };
 
-// TODO Forum信息添加
+// DONE (hhdem) Forum信息添加和修改
 exports.create = function (req, res, next) {
     req.checkBody({
         'title': {
@@ -86,7 +86,7 @@ exports.create = function (req, res, next) {
     });
 };
 
-// TODO Forum信息查看
+// DONE (hhdem) Forum信息查看
 exports.show = function (req, res, next) {
     req.checkParams({
         'id': {
@@ -121,13 +121,6 @@ exports.show = function (req, res, next) {
             forum.topics = topics;
             res.send({success: true, data: forum});
         });
-    });
-};
-
-// TODO Forum信息修改
-exports.update = function (req, res, next) {
-    res.render('static/function_building', {
-        title: 'Forum信息修改'
     });
 };
 

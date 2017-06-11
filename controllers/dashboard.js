@@ -3,7 +3,7 @@ var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
 
-// TODO 管理员维护界面 Dashboard
+// TODO 管理员维护界面 Dashboard, 统计数据的获取
 exports.dashboard = function (req, res, next) {
     async.parallel({
         mongodb: function (callback) {
@@ -40,6 +40,7 @@ exports.dashboard = function (req, res, next) {
             images: [],
             boards: [],
             teams: [],
+            forums: [],
             system: system
         });
     });
