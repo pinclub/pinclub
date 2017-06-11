@@ -10,10 +10,10 @@ describe('test/api/v1/reply.test.js', function () {
   
   before(function (done) {
     support.ready(function () {
-      support.createTopic(support.normalUser.id, function (err, topic) {
-        mockTopic = topic;
-        done();
-      });
+        support.createTopic(support.normalUser.id, support.testForum.id, function (err, topic) {
+            mockTopic = topic;
+            done();
+        });
     });
   });
 

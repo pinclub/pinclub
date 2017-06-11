@@ -18,7 +18,7 @@ describe('test/common/counter.test.js', function () {
         support.createUser(function (err, user) {
             mockUser = user;
             mockUserCookie = support.mockUser(user);
-            support.createTopic(mockUser._id, function (err, topic) {
+            support.createTopic(mockUser._id, support.testForum, function (err, topic) {
                 wouldBeDeleteTopic = topic;
                 support.createUser(function (err, user) {
                     mockUser2 = user;
@@ -56,7 +56,7 @@ describe('test/common/counter.test.js', function () {
                 .send({
                     accesstoken: mockUser.accessToken,
                     title: '我是API测试标题',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     content: '我是API测试内容'
                 })
                 .end(function (err, res) {

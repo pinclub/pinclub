@@ -1,5 +1,6 @@
 var User = require('../../proxy/user');
 var Topic = require('../../proxy/topic');
+var Forum = require('../../proxy/forum');
 var Board = require('../../proxy/board');
 var Reply = require('../../proxy/reply');
 var ready = require('ready');
@@ -23,9 +24,21 @@ exports.createUserByNameAndPwd = function (loginname, pwd, callback) {
     });
 };
 
-var createTopic = exports.createTopic = function (authorId, callback) {
+var createForum = exports.createForum = function (authorId, type, callback) {
     var key = new Date().getTime() + '_' + randomInt();
-    Topic.newAndSave('topic title' + key, 'test topic content' + key, 'share', authorId, callback);
+    var forum = {
+        title: 'forum title' + key,
+        content: 'forum content' + key,
+        path_name: key,
+        type: type,
+        user: authorId
+    };
+    Forum.newAndSave(forum, callback);
+};
+
+var createTopic = exports.createTopic = function (authorId, forum, callback) {
+    var key = new Date().getTime() + '_' + randomInt();
+    Topic.newAndSave('topic title' + key, 'test topic content' + key, forum, authorId, callback);
 };
 
 var createImage = exports.createImage = function (authorId, board, callback) {
@@ -86,8 +99,11 @@ ep.all('user', 'user2', 'user3', 'admin', function (user, user2, user3, admin) {
     exports.adminUser = admin;
     exports.adminUserCookie = mockUser(adminObj);
 
-    createTopic(user._id, ep.done('topic'));
-    createBoard(user._id, '', ep.done('board'));
+    createForum(admin._id, 'public', function (err, forum) {
+        exports.testForum = forum;
+        createTopic(user._id, forum, ep.done('topic'));
+        createBoard(user._id, '', ep.done('board'));
+    });
 });
 
 ep.all('board', function (board) {
@@ -105,7 +121,7 @@ ep.all('topic', function (topic) {
     createReply(topic._id, exports.normalUser._id, ep.done('reply'));
 });
 
-ep.all('reply', 'replyimage', function (reply, replyimage) {
+ep.all('reply', 'replyimage', function (reply, replyimage, forum) {
     exports.testReply = reply;
     exports.testReplyImage = replyimage;
     exports.ready(true);
@@ -130,5 +146,6 @@ createUser(ep.done('user'));
 createUser(ep.done('emptyAccessToken'));
 createUser(ep.done('needActive'));
 createUser(ep.done('admin'));
+
 
 

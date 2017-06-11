@@ -124,11 +124,3 @@ $(".js-data-example-ajax").select2({
     templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
 });
 
-$('select').on('select2:select', function (evt) {
-    console.info('select2:select');
-});
-
-$('select').on('select2:open', function (evt) {
-    console.info('select2:open');
-});
-

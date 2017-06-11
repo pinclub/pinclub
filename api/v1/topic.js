@@ -20,7 +20,7 @@ var validator = require('validator');
  * @apiGroup topic
  *
  * @apiParam {Number} page 页数
- * @apiParam {String} tab 主题分类。目前有 ask share job good
+ * @apiParam {String} forum 板块
  * @apiParam {Number} limit 每一页的主题数量
  * @apiParam {String} mdrender 当为 false 时，不渲染。默认为 true，渲染出现的所有 markdown 格式文本
  *
@@ -37,7 +37,7 @@ var validator = require('validator');
               {
                   "id": "",
                   "author_id": "",
-                  "tab": "ask",
+                  "forum": xxxxx,
                   "content": "",
                   "title": "",
                   "last_reply_at": "",
@@ -57,17 +57,19 @@ var validator = require('validator');
 var index = function (req, res, next) {
     var page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;
-    var tab = req.query.tab || 'all';
+    var forum = req.query.forum;
     var limit = Number(req.query.limit) || config.list_topic_count;
     var mdrender = req.query.mdrender === 'false' ? false : true;
 
     var query = {};
-    if (tab && tab !== 'all') {
-        if (tab === 'good') {
+    if (forum && forum !== 'all') {
+        if (forum === 'good') {
             query.good = true;
         } else {
-            query.tab = tab;
+            query.forum = forum;
         }
+    } else if (forum === 'all') {
+        delete query.forum;
     }
     query.deleted = false;
     var options = {skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at'};
@@ -91,7 +93,7 @@ var index = function (req, res, next) {
 
         ep.after('author', topics.length, function () {
             topics = topics.map(function (topic) {
-                return _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
+                return _.pick(topic, ['id', 'author_id', 'forum', 'content', 'title', 'last_reply_at',
                     'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'replay']);
             });
 
@@ -120,7 +122,7 @@ var show = function (req, res, next) {
             res.status(404);
             return res.send({success: false, error_msg: '话题不存在'});
         }
-        topic = _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply', 'last_reply_at',
+        topic = _.pick(topic, ['id', 'author_id', 'forum', 'content', 'title', 'last_reply', 'last_reply_at',
             'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author']);
 
         if (mdrender) {
@@ -167,13 +169,8 @@ exports.show = show;
 
 var create = function (req, res, next) {
     var title = validator.trim(req.body.title || '');
-    var tab = validator.trim(req.body.tab || '');
+    var forum = validator.trim(req.body.forum) || '';
     var content = validator.trim(req.body.content || '');
-
-    // 得到所有的 tab, e.g. ['ask', 'share', ..]
-    var allTabs = config.tabs.map(function (tPair) {
-        return tPair[0];
-    });
 
     // 验证
     var editError;
@@ -181,7 +178,7 @@ var create = function (req, res, next) {
         editError = '标题不能为空';
     } else if (title.length < 5 || title.length > 100) {
         editError = '标题字数太多或太少';
-    } else if (!tab || !_.includes(allTabs, tab)) {
+    } else if (forum === '') {
         editError = '必须选择一个版块';
     } else if (content === '') {
         editError = '内容不可为空';
@@ -193,7 +190,7 @@ var create = function (req, res, next) {
         return res.send({success: false, error_msg: editError});
     }
 
-    TopicProxy.newAndSave(title, content, tab, req.user.id, function (err, topic) {
+    TopicProxy.newAndSave(title, content, forum, req.user.id, function (err, topic) {
         if (err) {
             return next(err);
         }
@@ -225,13 +222,8 @@ exports.create = create;
 exports.update = function (req, res, next) {
     var topic_id = _.trim(req.body.topic_id);
     var title = _.trim(req.body.title);
-    var tab = _.trim(req.body.tab);
+    var forum = _.trim(req.body.forum);
     var content = _.trim(req.body.content);
-
-    // 得到所有的 tab, e.g. ['ask', 'share', ..]
-    var allTabs = config.tabs.map(function (tPair) {
-        return tPair[0];
-    });
 
     TopicProxy.getTopicById(topic_id, function (err, topic, tags) {
         if (!topic) {
@@ -246,7 +238,7 @@ exports.update = function (req, res, next) {
                 editError = '标题不能是空的。';
             } else if (title.length < 5 || title.length > 100) {
                 editError = '标题字数太多或太少。';
-            } else if (!tab || !_.includes(allTabs, tab)) {
+            } else if (!forum) {
                 editError = '必须选择一个版块。';
             }
             // END 验证
@@ -258,7 +250,7 @@ exports.update = function (req, res, next) {
             //保存话题
             topic.title = title;
             topic.content = content;
-            topic.tab = tab;
+            topic.forum = forum;
             topic.update_at = new Date();
 
             topic.save(function (err) {

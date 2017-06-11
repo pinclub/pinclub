@@ -10,7 +10,7 @@ describe('test/api/v1/topic_collect.test.js', function () {
   before(function (done) {
     support.createUser(function (err, user) {
       mockUser = user;
-      support.createTopic(user.id, function (err, topic) {
+      support.createTopic(user.id, support.testForum.id, function (err, topic) {
         mockTopic = topic;
         done();
       });

@@ -12,7 +12,7 @@ describe('test/api/v2/topic.test.js', function () {
     before(function (done) {
         support.createUser(function (err, user) {
             mockUser = user;
-            support.createTopic(user.id, function (err, topic) {
+            support.createTopic(user.id, support.testForum.id, function (err, topic) {
                 mockTopic = topic;
                 support.createReply(topic.id, user.id, function (err, reply) {
                     support.createSingleUp(reply.id, user.id, function (err, reply) {
@@ -128,7 +128,7 @@ describe('test/api/v2/topic.test.js', function () {
                 .set('Authorization', 'Bearer ' + mockUser.accessToken)
                 .send({
                     title: '我是API测试标题',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     content: '我是API测试内容'
                 })
                 .end(function (err, res) {
@@ -144,7 +144,7 @@ describe('test/api/v2/topic.test.js', function () {
             request.post('/api/v2/topics')
                 .send({
                     title: '我是API测试标题',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     content: '我是API测试内容'
                 })
                 .end(function (err, res) {
@@ -160,7 +160,7 @@ describe('test/api/v2/topic.test.js', function () {
                 .set('Authorization', 'Bearer ' + mockUser.accessToken)
                 .send({
                     title: '',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     content: '我是API测试内容'
                 })
                 .end(function (err, res) {
@@ -171,12 +171,12 @@ describe('test/api/v2/topic.test.js', function () {
                 });
         });
 
-        it('should fail with error tab', function (done) {
+        it('should fail with error forum', function (done) {
             request.post('/api/v2/topics')
                 .set('Authorization', 'Bearer ' + mockUser.accessToken)
                 .send({
                     title: '我是API测试标题',
-                    tab: '',
+                    forum: '',
                     content: '我是API测试内容'
                 })
                 .end(function (err, res) {
@@ -192,7 +192,7 @@ describe('test/api/v2/topic.test.js', function () {
                 .set('Authorization', 'Bearer ' + mockUser.accessToken)
                 .send({
                     title: '我是API测试标题',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     content: ''
                 })
                 .end(function (err, res) {
@@ -212,7 +212,7 @@ describe('test/api/v2/topic.test.js', function () {
                 .send({
                     topic_id: mockTopic.id,
                     title: '我是API测试标题',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     content: '我是API测试内容 /api/v2/topics/update'
                 })
                 .end(function (err, res) {

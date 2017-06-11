@@ -5,21 +5,23 @@ var support = require('../../support/support');
 
 describe('test/api/v1/topic.test.js', function () {
   
-  var mockUser, mockTopic;
+  var mockUser, mockTopic, mockForum;
 
   var createdTopicId = null;
 
   before(function (done) {
     support.createUser(function (err, user) {
       mockUser = user;
-      support.createTopic(user.id, function (err, topic) {
-        mockTopic = topic;
-        support.createReply(topic.id, user.id, function (err, reply) {
-          support.createSingleUp(reply.id, user.id, function (err, reply) {
-            done();
-          });
+        mockForum = support.testForum;
+        support.createTopic(user.id, mockForum.id, function (err, topic) {
+            mockTopic = topic;
+            support.createReply(topic.id, user.id, function (err, reply) {
+                support.createSingleUp(reply.id, user.id, function (err, reply) {
+                    done();
+                });
+            });
         });
-      });
+
     });
   });
 
@@ -130,7 +132,7 @@ describe('test/api/v1/topic.test.js', function () {
         .send({
           accesstoken: mockUser.accessToken,
           title: '我是API测试标题',
-          tab: 'share',
+            forum: mockForum.id,
           content: '我是API测试内容'
         })
         .end(function (err, res) {
@@ -146,7 +148,7 @@ describe('test/api/v1/topic.test.js', function () {
       request.post('/api/v1/topics')
         .send({
           title: '我是API测试标题',
-          tab: 'share',
+            forum: mockForum.id,
           content: '我是API测试内容'
         })
         .end(function (err, res) {
@@ -162,23 +164,7 @@ describe('test/api/v1/topic.test.js', function () {
         .send({
           accesstoken: mockUser.accessToken,
           title: '',
-          tab: 'share',
-          content: '我是API测试内容'
-        })
-        .end(function (err, res) {
-          should.not.exists(err);
-          res.status.should.equal(400);
-          res.body.success.should.false();
-          done();
-        });
-    });
-
-    it('should fail with error tab', function (done) {
-      request.post('/api/v1/topics')
-        .send({
-          accesstoken: mockUser.accessToken,
-          title: '我是API测试标题',
-          tab: '',
+            forum: mockForum.id,
           content: '我是API测试内容'
         })
         .end(function (err, res) {
@@ -194,7 +180,7 @@ describe('test/api/v1/topic.test.js', function () {
         .send({
           accesstoken: mockUser.accessToken,
           title: '我是API测试标题',
-          tab: 'share',
+            forum: mockForum.id,
           content: ''
         })
         .end(function (err, res) {
@@ -214,7 +200,7 @@ describe('test/api/v1/topic.test.js', function () {
           accesstoken: mockUser.accessToken,
           topic_id: createdTopicId,
           title: '我是API测试标题',
-          tab: 'share',
+            forum: mockForum.id,
           content: '我是API测试内容 /api/v1/topics/update'
         })
         .end(function (err, res) {

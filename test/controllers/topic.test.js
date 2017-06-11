@@ -53,7 +53,7 @@ describe('test/controllers/topic.test.js', function () {
             request.post('/topic/create')
                 .send({
                     title: '',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     t_content: '木耳敲回车',
                 })
                 .set('Cookie', support.normalUserCookie)
@@ -67,7 +67,7 @@ describe('test/controllers/topic.test.js', function () {
             request.post('/topic/create')
                 .send({
                     title: '呵呵复呵呵',
-                    tab: '',
+                    forum: '',
                     t_content: '木耳敲回车',
                 })
                 .set('Cookie', support.normalUserCookie)
@@ -81,7 +81,7 @@ describe('test/controllers/topic.test.js', function () {
             request.post('/topic/create')
                 .send({
                     title: '呵呵复呵呵',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     t_content: '',
                 })
                 .set('Cookie', support.normalUserCookie)
@@ -95,7 +95,7 @@ describe('test/controllers/topic.test.js', function () {
             request.post('/topic/create')
                 .send({
                     title: '呵呵复呵呵' + new Date(),
-                    tab: 'share',
+                    forum: support.testForum.id,
                     t_content: '木耳敲回车',
                 })
                 .set('Cookie', support.normalUserCookie)
@@ -122,7 +122,7 @@ describe('test/controllers/topic.test.js', function () {
             request.post('/topic/' + support.testTopic._id + '/edit')
                 .send({
                     title: '修改后的 topic title',
-                    tab: 'share',
+                    forum: support.testForum.id,
                     t_content: '修改后的木耳敲回车',
                 })
                 .set('Cookie', support.normalUserCookie)
@@ -136,7 +136,7 @@ describe('test/controllers/topic.test.js', function () {
     describe('#delete', function () {
         var wouldBeDeleteTopic;
         before(function (done) {
-            support.createTopic(support.normalUser._id, function (err, topic) {
+            support.createTopic(support.normalUser._id, support.testForum, function (err, topic) {
                 wouldBeDeleteTopic = topic;
                 done(err);
             });

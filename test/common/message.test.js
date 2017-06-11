@@ -23,7 +23,7 @@ describe('test/common/message.test.js', function () {
             atUser = support.normalUser;
             author = atUser;
             reply = {};
-            support.createTopic(author._id, ep.done('topic'));
+            support.createTopic(author._id, support.testForum, ep.done('topic'));
         });
     });
 
