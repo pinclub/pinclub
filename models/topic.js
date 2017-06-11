@@ -29,6 +29,7 @@ var TopicSchema = new Schema({
 
     // DONE (hhdem) 在 Topic 模型中增加 board 关联
     board: {type: ObjectId, ref: 'Board'},
+    forum: {type: ObjectId, ref: 'Forum'},
     type: {type: String, default: 'text', enum: ['text', 'image']},
     image: {type: String},
     image_86: {type: String},

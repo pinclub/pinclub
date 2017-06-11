@@ -1,10 +1,235 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<!-- TODO 管理员面板页面 -->
+<!-- TODO Tab页切换修改为ajax请求-->
+<%- Loader('/public/stylesheets/admin.min.css')
+.css('/public/stylesheets/dashboard.less')
+.css('/public/libs/select2/css/select2.css')
+.css('/public/libs/bootstrap-select2/select2-bootstrap.css')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<div id='dashboard' class="content">
+    <div class='container-fluid container-limited'>
+        <div class="admin-dashboard prepend-top-default">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>板块列表</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <th><input type="checkbox"></th>
+                                <th>板块名称</th>
+                                <th>主题数量</th>
+                                <th>类型</th>
+                                <th>排序</th>
+                                <th>创建于</th>
+                                <th>操作</th>
+                                </thead>
+                                <%- partial('_abstract_forum_item', {collection:forums, as:'forum'}) %>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            <button class="btn btn-default"  data-toggle="modal" data-target="#create_forum_modal">添加板块</button>
+                            <button class="btn btn-default">删除板块</button>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4>板块数据统计</h4></div>
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Forum modal -->
+<div class="modal fade" id="create_forum_modal" role="dialog" aria-hidden="true" aria-labelledby="createForumModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/admin/forums" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">板块信息</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="basicInfoForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        基本信息
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="title" placeholder="板块名称">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="path_name" placeholder="板块路径" onkeyup="changeExamplePathName(this);">
+                                            <div class="help-block">Example: /forums/<code class="text-info" id="example_path_name">{path_name}</code></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea id="forum_content" class="form-control" rows="3" name="content" placeholder="板块描述"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="order" placeholder="排序值">
+                                        </div>
+                                        <div class="col-sm-8 text-right">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="type" value="public" checked="checked"> 公开
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="type" value="internal"> 内部(注册用户)
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="type" value="private"> 私有
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="cssForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                        css 样式
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseFour">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea class="form-control" rows="5" name="css_text" placeholder="本版块 Css 样式"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="jsForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                        js 自定制
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseFive">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea class="form-control" rows="5" name="js_text" placeholder="本版块自定制 JS "></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="managerForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                        管理员信息
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseTwo">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <select name="managers" class="form-control js-data-example-ajax " multiple>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="memberForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                        成员列表 (只在 type 为 private 的时候起作用)
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseThree">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <select name="members" class="form-control js-data-example-ajax " multiple>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="bannerImageForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                                        Banner 图片
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseSix">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="bannerImageForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+                                        模板选择
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseSeven">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id">
+                    <button type="button" id="create-forum-close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="create-forum-submit" class="btn btn-primary ">保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- Loader('/public/dashboard/forums.min.js')
+.js('/public/libs/select2/js/select2.full.js')
+.js('/public/javascripts/dashboard/forums.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

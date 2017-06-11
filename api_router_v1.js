@@ -25,6 +25,7 @@ router.post('/topic_collect/de_collect', middleware.auth, topicCollectController
 router.get('/topic_collect/:loginname', topicCollectController.list);
 
 // 用户
+router.get('/users', userController.list);
 router.get('/user/:loginname', userController.show);
 
 

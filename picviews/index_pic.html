@@ -64,11 +64,19 @@
     <div class="panel">
         <div class="header">
             <!-- TODO Tab页切换修改为ajax请求-->
-            <% [['all', '全部'], ['good', '精华']].concat(tabs).forEach(function (pair) {
+            <% [['all', '全部'], ['good', '精华']].forEach(function (pair) {
             var value = pair[0];
             var text = pair[1]; %>
             <a href="<%= value ? '/?tab=' + value : '/' %>"
                class="topic-tab <%= value === tab ? 'current-tab' : '' %>"><%= text %></a>
+            <% }) %>
+
+            <% forums.forEach(function (forum) {
+            var value = forum._id;
+            var text = forum.title;
+            %>
+            <a href="<%= value ? '/?forum=' + value : '/' %>"
+               class="topic-tab <%= value === forum ? 'current-tab' : '' %>"><%= text %></a>
             <% }) %>
         </div>
         <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>

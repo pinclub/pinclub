@@ -1,9 +1,11 @@
 <tr>
     <td><input type="checkbox"></td>
-    <td>${forum.title} (path: ${forum.path_name})</td>
-    <td>${forum.topic_count}</td>
-    <td>${forum.type}</td>
-    <td>${forum.order}</td>
-    <td>${forum.create_at_ago}</td>
-    <td>修改</td>
+    <td><%= forum.title %> (path: <%= forum.path_name %>)</td>
+    <td><%= forum.topic_count %></td>
+    <td><%= forum.type %></td>
+    <td><%= forum.order %></td>
+    <td><%= forum.create_at_ago %></td>
+    <td>
+        <button id="modify_forum" data-id="<%= forum._id %>" class="btn btn-link">修改</button>
+    </td>
 </tr>

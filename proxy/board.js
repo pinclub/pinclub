@@ -134,7 +134,7 @@ exports.getFullBoard = function (id, callback) {
         proxy.emit('board', board);
 
         User.getUserById(board.user_id, proxy.done(function (creator) {
-            if (!author) {
+            if (!creator) {
                 proxy.unbind();
                 return callback(null, '画板的作者丢了。');
             }

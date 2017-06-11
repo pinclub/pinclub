@@ -58,4 +58,42 @@ var show = function (req, res, next) {
     }));
 };
 
+var list = function (req, res, next) {
+    req.checkQuery({
+        'q': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'q 不能为空'
+            }
+        }
+    });
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+        var ep = new EventProxy();
+
+        ep.fail(next);
+
+        let qs = req.query.q;
+        var query = {
+            loginname: {'$regex': qs}
+        };
+        UserProxy.getUsersByQuery(query, function (err, users) {
+            if (err) {
+                return next(err);
+            }
+            _.forEach(users, function (user) {
+                user = structureHelper.user(user);
+            });
+            res.send({success: true, data: users});
+        });
+    });
+};
+
 exports.show = show;
+exports.list = list;

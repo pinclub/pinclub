@@ -16,6 +16,7 @@ var message = require('./controllers/message');
 var topic = require('./controllers/topic');
 var image = require('./controllers/image');
 var board = require('./controllers/board');
+var forum = require('./controllers/forum');
 var reply = require('./controllers/reply');
 var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
@@ -34,7 +35,7 @@ var router = express.Router();
 //router.get('/', site.index);
 
 // pic home page
-router.get('/', site.index_pic);
+router.get('/', site.index);
 
 // sitemap
 router.get('/sitemap.xml', site.sitemap);
@@ -156,6 +157,9 @@ router.get('/admin/tags', auth.adminRequired, dashboard.tags);
 router.get('/admin/boards', auth.adminRequired, dashboard.boards);
 router.get('/admin/users', auth.adminRequired, dashboard.users);
 router.get('/admin/areas', auth.adminRequired, dashboard.areas);
+router.get('/admin/forums', auth.adminRequired, forum.list);
+router.post('/admin/forums', auth.adminRequired, forum.create);
+router.get('/admin/forums/:id', auth.adminRequired, forum.show);
 
 if (!config.debug) { // 这个兼容破坏了不少测试
 	router.get('/:name', function (req, res) {

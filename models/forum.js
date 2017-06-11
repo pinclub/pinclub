@@ -4,7 +4,8 @@ var Schema    = mongoose.Schema;
 var ObjectId  = Schema.ObjectId;
 
 var ForumSchema = new Schema({
-    user_id: { type: ObjectId }, // 创建者
+    user: { type: ObjectId,ref: 'User' }, // 创建者
+    path_name: { type: String },
     title: { type: String },
     content: { type: String },
     create_at: { type: Date, default: Date.now },
@@ -12,7 +13,7 @@ var ForumSchema = new Schema({
     topic_count: {type: Number, default: 0},
     managers: [{type: ObjectId, ref: 'User'}],
     members: [{type: ObjectId, ref: 'User'}],
-    order: {type: Number},
+    order: {type: Number, default: 0},
     template: {type: String},
     bannerImage: {type: String},
     css_text: {type:String},
@@ -21,6 +22,6 @@ var ForumSchema = new Schema({
 
 ForumSchema.plugin(BaseModel);
 ForumSchema.index({create_at: -1});
-ForumSchema.index({user_id: 1, create_at: -1});
+ForumSchema.index({user: 1, create_at: -1});
 
 mongoose.model('Forum', ForumSchema);
