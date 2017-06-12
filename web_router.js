@@ -156,8 +156,9 @@ router.get('/admin/dashboard', auth.adminRequired, dashboard.dashboard);
 router.get('/admin/tags', auth.adminRequired, dashboard.tags);
 router.get('/admin/boards', auth.adminRequired, dashboard.boards);
 router.get('/admin/users', auth.adminRequired, dashboard.users);
+// router.post('/admin/users', auth.adminRequired, dashboard.users);
 router.get('/admin/areas', auth.adminRequired, dashboard.areas);
-router.get('/admin/forums', auth.adminRequired, forum.list);
+router.get('/admin/forums', auth.adminRequired, dashboard.forums);
 router.post('/admin/forums', auth.adminRequired, forum.create);
 router.get('/admin/forums/:id', auth.adminRequired, forum.show);
 

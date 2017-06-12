@@ -16,7 +16,7 @@
 | store_local.js | 53 | [@hhdem](https://github.com/hhdem) ~~上传图片时裁剪生成 86 像素宽的缩略图, 存储到upload下~~
 | forum.js | 14 | [@hhdem](https://github.com/hhdem) ~~所有Forum列表~~
 | forum.js | 27 | [@hhdem](https://github.com/hhdem) ~~Forum信息添加和修改~~
-| forum.js | 89 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
+| forum.js | 93 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
 | image.js | 242 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
 | image.js | 243 | [@hhdem](https://github.com/hhdem) ~~上传图片支持 7牛云, 增加对应的配置~~
 | image.js | 244 | [@hhdem](https://github.com/hhdem) ~~更改hash参数生成方式为 ghash~~
@@ -33,6 +33,7 @@
 | common/counter.test.js | 180 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 收藏主题后增加用户收藏主题数~~
 | common/counter.test.js | 212 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 取消收藏主题后减少用户收藏主题数~~
 | controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
+| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | index.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 13 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
@@ -58,8 +59,8 @@
 | v2/topic.js | 185 |  创建 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
 | v2/topic.js | 186 |  创建 topic 时可以关联已发布的图片，或Board
 | v2/topic.js | 187 |  微信小程序记录轨迹
-| v2/topic.js | 245 |  修改 topic 时可以选择管理员维护的 area，在列表和详细信息查看中加入 area 标签显示
-| v2/topic.js | 246 |  修改 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
+| v2/topic.js | 240 |  修改 topic 时可以选择管理员维护的 area，在列表和详细信息查看中加入 area 标签显示
+| v2/topic.js | 241 |  修改 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
 | board.js | 1 |  用户Board列表
 | board.js | 8 |  用户Board信息查看
 | board.js | 15 |  用户Board信息修改
@@ -69,7 +70,7 @@
 | dashboard.js | 54 |  管理员维护界面 board 列表
 | dashboard.js | 59 |  管理员维护界面 用户 列表
 | dashboard.js | 64 |  管理员地区管理界面
-| forum.js | 127 |  Forum信息删除
+| forum.js | 131 |  Forum信息删除
 | image.js | 307 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
 | team.js | 1 |  v2 小组列表
 | team.js | 6 |  v2 用户已加入小组列表
@@ -82,7 +83,7 @@
 | trip.js | 1 |  v2 用户可以创建活动，以及活动结束后可以通过微信小程序共享轨迹
 | trip.js | 2 |  v2 需要绑定 google 地图，显示活动轨迹
 | trip.js | 3 |  v2 活动状态更新
-| controllers/image.test.js | 80 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
+| controllers/image.test.js | 119 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 | index_pic.html | 14 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
 | index_pic.html | 51 |  Signin with wechat and QQ account
 | board/_board_create_search.html | 1 |  Tag添加

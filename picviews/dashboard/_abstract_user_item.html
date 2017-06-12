@@ -1,0 +1,14 @@
+<tr>
+    <td><input type="checkbox"></td>
+    <td><img src="<%= user.avatar %>" width="25" height="25"/></td>
+    <td><%= user.loginname %></td>
+    <td><%= user.email %></td>
+    <td><%= user.topic_count %></td>
+    <td><%= user.image_count %></td>
+    <td><%= user.board_count %></td>
+    <td><%= user.score %></td>
+    <td><%= user.create_at_ago() %></td>
+    <td>
+        <button id="modify_user" data-id="<%= user._id %>" data-loginname="<%= user.loginname %>" class="btn btn-link">修改</button>
+    </td>
+</tr>

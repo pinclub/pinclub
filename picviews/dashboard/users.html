@@ -1,0 +1,250 @@
+<!-- TODO 管理员面板页面 -->
+<!-- TODO Tab页切换修改为ajax请求-->
+<%- Loader('/public/stylesheets/users.min.css')
+.css('/public/stylesheets/dashboard.less')
+.css('/public/libs/select2/css/select2.css')
+.css('/public/libs/bootstrap-select2/select2-bootstrap.css')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<div id='dashboard' class="content">
+    <div class='container-fluid container-limited'>
+        <div class="admin-dashboard prepend-top-default">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>用户列表</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <th><input type="checkbox"></th>
+                                <th>头像</th>
+                                <th>用户名称</th>
+                                <th>邮箱</th>
+                                <th>主题数量</th>
+                                <th>图片数量</th>
+                                <th>Board数量</th>
+                                <th>积分</th>
+                                <th>创建于</th>
+                                <th>操作</th>
+                                </thead>
+                                <%- partial('_abstract_user_item', {collection:users, as:'user'}) %>
+                            </table>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <% var base_url = '?'
+                                    + 'page='; %>
+                                    <% if (current_page == 1) { %>
+                                    <li class='disabled'><a>«</a></li>
+                                    <% } else { %>
+                                    <li><a href="<%= base_url %>1">«</a></li>
+                                    <% } %>
+
+                                    <%
+                                    var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
+                                    var page_end = page_start + 4 >= pages ? pages : page_start + 4;
+                                    %>
+
+                                    <% if (page_start > 1) { %>
+                                    <li><a>...</a></li>
+                                    <% } %>
+
+                                    <% for(var i = page_start; i <= page_end; i++) { %>
+                                    <% if (i === current_page) { %>
+                                    <li class='disabled'><a><%= i %></a></li>
+                                    <% } else { %>
+                                    <li><a href='<%= base_url + i %>'><%= i %></a></li>
+                                    <% } %>
+                                    <% } %>
+
+                                    <% if (page_end < pages ) { %>
+                                    <li><a>...</a></li>
+                                    <% } %>
+
+                                    <% if (current_page == pages) { %>
+                                    <li class='disabled'><a>»</a></li>
+                                    <% } else { %>
+                                    <li><a href='<%= base_url + pages %>'>»</a></li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                            <script>
+                                $(document).ready(function () {
+                                    var $nav = $('.pagination');
+                                    var current_page = $nav.attr('current_page');
+                                    if (current_page) {
+                                        $nav.find('li').each(function () {
+                                            var $li = $(this);
+                                            var $a = $li.find('a');
+                                            if ($a.html() == current_page) {
+                                                $li.addClass('active');
+                                                $a.removeAttr('href');
+                                            }
+                                        });
+                                    }
+                                });
+                            </script>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            <button class="btn btn-default" data-toggle="modal" data-target="#create_user_modal">添加用户
+                            </button>
+                            <button class="btn btn-default">删除用户</button>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4>数据统计</h4></div>
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--User modal -->
+<div class="modal fade" id="create_user_modal" role="dialog" aria-hidden="true" aria-labelledby="createUserModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/admin/users" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">用户信息</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="basicInfoUser">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                                       aria-expanded="true" aria-controls="collapseOne">
+                                        基本信息
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                                 aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="loginname" placeholder="用户名称">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="email" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea id="user_profile" class="form-control" rows="3" name="profile"
+                                                      placeholder="用户描述"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="cssUser">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                        统计数据
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel"
+                                 aria-labelledby="collapseFour">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            score
+                                        </div>
+                                        <div class="col-sm-3">
+                                            topic_count
+                                        </div>
+                                        <div class="col-sm-3">
+                                            image_count
+                                        </div>
+                                        <div class="col-sm-3">
+                                            board_count
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            collect_topic_count
+                                        </div>
+                                        <div class="col-sm-3">
+                                            collect_board_count
+                                        </div>
+                                        <div class="col-sm-3">
+                                            like_image_count
+                                        </div>
+                                        <div class="col-sm-3">
+                                            get_image_count
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            reply_count
+                                        </div>
+                                        <div class="col-sm-3">
+                                            follower_count
+                                        </div>
+                                        <div class="col-sm-6">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="jsUser">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                        修改密码
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse" role="tabpanel"
+                                 aria-labelledby="collapseFive">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="password" placeholder="Password">
+                                            <div class="help-block">不填则不修改</div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="repassword" placeholder="Re-Password">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id">
+                    <button type="button" id="create-user-close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="submit" id="create-user-submit" class="btn btn-primary ">保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- Loader('/public/users.min.js')
+.js('/public/javascripts/dashboard/users.js')
+.js('/public/libs/select2/js/select2.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

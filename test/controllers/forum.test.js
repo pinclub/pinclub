@@ -143,10 +143,6 @@ describe('test/controllers/forum.test.js', function () {
                     done(err);
                 });
         });
-
-        it('should list right search result', function (done) {
-            done();
-        });
     });
 
     describe('show forum', function () {

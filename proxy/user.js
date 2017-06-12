@@ -84,6 +84,11 @@ exports.getUsersByQuery = function (query, opt, callback) {
     User.find(query, '', opt, callback);
 };
 
+
+exports.getCountByQuery = function (query, callback) {
+    User.count(query, callback);
+};
+
 /**
  * 根据查询条件，获取一个用户
  * Callback:

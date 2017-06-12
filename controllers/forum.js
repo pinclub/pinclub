@@ -1,28 +1,5 @@
-var validator = require('validator');
-
-var at           = require('../common/at');
-var User         = require('../proxy').User;
 var Forum        = require('../proxy').Forum;
-var EventProxy   = require('eventproxy');
-var tools        = require('../common/tools');
-var store        = require('../common/store');
-var config       = require('../config');
 var _            = require('lodash');
-var cache        = require('../common/cache');
-var logger = require('../common/logger');
-
-// DONE (hhdem) 所有Forum列表
-exports.list = function (req, res, next) {
-    var options = { sort: '-order', limit: 10};
-    Forum.getForumsByQuery({}, options, function (err, forums) {
-        if (err) {
-            return next(err);
-        }
-        res.render('dashboard/forums', {
-            forums: forums
-        });
-    });
-};
 
 // DONE (hhdem) Forum信息添加和修改
 exports.create = function (req, res, next) {
