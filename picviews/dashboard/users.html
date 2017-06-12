@@ -69,22 +69,7 @@
                                     <% } %>
                                 </ul>
                             </nav>
-                            <script>
-                                $(document).ready(function () {
-                                    var $nav = $('.pagination');
-                                    var current_page = $nav.attr('current_page');
-                                    if (current_page) {
-                                        $nav.find('li').each(function () {
-                                            var $li = $(this);
-                                            var $a = $li.find('a');
-                                            if ($a.html() == current_page) {
-                                                $li.addClass('active');
-                                                $a.removeAttr('href');
-                                            }
-                                        });
-                                    }
-                                });
-                            </script>
+
                         </div>
 
                     </div>
@@ -242,9 +227,24 @@
         </div>
     </div>
 </div>
-
+<script>
+    $(document).ready(function () {
+        var $nav = $('.pagination');
+        var current_page = $nav.attr('current_page');
+        if (current_page) {
+            $nav.find('li').each(function () {
+                var $li = $(this);
+                var $a = $li.find('a');
+                if ($a.html() == current_page) {
+                    $li.addClass('active');
+                    $a.removeAttr('href');
+                }
+            });
+        }
+    });
+</script>
 <%- Loader('/public/users.min.js')
+.js('/public/libs/select2/js/select2.full.js')
 .js('/public/javascripts/dashboard/users.js')
-.js('/public/libs/select2/js/select2.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>

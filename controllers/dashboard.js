@@ -17,7 +17,6 @@ exports.dashboard = function (req, res, next) {
                     err.type = 'database';
                     return callback(err);
                 }
-
                 callback(null, _.pick(info, 'version').version);
             });
         }
