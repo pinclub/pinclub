@@ -54,6 +54,34 @@ var index = function (req, res, next) {
     });
 };
 
+// TODO Board 信息查看接口
+var show = function (req, res, next) {
+    var boardId = String(req.params.id);
+
+    var ep = new EventProxy();
+
+    if (!validator.isMongoId(boardId)) {
+        res.status(400);
+        return res.send({success: false, error_msg: '不是有效的话题id'});
+    }
+
+    ep.fail(next);
+
+    BoardProxy.getFullBoard(boardId, ep.done(function (err, msg, board, author, topics) {
+        if (!board) {
+            res.status(404);
+            return res.send({success: false, error_msg: '话题不存在'});
+        }
+
+        board.author = _.pick(author, ['loginname', 'avatar_url']);
+
+        board.topics = topics;
+
+        res.send({success: true, data: board});
+    }));
+
+};
+
 /**
  * @api {post} /v2/boards 创建Board
  * @apiDescription
@@ -298,3 +326,4 @@ exports.index = index;
 exports.create = create;
 exports.collect = collect;
 exports.decollect = decollect;
+exports.show = show;

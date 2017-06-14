@@ -28,6 +28,7 @@ router.post('/images/get', middleware.auth, imageController.getImage);
 // Board
 router.get('/boards', middleware.auth, boardController.index);
 router.post('/boards', middleware.auth, limit.peruserperday('create_board', config.create_board_per_day, {showJson: true}), boardController.create);
+router.get('/boards/:id', middleware.auth, boardController.show);
 // Board 收藏
 router.get('/boards/collect/:loginname', boardController.collectList); // 关注列表
 router.post('/boards/collect', middleware.auth, boardController.collect); // 关注某Board

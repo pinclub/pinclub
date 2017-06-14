@@ -4,6 +4,7 @@ var async = require('async');
 var mongoose = require('mongoose');
 var EventProxy = require('eventproxy');
 var Forum        = require('../proxy').Forum;
+var Board        = require('../proxy').Board;
 var User        = require('../proxy').User;
 
 // TODO 管理员维护界面 Dashboard, 统计数据的获取
@@ -34,14 +35,14 @@ exports.dashboard = function (req, res, next) {
             node_version: process.versions.node,
             mongodb_version: results.mongodb
         };
-        var render = function (users, forums) {
+        var render = function (users, forums, boards) {
             res.render('dashboard/index', {
                 reply_count: 0,
                 active_user_count: 0,
                 users: users,
                 topics: [],
                 images: [],
-                boards: [],
+                boards: boards,
                 teams: [],
                 forums: forums,
                 system: system
@@ -49,9 +50,10 @@ exports.dashboard = function (req, res, next) {
         };
         var ep = EventProxy.create();
         ep.fail(next);
-        ep.assign('users', 'forums', render);
+        ep.assign('users', 'forums', 'boards', render);
         User.getUsersByQuery({}, {}, ep.done('users'));
         Forum.getForumsByQuery({}, {}, ep.done('forums'));
+        Board.getBoardsByQuery({}, {}, ep.done('boards'));
     });
 };
 
@@ -62,7 +64,26 @@ exports.tags = function (req, res, next) {
 
 // TODO 管理员维护界面 board 列表
 exports.boards = function (req, res, next) {
-
+    var page = parseInt(req.query.page, 10) || 1;
+    page = page > 0 ? page : 1;
+    var limit = 20;
+    var options = { skip: (page - 1) * limit, sort: '-create_at', limit: limit};
+    Board.getCountByQuery({}, function (err, all_boards_count) {
+        if (err) {
+            return next(err);
+        }
+        var pages = Math.ceil(all_boards_count / limit);
+        Board.getBoardsByQuery({}, options, function (err, boards) {
+            if (err) {
+                return next(err);
+            }
+            res.render('dashboard/boards', {
+                current_page: page,
+                pages: pages,
+                boards: boards
+            });
+        });
+    });
 };
 
 // TODO 管理员维护界面 用户 列表

@@ -4,10 +4,10 @@ var Schema    = mongoose.Schema;
 var ObjectId  = Schema.ObjectId;
 
 var BoardSchema = new Schema({
-    user_id: { type: ObjectId },
+    user_id: { type: ObjectId, ref: 'User' },
     title: { type: String },
     create_at: { type: Date, default: Date.now },
-    type: {type: String},
+    type: {type: String, default: 'public', enum: ['private', 'public']},
     topic_count: {type: Number, default: 0},
     collect_count: {type: Number, default: 0}
 });

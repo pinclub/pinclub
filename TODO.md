@@ -14,9 +14,9 @@
 | counter.js | 170 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | store_local.js | 45 | [@hhdem](https://github.com/hhdem) ~~上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法~~
 | store_local.js | 53 | [@hhdem](https://github.com/hhdem) ~~上传图片时裁剪生成 86 像素宽的缩略图, 存储到upload下~~
-| forum.js | 14 | [@hhdem](https://github.com/hhdem) ~~所有Forum列表~~
-| forum.js | 27 | [@hhdem](https://github.com/hhdem) ~~Forum信息添加和修改~~
-| forum.js | 93 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
+| dashboard.js | 98 | [@hhdem](https://github.com/hhdem) ~~所有Forum列表~~
+| forum.js | 4 | [@hhdem](https://github.com/hhdem) ~~Forum信息添加和修改~~
+| forum.js | 70 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
 | image.js | 242 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
 | image.js | 243 | [@hhdem](https://github.com/hhdem) ~~上传图片支持 7牛云, 增加对应的配置~~
 | image.js | 244 | [@hhdem](https://github.com/hhdem) ~~更改hash参数生成方式为 ghash~~
@@ -65,12 +65,12 @@
 | board.js | 8 |  用户Board信息查看
 | board.js | 15 |  用户Board信息修改
 | board.js | 22 |  用户Board信息删除
-| dashboard.js | 6 |  管理员维护界面 Dashboard, 统计数据的获取
-| dashboard.js | 49 |  管理员维护界面 tag 列表
-| dashboard.js | 54 |  管理员维护界面 board 列表
-| dashboard.js | 59 |  管理员维护界面 用户 列表
-| dashboard.js | 64 |  管理员地区管理界面
-| forum.js | 131 |  Forum信息删除
+| dashboard.js | 9 |  管理员维护界面 Dashboard, 统计数据的获取
+| dashboard.js | 58 |  管理员维护界面 tag 列表
+| dashboard.js | 63 |  管理员维护界面 board 列表
+| dashboard.js | 68 |  管理员维护界面 用户 列表
+| dashboard.js | 93 |  管理员地区管理界面
+| forum.js | 108 |  Forum信息删除
 | image.js | 307 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
 | team.js | 1 |  v2 小组列表
 | team.js | 6 |  v2 用户已加入小组列表
@@ -83,6 +83,9 @@
 | trip.js | 1 |  v2 用户可以创建活动，以及活动结束后可以通过微信小程序共享轨迹
 | trip.js | 2 |  v2 需要绑定 google 地图，显示活动轨迹
 | trip.js | 3 |  v2 活动状态更新
+| user.js | 381 |  点击首页Get数量，进入用户Get的图片列表页面
+| user.js | 388 |  点击首页Board数量，进入用户 Board 列表页面
+| user.js | 395 |  点击首页积分，进入用户 积分明细页面 的图片列表页面
 | controllers/image.test.js | 119 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 | index_pic.html | 14 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
 | index_pic.html | 51 |  Signin with wechat and QQ account
@@ -91,6 +94,11 @@
 | dashboard/forums.html | 2 |  Tab页切换修改为ajax请求
 | dashboard/index.html | 1 |  管理员面板页面
 | dashboard/index.html | 2 |  Tab页切换修改为ajax请求
+| dashboard/users.html | 1 |  管理员的用户列表页面中加入，禁言、修改
+| dashboard/users.html | 2 |  Tab页切换修改为ajax请求
+| dashboard/users.html | 80 |  管理员用户列表，点击添加用户弹出新增模态框，创建用户
+| dashboard/users.html | 81 |  管理员用户列表，点击删除用户可以删除选定用户
+| dashboard/users.html | 98 |  管理员用户列表，点击修改弹出修改模态框并可修改用户信息
 | topic/_pic_create_modal.html | 5 | [@hhdem](https://github.com/hhdem) chrome 插件直接采集
 | topic/_templates.html | 27 |  关注board按钮实现
 | user/boards.html | 1 |  用户 Board 列表页面

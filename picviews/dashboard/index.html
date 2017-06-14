@@ -1,5 +1,4 @@
-<!-- TODO 管理员面板页面 -->
-<!-- TODO Tab页切换修改为ajax请求-->
+<!-- TODO 管理员面板页面，统计数据获取， -->
 <%- Loader('/public/stylesheets/admin.min.css')
 .css('/public/stylesheets/dashboard.less')
 .done(assets, config.site_static_host, config.mini_assets)
@@ -88,6 +87,20 @@
                                 </div>
                                 <div class="col-xs-2 col-sm-3 text-center">
                                     <h1 class="list-group-item-heading"><%= forums.length %></h1>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                    <div class="list-group">
+                        <a href="/admin/boards" class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-10 col-sm-9">
+                                    <h4 class="list-group-item-heading">Board 数量 </h4>
+                                    <p class="list-group-item-text">点击进入Board列表</p>
+                                </div>
+                                <div class="col-xs-2 col-sm-3 text-center">
+                                    <h1 class="list-group-item-heading"><%= boards.length %></h1>
                                 </div>
 
                             </div>
