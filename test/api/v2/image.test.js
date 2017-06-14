@@ -14,7 +14,7 @@ describe('test/api/v2/image.test.js', function () {
         simImagePath2 = path.join(__dirname, '/sim2.JPG');
         support.createUser(function (err, user) {
             mockUser = user;
-            support.createBoard(user.id, '', function (err, board) {
+            support.createBoard(user.id, 'public', function (err, board) {
                 mockBoard = board;
                 support.createImage(user.id, board, function (err, image) {
                     mockImage = image;
@@ -255,7 +255,7 @@ describe('test/api/v2/image.test.js', function () {
     describe('post /api/v2/images/get', function () {
         var wouldBeGetToBoard;
         before(function (done) {
-            support.createBoard(support.normalUser.id, '', function (err, board) {
+            support.createBoard(support.normalUser.id, 'public', function (err, board) {
                 wouldBeGetToBoard = board;
                 done();
             });

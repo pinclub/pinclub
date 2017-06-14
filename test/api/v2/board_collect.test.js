@@ -10,7 +10,7 @@ describe('test/api/v2/board_collect.test.js', function () {
     before(function (done) {
         support.createUser(function (err, user) {
             mockUser = user;
-            support.createBoard(user.id, '', function (err, board) {
+            support.createBoard(user.id, 'public', function (err, board) {
                 mockBoard = board;
                 done();
             });

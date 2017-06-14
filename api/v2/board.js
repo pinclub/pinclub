@@ -105,7 +105,7 @@ var show = function (req, res, next) {
 var create = function (req, res, next) {
 
     var title = validator.trim(req.body.title || '');
-    var type = validator.trim(req.body.type || '');
+    var type = validator.trim(req.body.type || 'public');
 
     // 验证
     var editError;

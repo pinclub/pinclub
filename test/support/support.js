@@ -102,7 +102,7 @@ ep.all('user', 'user2', 'user3', 'admin', function (user, user2, user3, admin) {
     createForum(admin._id, 'public', function (err, forum) {
         exports.testForum = forum;
         createTopic(user._id, forum, ep.done('topic'));
-        createBoard(user._id, '', ep.done('board'));
+        createBoard(user._id, 'public', ep.done('board'));
     });
 });
 
