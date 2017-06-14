@@ -11,7 +11,6 @@
 var should = require('should');
 var app = require('../../app');
 var request = require('supertest')(app);
-var mm = require('mm');
 var support = require('../support/support');
 var _ = require('lodash');
 var pedding = require('pedding');
@@ -138,7 +137,7 @@ describe('test/controllers/user.test.js', function () {
 
   describe('#toggleStar', function () {
     it('should not set star user when no user_id', function (done) {
-      request.post('/user/set_star')
+      request.post('/user/ddssaa/star')
       .set('Cookie', support.adminUserCookie)
       .expect(500, function (err, res) {
         res.text.should.containEql('user is not exists');
@@ -147,13 +146,10 @@ describe('test/controllers/user.test.js', function () {
     });
 
     it('should set star user', function (done) {
-      request.post('/user/set_star')
-      .send({
-        user_id: support.normalUser._id
-      })
+      request.post('/user/'+support.normalUser.loginname+'/star')
       .set('Cookie', support.adminUserCookie)
       .expect(200, function (err, res) {
-        res.body.should.eql({status: 'success'});
+        res.body.should.eql({success: true});
 
         UserProxy.getUserById(support.normalUser._id, function (err, user) {
           user.is_star.should.be.true();
@@ -163,13 +159,10 @@ describe('test/controllers/user.test.js', function () {
     });
 
     it('should unset star user', function (done) {
-      request.post('/user/set_star')
-      .send({
-        user_id: support.normalUser._id
-      })
+      request.post('/user/'+support.normalUser.loginname+'/star')
       .set('Cookie', support.adminUserCookie)
       .expect(200, function (err, res) {
-        res.body.should.eql({status: 'success'});
+        res.body.should.eql({success: true});
 
         UserProxy.getUserById(support.normalUser._id, function (err, user) {
           user.is_star.should.be.false();
@@ -228,7 +221,7 @@ describe('test/controllers/user.test.js', function () {
         })
         .set('Cookie', support.adminUserCookie)
         .expect(200, function (err, res) {
-          res.body.should.eql({status: 'success'});
+          res.body.should.eql({status: 'success', success: true});
           UserProxy.getUserById(newuser._id, function (err, user) {
             user.is_block.should.be.true();
             done(err);
@@ -244,10 +237,10 @@ describe('test/controllers/user.test.js', function () {
       })
       .set('Cookie', support.adminUserCookie)
       .expect(200, function (err, res) {
-        res.body.should.eql({status: 'success'});
+        res.body.should.eql({status: 'success', success: true});
         done(err);
-      })
-    })
+      });
+    });
 
     it('should wrong when user is not exists', function (done) {
       request.post('/user/not_exists_user/block')
@@ -256,11 +249,11 @@ describe('test/controllers/user.test.js', function () {
       })
       .set('Cookie', support.adminUserCookie)
       .expect(500, function (err, res) {
-        res.text.should.containEql('user is not exists')
+        res.text.should.containEql('user is not exists');
         done(err);
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('#delete_all', function () {
     it('should delele all ups', function (done) {
@@ -270,7 +263,7 @@ describe('test/controllers/user.test.js', function () {
           should.not.exists(err);
           reply.ups.push(userId);
           reply.save(function (err, reply) {
-            reply.ups.should.containEql(userId)
+            reply.ups.should.containEql(userId);
 
             request.post('/user/' + user.loginname + '/delete_all')
               .set('Cookie', support.adminUserCookie)
@@ -278,13 +271,13 @@ describe('test/controllers/user.test.js', function () {
                 res.body.should.eql({ status: 'success' });
 
                 ReplyModel.findOne({_id: reply._id}, function (err, reply) {
-                  reply.ups.should.not.containEql(userId)
+                  reply.ups.should.not.containEql(userId);
                   done();
-                })
-              })
-          })
-        })
-      })
-    })
-  })
+                });
+              });
+          });
+        });
+      });
+    });
+  });
 });

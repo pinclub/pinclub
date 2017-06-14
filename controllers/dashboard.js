@@ -34,7 +34,7 @@ exports.dashboard = function (req, res, next) {
             node_version: process.versions.node,
             mongodb_version: results.mongodb
         };
-        var render = function (users) {
+        var render = function (users, forums) {
             res.render('dashboard/index', {
                 reply_count: 0,
                 active_user_count: 0,
@@ -43,15 +43,15 @@ exports.dashboard = function (req, res, next) {
                 images: [],
                 boards: [],
                 teams: [],
-                forums: [],
+                forums: forums,
                 system: system
             });
         };
         var ep = EventProxy.create();
         ep.fail(next);
-        ep.assign('users', render);
+        ep.assign('users', 'forums', render);
         User.getUsersByQuery({}, {}, ep.done('users'));
-
+        Forum.getForumsByQuery({}, {}, ep.done('forums'));
     });
 };
 

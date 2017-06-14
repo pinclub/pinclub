@@ -225,7 +225,7 @@ describe('test/controllers/topic.test.js', function () {
                     done(err);
                 });
         });
-    })
+    });
 
     describe('#de_collect', function () {
         it('should decollect a topic', function (done) {

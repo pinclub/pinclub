@@ -169,8 +169,8 @@ exports.setting = function (req, res, next) {
 };
 
 exports.toggleStar = function (req, res, next) {
-    var user_id = req.body.user_id;
-    User.getUserById(user_id, function (err, user) {
+    var loginname = req.params.name;
+    User.getUserByLoginName(loginname, function (err, user) {
         if (err) {
             return next(err);
         }
@@ -182,7 +182,7 @@ exports.toggleStar = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            res.json({status: 'success'});
+            res.json({success: true});
         });
     });
 };
@@ -340,7 +340,7 @@ exports.block = function (req, res, next) {
         if (action === 'set_block') {
             ep.all('block_user',
                 function (user) {
-                    res.json({status: 'success'});
+                    res.json({success: true, status: 'success'});
                 });
             user.is_block = true;
             user.save(ep.done('block_user'));
@@ -349,7 +349,7 @@ exports.block = function (req, res, next) {
             user.is_block = false;
             user.save(ep.done(function () {
 
-                res.json({status: 'success'});
+                res.json({success: true, status: 'success'});
             }));
         }
     }));

@@ -1,15 +1,6 @@
-/*!
- * nodeclub - site controller test
- * Copyright(c) 2012 fengmk2 <fengmk2@gmail.com>
- * MIT Licensed
- */
-
 /**
  * Module dependencies.
  */
-
-var should = require('should');
-var config = require('../../config');
 var app = require('../../app');
 var request = require('supertest')(app);
 

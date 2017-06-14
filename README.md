@@ -103,6 +103,10 @@ db.system.js.save(
 ![设置board](https://s-media-cache-ak0.pinimg.com/originals/5a/4e/d8/5a4ed82f3fe250c2051c3c463db8e397.jpg)
 ![图片box](https://s-media-cache-ak0.pinimg.com/originals/61/dd/c0/61ddc022328245d89cf24aba204b95a2.jpg)
 ![Get图片](https://s-media-cache-ak0.pinimg.com/originals/15/d0/18/15d018bcbe7fe02e2c541f648c6a1e16.jpg)
+![Dashboard](https://s-media-cache-ak0.pinimg.com/564x/06/15/3c/06153c8e3c5544f4a089c848de0f692b.jpg)
+![用户列表](https://s-media-cache-ak0.pinimg.com/564x/26/0d/61/260d61613e2598e424611338978ec39b.jpg)
+![板块列表](https://s-media-cache-ak0.pinimg.com/564x/a0/3b/87/a03b87d957222511918cbf344ce55250.jpg)
+![板块弹出模态框](https://s-media-cache-ak0.pinimg.com/564x/9f/be/c3/9fbec3406cdf86cfb1ad4f5658cc4593.jpg)
 
 ## 关于 Nodeclub
 

@@ -124,11 +124,10 @@
             var $me = $(this);
             var action = $me.attr('action');
             var params = {
-                user_id: '<%= user._id %>',
                 _csrf: '<%- csrf %>'
             };
-            $.post('/user/' + action, params, function (data) {
-                if (data.status === 'success') {
+            $.post('/user/<%= user.loginname %>/star', params, function (data) {
+                if (data.success === true) {
                     if (action === 'set_star') {
                         $me.html('取消达人');
                         $me.attr('action', 'cancel_star');

@@ -1,4 +1,4 @@
-<!-- TODO 管理员面板页面 -->
+<!-- TODO 管理员的用户列表页面中加入，禁言、修改 -->
 <!-- TODO Tab页切换修改为ajax请求-->
 <%- Loader('/public/stylesheets/users.min.css')
 .css('/public/stylesheets/dashboard.less')
@@ -77,6 +77,8 @@
                 <div class="col-md-2">
                     <div class="panel panel-default">
                         <div class="panel-body text-center">
+                            <!--TODO 管理员用户列表，点击添加用户弹出新增模态框，创建用户-->
+                            <!--TODO 管理员用户列表，点击删除用户可以删除选定用户-->
                             <button class="btn btn-default" data-toggle="modal" data-target="#create_user_modal">添加用户
                             </button>
                             <button class="btn btn-default">删除用户</button>
@@ -93,7 +95,7 @@
     </div>
 </div>
 
-<!--User modal -->
+<!--TODO 管理员用户列表，点击修改弹出修改模态框并可修改用户信息-->
 <div class="modal fade" id="create_user_modal" role="dialog" aria-hidden="true" aria-labelledby="createUserModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -227,6 +229,28 @@
         </div>
     </div>
 </div>
+
+<!--Message modal -->
+<div class="modal fade" id="message_modal" role="dialog" aria-hidden="true" aria-labelledby="messageModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/admin/users" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">信息</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="message"></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id">
+                    <button type="button" id="message-close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function () {
         var $nav = $('.pagination');
