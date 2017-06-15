@@ -15,7 +15,7 @@
                     <div class="profile-basic">
                         <a href="/user/<%= current_user.loginname %>" title="<%= current_user.loginname %>" class="img x loaded">
                             <img width="54" height="54" src="<%= current_user.avatar_url %>" data-baiduimageplus-ignore="1"></a>
-                        <a href="/user/<%= current_user.loginname %>" class="userlink">hhdem</a>
+                        <a href="/user/<%= current_user.loginname %>" class="userlink"><%= current_user.loginname %></a>
                         <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
                     </div>
                     <div class="profile-stats">

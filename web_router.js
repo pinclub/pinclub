@@ -157,6 +157,7 @@ router.get('/search', search.index);
 router.get('/admin/dashboard', auth.adminRequired, dashboard.dashboard);
 router.get('/admin/tags', auth.adminRequired, dashboard.tags);
 router.get('/admin/boards', auth.adminRequired, dashboard.boards);
+router.post('/admin/boards/:board_id/edit', auth.adminRequired, board.adminEdit);
 router.get('/admin/users', auth.adminRequired, dashboard.users);
 // router.post('/admin/users', auth.adminRequired, dashboard.users);
 router.get('/admin/areas', auth.adminRequired, dashboard.areas);

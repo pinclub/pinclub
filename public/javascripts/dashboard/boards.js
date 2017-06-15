@@ -3,12 +3,14 @@ $(document).on('click', '#modify_board', function (event) {
     if (!event.currentTarget) {
         return;
     }
-    $.ajax({
-        type: "GET",
-        url: "/api/v2/boards/" + event.currentTarget.dataset.id
-    }).done(function (response) {
-        console.log(response);
-        var modal = $('#create_board_modal');
-        modal.modal('show');
-    });
+    var data = event.currentTarget;
+    var modal = $('#modify_board_modal');
+    modal.find('form').prop('action', '/admin/boards/'+data.dataset.id+'/edit');
+    modal.find('input[name=title]').val(data.dataset.title);
+    if (data.dataset.type == 'private') {
+        modal.find('input[name=type][value="private"]').prop("checked", true);
+    } else {
+        modal.find('input[name=type][value="public"]').prop("checked", true);
+    }
+    modal.modal('show');
 });

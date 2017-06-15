@@ -14,7 +14,7 @@ describe('test/controllers/image.test.js', function () {
         support.createUser(function (err, user) {
             mockUser = user;
             mockUserCookie = support.mockUser(user);
-            support.createBoard(user.id, 'public', function (err, board) {
+            support.createBoard('I am board', user.id, 'public', function (err, board) {
                 mockBoard = board;
                 support.createImage(user.id, board, function (err, image) {
                     mockImage = image;

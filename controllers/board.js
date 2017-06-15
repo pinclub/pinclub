@@ -32,19 +32,106 @@ exports.index = function (req, res, next) {
 
 };
 
-// TODO 用户Board信息查看
+// TODO 用户Board信息查看, 显示Board中的图片列表
 exports.show = function (req, res, next) {
-    res.render('static/function_building', {
-        title: 'Board信息查看'
+    req.checkParams({
+        'board_id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'Board Id 不能为空'
+            },
+            isMongoId: {
+                options: [true],
+                errorMessage: 'Board Id 格式不正确'
+            }
+        }
+    });
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+        Board.getBoard(req.params.board_id, function (err, board) {
+            if (err) {
+                return next(err);
+            }
+            if (!board) {
+                return res.status(404).json({
+                    success: false,
+                    err_message: 'Board不存在'
+                }).end();
+            }
+            Topic.getImagesByQuery({
+                board: req.params.board_id
+            }, {}, function (err, topics) {
+                if (err) {
+                    return next(err);
+                }
+                board.topics = topics;
+                res.render('board/topics', {
+                    board: board
+                });
+            });
+        });
     });
 };
 
-// TODO 用户Board信息修改
-exports.update = function (req, res, next) {
-    res.render('static/function_building', {
-        title: 'Board信息修改'
+function update (req, res, cb) {
+    req.checkBody({
+        'title': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'Board 名称不能为空'
+            }
+        },
+        'type': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'type 不能为空'
+            },
+            matches: {
+                options: ['public|private'],
+                errorMessage: 'type 必须为 public,private'
+            }
+        }
     });
-};
+    req.checkParams({
+        'board_id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'Board Id 不能为空'
+            },
+            isMongoId: {
+                options: [true],
+                errorMessage: 'Board Id 格式不正确'
+            }
+        }
+    });
+
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+
+        Board.getBoard(req.params.board_id, function (err, board) {
+            if (err) {
+                return cb(err);
+            }
+
+            board.title = req.body.title;
+            board.type = req.body.type;
+            board.save();
+            cb();
+        });
+    });
+}
 
 // TODO 用户Board信息删除
 exports.delete = function (req, res, next) {
@@ -104,55 +191,26 @@ exports.create = function (req, res, next) {
 
 // DONE 用户Board列表页修改Board信息
 exports.edit = function (req, res, next) {
-    req.checkBody({
-        'title': {
-            notEmpty: {
-                options: [true],
-                errorMessage: 'Board 名称不能为空'
-            }
-        },
-        'type': {
-            notEmpty: {
-                options: [true],
-                errorMessage: 'type 不能为空'
-            },
-            matches: {
-                options: ['public|private'],
-                errorMessage: 'type 必须为 public,private'
-            }
-        }
-    });
-    req.checkParams({
-        'board_id': {
-            notEmpty: {
-                options: [true],
-                errorMessage: 'Board Id 不能为空'
-            },
-            isMongoId: {
-                options: [true],
-                errorMessage: 'Board Id 格式不正确'
-            }
-        }
-    });
-
-    req.getValidationResult().then(function(result) {
-        if (!result.isEmpty()) {
+    update(req, res, function(err) {
+        if (err) {
             return res.status(400).json({
                 success: false,
-                err_message: '参数验证失败',
-                err: result.useFirstErrorOnly().mapped()
+                err_message: '修改Board信息失败'
             }).end();
         }
+        return res.redirect('/boards');
+    });
+};
 
-        Board.getBoard(req.params.board_id, function (err, board) {
-            if (err) {
-                return next(err);
-            }
-
-            board.title = req.body.title;
-            board.type = req.body.type;
-            board.save();
-            return res.redirect('/boards');
-        });
+// TODO 管理员修改 Board 信息
+exports.adminEdit = function (req, res, next) {
+    update(req, res, function(err) {
+        if (err) {
+            return res.status(400).json({
+                success: false,
+                err_message: '修改Board信息失败'
+            }).end();
+        }
+        return res.redirect('/admin/boards');
     });
 };

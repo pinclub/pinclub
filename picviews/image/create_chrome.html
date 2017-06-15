@@ -48,7 +48,7 @@
         </div>
     </div>
 </div>
-<%- Loader('/public/pics.min.js')
+<%- Loader('/public/javascripts/pics.min.js')
 .js('/public/libs/masonry.pkgd.js')
 .js('/public/libs/imagesloaded.pkgd.min.js')
 .js('/public/libs/load-image.all.min.js')
@@ -58,7 +58,7 @@
 %>
 
 <% if (typeof(user) !== 'undefined' || current_user) { %>
-<%- Loader('/public/boards.min.js')
+<%- Loader('/public/javascripts/boards.min.js')
 .js('/public/javascripts/board_init.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>

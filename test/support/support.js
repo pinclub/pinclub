@@ -53,8 +53,8 @@ var createImage = exports.createImage = function (authorId, board, callback) {
     Topic.newAndSaveImage(image, callback);
 };
 
-var createBoard = exports.createBoard = function (authorId, type, callback) {
-    Board.newAndSave('I am board', type, authorId, callback);
+var createBoard = exports.createBoard = function (title, authorId, type, callback) {
+    Board.newAndSave(title, type, authorId, callback);
 };
 
 var createReply = exports.createReply = function (topicId, authorId, callback) {
@@ -102,7 +102,7 @@ ep.all('user', 'user2', 'user3', 'admin', function (user, user2, user3, admin) {
     createForum(admin._id, 'public', function (err, forum) {
         exports.testForum = forum;
         createTopic(user._id, forum, ep.done('topic'));
-        createBoard(user._id, 'public', ep.done('board'));
+        createBoard('board_title', user._id, 'public', ep.done('board'));
     });
 });
 

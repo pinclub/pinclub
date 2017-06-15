@@ -12,7 +12,7 @@ describe('test/api/v2/board.test.js', function () {
     before(function (done) {
         support.createUser(function (err, user) {
             mockUser = user;
-            support.createBoard(user.id, 'public', function (err, board) {
+            support.createBoard('new board title', user.id, 'public', function (err, board) {
                 support.createImage(user.id, board, function (err, image) {
                     mockImage = image;
                     done();

@@ -23,7 +23,7 @@ describe('test/common/counter.test.js', function () {
                 support.createUser(function (err, user) {
                     mockUser2 = user;
                     mockUserCookie2 = support.mockUser(user);
-                    support.createBoard(mockUser2._id, 'public', function (err, board) {
+                    support.createBoard('new board title', mockUser2._id, 'public', function (err, board) {
                         mockBoard = board;
                         support.createImage(mockUser2._id, mockBoard, function (err, image) {
                             mockImage = image;

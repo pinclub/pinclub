@@ -1,5 +1,5 @@
 <!-- TODO 管理员的Board列表页功能-->
-<%- Loader('/public/stylesheets/dashboard/boards.min.css')
+<%- Loader('/public/stylesheets/dashboard.min.css')
 .css('/public/stylesheets/dashboard.less')
 .css('/public/libs/select2/css/select2.css')
 .css('/public/libs/bootstrap-select2/select2-bootstrap.css')
@@ -74,6 +74,17 @@
                 <div class="col-md-2">
                     <div class="panel panel-default">
                         <div class="panel-body text-center">
+                            <!--TODO 管理员Board列表，搜索功能 -->
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="q" placeholder="关键词">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" style="height: 34px;">搜索</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
                             <!--TODO 管理员Board列表，点击删除Board可以删除选定Board-->
                             <button class="btn btn-default">删除Board</button>
                         </div>
@@ -89,134 +100,32 @@
     </div>
 </div>
 
-<!--TODO 管理员Board列表，点击修改弹出修改模态框并可修改Board信息-->
-<div class="modal fade" id="create_board_modal" role="dialog" aria-hidden="true" aria-labelledby="createBoardModalLabel">
+<!--DONE 管理员Board列表，点击修改弹出修改模态框并可修改Board信息-->
+<div class="modal fade" id="modify_board_modal" role="dialog" aria-hidden="true" aria-labelledby="modifyBoardModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form class="form-horizontal" action="/admin/boards" method="post">
                 <div class="modal-header">
-                    <h5 class="modal-title">用户信息</h5>
+                    <h5 class="modal-title">Board 信息</h5>
                 </div>
                 <div class="modal-body">
-                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="basicInfoUser">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
-                                       aria-expanded="true" aria-controls="collapseOne">
-                                        基本信息
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
-                                 aria-labelledby="headingOne">
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <input type="text" class="form-control" name="loginname" placeholder="用户名称">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <input type="text" class="form-control" name="email" placeholder="Email">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <textarea id="board_profile" class="form-control" rows="3" name="profile"
-                                                      placeholder="用户描述"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="cssUser">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
-                                       href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                                        统计数据
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel"
-                                 aria-labelledby="collapseFour">
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <div class="col-sm-3">
-                                            score
-                                        </div>
-                                        <div class="col-sm-3">
-                                            topic_count
-                                        </div>
-                                        <div class="col-sm-3">
-                                            image_count
-                                        </div>
-                                        <div class="col-sm-3">
-                                            board_count
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-3">
-                                            collect_topic_count
-                                        </div>
-                                        <div class="col-sm-3">
-                                            collect_board_count
-                                        </div>
-                                        <div class="col-sm-3">
-                                            like_image_count
-                                        </div>
-                                        <div class="col-sm-3">
-                                            get_image_count
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-3">
-                                            reply_count
-                                        </div>
-                                        <div class="col-sm-3">
-                                            follower_count
-                                        </div>
-                                        <div class="col-sm-6">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="jsUser">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
-                                       href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-                                        修改密码
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFive" class="panel-collapse collapse" role="tabpanel"
-                                 aria-labelledby="collapseFive">
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <div class="col-sm-6">
-                                            <input type="text" class="form-control" name="password" placeholder="Password">
-                                            <div class="help-block">不填则不修改</div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="text" class="form-control" name="repassword" placeholder="Re-Password">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <!--TODO 用户修改Board信息-->
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" name="title" placeholder="名称">
                         </div>
                     </div>
-
+                    <div class="checkbox text-right">
+                        <label>
+                            <input type="radio" name="type" value="private"> 私有
+                            <input type="radio" name="type" value="public" checked="checked"> 公开
+                        </label>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" name="id">
-                    <button type="button" id="create-board-close" class="btn btn-default" data-dismiss="modal">Close
+                    <button type="button" id="modify-board-close" class="btn btn-default" data-dismiss="modal">Close
                     </button>
-                    <button type="submit" id="create-board-submit" class="btn btn-default ">保存
+                    <button type="submit" id="modify-board-submit" class="btn btn-default ">保存
                     </button>
                 </div>
             </form>
@@ -261,7 +170,7 @@
         }
     });
 </script>
-<%- Loader('/public/dashboard/boards.min.js')
+<%- Loader('/public/javascripts/dashboard/boards.min.js')
 .js('/public/libs/select2/js/select2.full.js')
 .js('/public/javascripts/dashboard/boards.js')
 .done(assets, config.site_static_host, config.mini_assets)
