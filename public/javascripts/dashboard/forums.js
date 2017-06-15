@@ -23,7 +23,7 @@ $(document).on('click', '#modify_forum', function (event) {
         modal.find('#example_path_name').html(data.path_name);
         modal.find('textarea[name=content]').val(data.content);
         modal.find('input[name=order]').val(data.order);
-        modal.find('input[name=type][value="'+data.type+'"]').attr("checked", true);
+        modal.find('input[name=type][value="'+data.type+'"]').prop("checked", true);
         modal.find('textarea[name=css_text]').val(data.css_text);
         modal.find('textarea[name=js_text]').val(data.js_text);
         if (!!data.managers && data.managers.length > 0) {

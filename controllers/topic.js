@@ -19,7 +19,7 @@ var store = require('../common/store');
 var config = require('../config');
 var _ = require('lodash');
 var cache = require('../common/cache');
-var logger = require('../common/logger')
+var logger = require('../common/logger');
 
 /**
  * Topic page

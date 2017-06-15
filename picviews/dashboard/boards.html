@@ -1,5 +1,5 @@
 <!-- TODO 管理员的Board列表页功能-->
-<%- Loader('/public/stylesheets/boards.min.css')
+<%- Loader('/public/stylesheets/dashboard/boards.min.css')
 .css('/public/stylesheets/dashboard.less')
 .css('/public/libs/select2/css/select2.css')
 .css('/public/libs/bootstrap-select2/select2-bootstrap.css')
@@ -216,7 +216,7 @@
                     <input type="hidden" name="id">
                     <button type="button" id="create-board-close" class="btn btn-default" data-dismiss="modal">Close
                     </button>
-                    <button type="submit" id="create-board-submit" class="btn btn-primary ">保存
+                    <button type="submit" id="create-board-submit" class="btn btn-default ">保存
                     </button>
                 </div>
             </form>
@@ -261,7 +261,7 @@
         }
     });
 </script>
-<%- Loader('/public/boards.min.js')
+<%- Loader('/public/dashboard/boards.min.js')
 .js('/public/libs/select2/js/select2.full.js')
 .js('/public/javascripts/dashboard/boards.js')
 .done(assets, config.site_static_host, config.mini_assets)

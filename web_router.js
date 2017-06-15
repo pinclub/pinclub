@@ -122,8 +122,10 @@ router.get('/image/create/bookmarklet', auth.userSigninRequired, image.create);
 router.post('/image/create/bookmarklet', auth.userSigninRequired, image.createFromChrome);
 
 // board 列表
-router.get('/boards', board.list);
+router.get('/boards', auth.userSigninRequired, board.index);
+router.post('/boards', auth.userSigninRequired, board.create);
 router.get('/boards/:board_id', board.show);
+router.post('/boards/:board_id/edit', auth.userSigninRequired, board.edit);
 
 // upload
 router.post('/upload', auth.userRequired, topic.upload); //上传图片

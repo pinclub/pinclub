@@ -1,0 +1,72 @@
+<%- Loader('/public/stylesheets/boards.min.css')
+.css('/public/stylesheets/board.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<div id="board_list" class="wrapper">
+    <div id="waterfall" class="row">
+        <div class="col-md-2">
+            <div class="add-board">
+                <div class="inner">
+                    <i></i>
+                    <span>创建画板</span>
+                </div>
+            </div>
+        </div>
+        <% for(var i = 0; i < boards.length; i++) { %>
+        <div class="col-md-2">
+            <div class="grid-item">
+                <a class="link" href="#" onclick="return false;">
+                    <% for(var j = 0; j < boards[i].topics.length; j++) { %>
+                        <img src="<% if (j==0) {%><%= boards[i].topics[j].image_430 %><%} else {%><%= boards[i].topics[j].image_86 %><%}%>" class="<% if (j==0) {%>large<%}%>">
+                    <% } %>
+                    <div class="shadows"><div class="large-shadow"></div><div class="shadow"></div><div class="shadow"></div><div class="shadow"></div></div>
+                    <div class="over "><h3><%= boards[i].title %></h3><h4></h4><div class="pin-count"><%= boards[i].topic_count %></div></div>
+                </a>
+                <div class="FollowBoard text-center">
+                    <button href="/boards/<%= boards[i].id %>/edit" class="btn btn-default " id="modify_board" data-id="<%= boards[i].id %>" data-type="<%= boards[i].type %>" data-title="<%= boards[i].title %>"><strong>编辑</strong><span></span></button>
+                    <button href="/boards/<%= boards[i].id %>/delete" class="btn btn-default " id="delete_board" data-id="<%= boards[i].id %>" style="background: red;color: white;"><strong>删除</strong><span></span></button>
+                </div>
+            </div>
+        </div>
+        <% }%>
+
+    </div>
+</div>
+
+<div class="modal fade" id="modify_board_modal" role="dialog" aria-hidden="true" aria-labelledby="modifyBoardModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" action="#" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Board 信息</h5>
+                </div>
+                <div class="modal-body">
+                    <!--TODO 用户修改Board信息-->
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" name="title" placeholder="名称">
+                        </div>
+                    </div>
+                    <div class="checkbox text-right">
+                        <label>
+                            <input type="radio" name="type" value="private"> 私有
+                            <input type="radio" name="type" value="public" checked="checked"> 公开
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modify-board-close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="submit" id="modify-board-submit" class="btn btn-default ">保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- Loader('/public/boards.min.js')
+.js('/public/libs/select2/js/select2.full.js')
+.js('/public/javascripts/board.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

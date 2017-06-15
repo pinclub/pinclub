@@ -81,3 +81,13 @@ ul {
 dd, dt, li {
     line-height: 30px;
 }
+
+.btn {
+    background: #fff;
+    background: linear-gradient( #FAFAFA, #F2F2F2);
+    border: 1px solid #D9D9D9;
+}
+
+.modal-content {
+    border-radius: 0px;
+}

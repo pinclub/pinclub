@@ -20,7 +20,7 @@
                     </div>
                     <div class="profile-stats">
                         <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.image_count + current_user.get_image_count %></strong>图片</a>
-                        <a href="/user/<%= current_user.loginname %>/board" class="middle"><strong><%= current_user.board_count %></strong>画板</a>
+                        <a href="/boards" class="middle"><strong><%= current_user.board_count %></strong>画板</a>
                         <a href="/user/<%= current_user.loginname %>/score"><strong><%= current_user.score %></strong>积分</a>
                     </div>
                     <div class="profile-acts convo">

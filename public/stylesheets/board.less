@@ -1,0 +1,181 @@
+.grid-item{
+  position: static;
+  background-color: white;
+  display: inline-block;
+  width: 236px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  margin-top: 10px;
+}
+
+.grid-item .over h3 {
+  margin-top: 0px;
+  padding: 8px 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5)
+}
+
+.grid-item .over h4 {
+  font-size: 12px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  margin-top: 5px;
+  padding: 0 8px;
+  height: 38px;
+  overflow: hidden;
+  line-height: 1.5;
+  -webkit-transition: opacity .2s linear;
+  transition: opacity .2s linear;
+  opacity: 0
+}
+
+.grid-item:hover h4 {
+  opacity: 1
+}
+
+.grid-item .pin-count {
+  position: absolute;
+  top: 188px;
+  left: 8px;
+  font-size: 12px;
+  color: #fff;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 5px;
+  background: rgba(0,0,0,.4);
+  border-radius: 2px
+}
+
+.col-md-2 {
+  padding: 0 5px;
+}
+
+.grid-item .link {
+  display: block;
+  height: 310px;
+  padding: 10px 0 0 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.grid-item .link img {
+  float: left;
+  width: 70px;
+  height: 70px;
+  margin: 0 3px 3px 0
+}
+
+.grid-item .link img.large {
+  width: 216px;
+  height: 216px
+}
+
+
+.grid-item .link .shadows {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 226px
+}
+
+.grid-item .link .shadows .shadow {
+  width: 70px;
+  height: 70px;
+  margin: 0 3px 3px 0;
+  float: left;
+  box-shadow: inset 0 0 2px rgba(0,0,0,.2)
+}
+
+.grid-item .link .shadows .large-shadow {
+  width: 216px;
+  height: 216px;
+  margin: 0 3px 3px 0;
+  float: left;
+  box-shadow: inset 0 0 2px rgba(0,0,0,.2)
+}
+
+.grid-item .link .over {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 216px;
+  height: 289px;
+  background: url(../images/board_info_cover.png) 0 0 repeat-x
+}
+
+.grid-item .link:hover .over {
+  background-color: rgba(0,0,0,.1)
+}
+
+.grid-item:hover .board-cover-edit {
+  opacity: 1
+}
+
+.grid-item .FollowBoard {
+  padding: 0 10px 11px;
+  text-align: center
+}
+
+.wbtn {
+  width: 100%;
+}
+
+#waterfall .add-board {
+  position: relative;
+  float: left;
+  left: auto;
+  top: auto;
+  width: 236px;
+  height: 349px;
+  background: #f6f5f5;
+  background: rgba(255,255,255,.5);
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#waterfall .add-board .inner {
+  margin: 10px;
+  height: 330px;
+  border: 2px dashed #dedede;
+}
+
+#waterfall .add-board .inner i {
+  display: block;
+  width: 48px;
+  height: 48px;
+  background: url(../images/icon_add_rbig.png) 0 0 no-repeat;
+  margin: 128px auto 10px;
+}
+
+#waterfall .add-board .inner span {
+  display: block;
+  color: #777;
+  text-align: center;
+}
+
+#waterfall .add-board:hover {
+  background: #fff
+}
+
+#waterfall .add-board:hover .inner {
+  border-color: #d4d4d4
+}
+
+#waterfall .add-board:active .inner {
+  border-color: #bbb
+}
+
+#waterfall .add-board:hover .inner i {
+  background-position: 0 -80px
+}
+
+#waterfall .add-board:active .inner i {
+  background-position: 0 -160px
+}
