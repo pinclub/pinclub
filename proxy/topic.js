@@ -72,7 +72,7 @@ exports.getCountByQuery = function (query, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getTopicsByQuery = function (query, opt, callback) {
-    query.deleted = false;
+    // query.deleted = false;
     Topic.find(query, {}, opt)
         .populate('board', 'title desc _id topic_count')
         .populate('forum', 'title content _id topic_count')
@@ -118,7 +118,7 @@ exports.getTopicsByQuery = function (query, opt, callback) {
 };
 
 exports.getImagesByQuery = function (query, opt, callback) {
-    query.deleted = false;
+    // query.deleted = false;
     Topic.find(query, {}, opt).populate('board', 'id title topic_count create_at type').exec(function (err, topics) {
         if (err) {
             return callback(err);

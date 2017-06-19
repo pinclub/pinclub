@@ -1,4 +1,4 @@
-`_``_`### DONEs
+### DONEs
 | Filename | line # | DONE
 |:------|:------:|:------
 | v2/auth.js | 102 | [@hhdem](https://github.com/hhdem) ~~提醒激活不然无法继续进行下一步操作~~
@@ -14,6 +14,9 @@
 | counter.js | 170 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | store_local.js | 45 | [@hhdem](https://github.com/hhdem) ~~上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法~~
 | store_local.js | 53 | [@hhdem](https://github.com/hhdem) ~~上传图片时裁剪生成 86 像素宽的缩略图, 存储到upload下~~
+| board.js | 7 | [@hhdem](https://github.com/hhdem) ~~用户Board列表~~
+| board.js | 143 |  ~~用户Board列表页创建Board信息~~
+| board.js | 192 |  ~~用户Board列表页修改Board信息~~
 | dashboard.js | 119 | [@hhdem](https://github.com/hhdem) ~~所有Forum列表~~
 | forum.js | 4 | [@hhdem](https://github.com/hhdem) ~~Forum信息添加和修改~~
 | forum.js | 70 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
@@ -28,16 +31,17 @@
 | topic.js | 30 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
 | api/v1/message.test.js | 27 | [@hhdem](https://github.com/hhdem) ~~accessToken 的问题导致测试用例失败~~
 | api/v2/image.test.js | 104 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算~~
-| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
-| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | common/counter.test.js | 54 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 创建主题后增加用户积分和主题数~~
 | common/counter.test.js | 92 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 删除主题后减少用户积分和主题数~~
 | common/counter.test.js | 180 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 收藏主题后增加用户收藏主题数~~
 | common/counter.test.js | 212 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 取消收藏主题后减少用户收藏主题数~~
+| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
+| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | index.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 13 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
 | index_pic.html | 66 | [@hhdem](https://github.com/hhdem) ~~首页中板块切换修改为ajax请求~~
+| dashboard/boards.html | 103 |  ~~管理员Board列表，点击修改弹出修改模态框并可修改Board信息~~
 | dashboard/forums.html | 1 | [@hhdem](https://github.com/hhdem) ~~管理员面板管理页面~~
 | topic/_pic_box.html | 1 | [@hhdem](https://github.com/hhdem) ~~点击图片Box, 弹出浏览图片的modal, 查看图片详情~~
 | topic/_pic_box.html | 2 | [@hhdem](https://github.com/hhdem) ~~Get 图片功能按钮实现~~
@@ -63,10 +67,9 @@
 | v2/topic.js | 187 |  微信小程序记录轨迹
 | v2/topic.js | 240 |  修改 topic 时可以选择管理员维护的 area，在列表和详细信息查看中加入 area 标签显示
 | v2/topic.js | 241 |  修改 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
-| board.js | 1 |  用户Board列表
-| board.js | 8 |  用户Board信息查看
-| board.js | 15 |  用户Board信息修改
-| board.js | 22 |  用户Board信息删除
+| board.js | 35 |  用户Board信息查看, 显示Board中的图片列表
+| board.js | 136 |  用户Board信息删除
+| board.js | 205 |  管理员修改 Board 信息
 | dashboard.js | 10 |  管理员维护界面 Dashboard, 统计数据的获取
 | dashboard.js | 60 |  管理员维护界面 tag 列表
 | dashboard.js | 65 |  管理员维护界面 board 列表
@@ -91,16 +94,18 @@
 | controllers/image.test.js | 119 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 | index_pic.html | 14 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
 | index_pic.html | 51 |  Signin with wechat and QQ account
+| board/_board_create_search.html | 1 |  Tag添加
+| board/index.html | 44 |  用户修改Board信息
 | dashboard/boards.html | 1 |  管理员的Board列表页功能
-| dashboard/boards.html | 77 |  管理员Board列表，点击删除Board可以删除选定Board
-| dashboard/boards.html | 92 |  管理员Board列表，点击修改弹出修改模态框并可修改Board信息
+| dashboard/boards.html | 77 |  管理员Board列表，搜索功能
+| dashboard/boards.html | 88 |  管理员Board列表，点击删除Board可以删除选定Board
+| dashboard/boards.html | 112 |  用户修改Board信息
 | dashboard/index.html | 1 |  管理员面板页面，统计数据获取，
 | dashboard/users.html | 1 |  管理员的用户列表页面中加入，禁言、修改
 | dashboard/users.html | 2 |  Tab页切换修改为ajax请求
 | dashboard/users.html | 80 |  管理员用户列表，点击添加用户弹出新增模态框，创建用户
 | dashboard/users.html | 81 |  管理员用户列表，点击删除用户可以删除选定用户
 | dashboard/users.html | 98 |  管理员用户列表，点击修改弹出修改模态框并可修改用户信息
-| board/_board_create_search.html | 1 |  Tag添加
 | topic/_pic_create_modal.html | 5 | [@hhdem](https://github.com/hhdem) chrome 插件直接采集
 | topic/_templates.html | 27 |  关注board按钮实现
 | user/boards.html | 1 |  用户 Board 列表页面

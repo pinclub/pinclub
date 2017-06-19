@@ -147,3 +147,7 @@ exports.getRepliesByAuthorId = function (authorId, opt, callback) {
 exports.getCountByAuthorId = function (authorId, callback) {
   Reply.count({author_id: authorId}, callback);
 };
+
+exports.getCountByQuery = function (query, callback) {
+    Reply.count(query, callback);
+};

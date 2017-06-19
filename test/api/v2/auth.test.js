@@ -1,13 +1,22 @@
 var app = require('../../../app');
 var request = require('supertest')(app);
 var should = require('should');
+var jwt          = require('jsonwebtoken');
 var support = require('../../support/support');
+var config = require('../../../config');
 
 describe('test/api/v2/auth.test.js', function () {
     var mockUser;
 
     before(function (done) {
         support.createUser(function (err, user) {
+            let accessToken = jwt.sign({
+                loginname: user.loginname,
+                _id: user._id
+            }, config.jwt_token, {expiresIn: 1});
+            user.active = true;
+            user.accessToken = accessToken;
+            user.save();
             mockUser = user;
             done();
         });
@@ -114,7 +123,19 @@ describe('test/api/v2/auth.test.js', function () {
                 });
         });
 
-
+        it('should signin with new accessToken when old accessToken is expired', function (done) {
+            request.post('/api/v2/auth/signin')
+                .send({
+                    loginname: mockUser.loginname,
+                    password: 'password'
+                })
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.true();
+                    res.body.accessToken.should.not.equal(mockUser.accessToken);
+                    done();
+                });
+        });
     });
 
 });

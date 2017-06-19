@@ -9,10 +9,16 @@
     <td><%= user.score %></td>
     <td><%= user.create_at_ago() %></td>
     <td>
-        <% if (current_user.id != user.id) { %>
-            <button id="star_user" data-id="<%= user._id %>" data-loginname="<%= user.loginname %>" class="btn btn-sm btn-link" href="#"><% if (user.is_star) {%>非达人<% } else { %>达人<% }%></button>
-            <button id="block_user" data-id="<%= user._id %>" data-loginname="<%= user.loginname %>" class="btn btn-sm btn-link" data-block="<% if (user.is_block) {%>cancel_block<% } else { %>set_block<% }%>" href="#"><% if (user.is_block) {%>解禁<% } else { %>禁言<% }%></button>
-        <% }%>
+        <% if (!!current_user && current_user.id != user.id) { %>
+            <button id="star_user" data-id="<%= user._id %>" data-loginname="<%= user.loginname %>" class="btn btn-sm btn-link" href="#">
+                <% if (user.is_star) { %>
+                非达人
+                <% } else { %>
+                达人
+                <% }%>
+            </button>
+            <button id="block_user" data-id="<%= user._id %>" data-loginname="<%= user.loginname %>" class="btn btn-sm btn-link" data-block="<% if (user.is_block) { %>cancel_block<% } else { %>set_block<% } %>" href="#"><% if (user.is_block) { %>解禁<% } else { %>禁言<% } %></button>
+        <% } %>
         <button id="modify_user" data-id="<%= user._id %>" data-loginname="<%= user.loginname %>" class="btn btn-sm btn-link" href="#">修改</button>
     </td>
 </tr>

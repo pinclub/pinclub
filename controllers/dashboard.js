@@ -6,6 +6,8 @@ var EventProxy = require('eventproxy');
 var Forum        = require('../proxy').Forum;
 var Board        = require('../proxy').Board;
 var User        = require('../proxy').User;
+var Topic = require('../proxy').Topic;
+
 
 // TODO 管理员维护界面 Dashboard, 统计数据的获取
 exports.dashboard = function (req, res, next) {
@@ -35,12 +37,12 @@ exports.dashboard = function (req, res, next) {
             node_version: process.versions.node,
             mongodb_version: results.mongodb
         };
-        var render = function (users, forums, boards) {
+        var render = function (users, forums, boards, topics) {
             res.render('dashboard/index', {
                 reply_count: 0,
                 active_user_count: 0,
                 users: users,
-                topics: [],
+                topics: topics,
                 images: [],
                 boards: boards,
                 teams: [],
@@ -50,10 +52,11 @@ exports.dashboard = function (req, res, next) {
         };
         var ep = EventProxy.create();
         ep.fail(next);
-        ep.assign('users', 'forums', 'boards', render);
+        ep.assign('users', 'forums', 'boards', 'topics', render);
         User.getUsersByQuery({}, {}, ep.done('users'));
         Forum.getForumsByQuery({}, {}, ep.done('forums'));
         Board.getBoardsByQuery({}, {}, ep.done('boards'));
+        Topic.getTopicsByQuery({}, {}, ep.done('topics'));
     });
 };
 

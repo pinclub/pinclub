@@ -73,7 +73,8 @@ exports.signIn = function (req, res, next) {
                 if (err) {
                     return ep.emit('login_error', '保存token出错');
                 }
-                ep.emit('login_success', accessToken);
+                user.accessToken = accessToken;
+                ep.emit('login_success', user);
             });
         });
 

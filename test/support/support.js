@@ -77,6 +77,36 @@ function mockUser(user) {
 
 exports.mockUser = mockUser;
 
+exports.userCounter = function (query, callback) {
+    User.getCountByQuery(query, function (err, count) {
+        callback(err, count);
+    });
+};
+
+exports.topicCounter = function (query, callback) {
+    Topic.getCountByQuery(query, function (err, count) {
+        callback(err, count);
+    });
+};
+
+exports.boardCounter = function (query, callback) {
+    Board.getCountByQuery(query, function (err, count) {
+        callback(err, count);
+    });
+};
+
+exports.forumCounter = function (query, callback) {
+    Forum.getCountByQuery(query, function (err, count) {
+        callback(err, count);
+    });
+};
+
+exports.replyCounter = function (query, callback) {
+    Reply.getCountByQuery(query, function (err, count) {
+        callback(err, count);
+    });
+};
+
 ready(exports);
 
 var ep = new EventProxy();
@@ -121,11 +151,13 @@ ep.all('topic', function (topic) {
     createReply(topic._id, exports.normalUser._id, ep.done('reply'));
 });
 
-ep.all('reply', 'replyimage', function (reply, replyimage, forum) {
+ep.all('reply', 'replyimage', function (reply, replyimage) {
     exports.testReply = reply;
     exports.testReplyImage = replyimage;
     exports.ready(true);
 });
+
+
 
 ep.on('needActive', function (user) {
     user.active = true;

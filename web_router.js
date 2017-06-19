@@ -133,8 +133,6 @@ router.post('/imageupload', auth.userRequired, image.upload); //上传图片
 
 // static
 router.get('/about', staticController.about);
-router.get('/faq', staticController.faq);
-router.get('/getstart', staticController.getstart);
 router.get('/robots.txt', staticController.robots);
 
 //rss
