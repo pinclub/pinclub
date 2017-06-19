@@ -37,13 +37,13 @@ exports.dashboard = function (req, res, next) {
             node_version: process.versions.node,
             mongodb_version: results.mongodb
         };
-        var render = function (users, forums, boards, topics) {
+        var render = function (users, active_users, forums, boards, topics, images) {
             res.render('dashboard/index', {
                 reply_count: 0,
-                active_user_count: 0,
+                active_user_count: active_users.length,
                 users: users,
                 topics: topics,
-                images: [],
+                images: images,
                 boards: boards,
                 teams: [],
                 forums: forums,
@@ -52,11 +52,13 @@ exports.dashboard = function (req, res, next) {
         };
         var ep = EventProxy.create();
         ep.fail(next);
-        ep.assign('users', 'forums', 'boards', 'topics', render);
+        ep.assign('users', 'active_users', 'forums', 'boards', 'topics', 'images', render);
         User.getUsersByQuery({}, {}, ep.done('users'));
+        User.getUsersByQuery({active: true}, {}, ep.done('active_users'));
         Forum.getForumsByQuery({}, {}, ep.done('forums'));
         Board.getBoardsByQuery({}, {}, ep.done('boards'));
-        Topic.getTopicsByQuery({}, {}, ep.done('topics'));
+        Topic.getTopicsByQuery({type: 'text'}, {}, ep.done('topics'));
+        Topic.getTopicsByQuery({type: 'image'}, {}, ep.done('images'));
     });
 };
 

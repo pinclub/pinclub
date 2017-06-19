@@ -1,7 +1,8 @@
 ### DONEs
 | Filename | line # | DONE
 |:------|:------:|:------
-| v2/auth.js | 102 | [@hhdem](https://github.com/hhdem) ~~提醒激活不然无法继续进行下一步操作~~
+| v2/auth.js | 103 | [@hhdem](https://github.com/hhdem) ~~提醒激活不然无法继续进行下一步操作~~
+| v2/board.js | 57 |  ~~Board 信息查看接口~~
 | v2/board.js | 150 | [@hhdem](https://github.com/hhdem) ~~关注 board~~
 | v2/board.js | 210 | [@hhdem](https://github.com/hhdem) ~~取消关注 board~~
 | v2/board.js | 266 | [@hhdem](https://github.com/hhdem) ~~关注列表~~
@@ -17,7 +18,7 @@
 | board.js | 7 | [@hhdem](https://github.com/hhdem) ~~用户Board列表~~
 | board.js | 143 |  ~~用户Board列表页创建Board信息~~
 | board.js | 192 |  ~~用户Board列表页修改Board信息~~
-| dashboard.js | 119 | [@hhdem](https://github.com/hhdem) ~~所有Forum列表~~
+| dashboard.js | 124 | [@hhdem](https://github.com/hhdem) ~~所有Forum列表~~
 | forum.js | 4 | [@hhdem](https://github.com/hhdem) ~~Forum信息添加和修改~~
 | forum.js | 70 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
 | image.js | 242 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
@@ -31,12 +32,12 @@
 | topic.js | 30 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
 | api/v1/message.test.js | 27 | [@hhdem](https://github.com/hhdem) ~~accessToken 的问题导致测试用例失败~~
 | api/v2/image.test.js | 104 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算~~
+| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
+| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | common/counter.test.js | 54 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 创建主题后增加用户积分和主题数~~
 | common/counter.test.js | 92 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 删除主题后减少用户积分和主题数~~
 | common/counter.test.js | 180 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 收藏主题后增加用户收藏主题数~~
 | common/counter.test.js | 212 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 取消收藏主题后减少用户收藏主题数~~
-| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
-| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | index.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 13 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
@@ -50,6 +51,7 @@
 | topic/_pic_box.html | 22 | [@hhdem](https://github.com/hhdem) ~~修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果~~
 | topic/_pic_create_modal.html | 3 | [@hhdem](https://github.com/hhdem) ~~modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口~~
 | topic/_pic_create_modal.html | 4 | [@hhdem](https://github.com/hhdem) ~~点击上传图片后弹出的模态框中确认上传按钮样式错误~~
+| topic/_pic_create_modal.html | 5 | [@hhdem](https://github.com/hhdem) ~~chrome 插件直接采集~~
 | topic/_pic_create_modal.html | 6 | [@hhdem](https://github.com/hhdem) ~~弹出层上传文件, 文件只能单选, 默认描述是文件名~~
 | topic/_templates.html | 12 | [@hhdem](https://github.com/hhdem) ~~点击图片Box, 弹出浏览图片的modal, 图片 Board 信息显示功能, Board统计信息和 Board 中的图片列表~~
 | user/index.html | 1 | [@hhdem](https://github.com/hhdem) ~~用户首页中列表显示错误~~
@@ -60,7 +62,6 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| v2/board.js | 57 |  Board 信息查看接口
 | v2/topic.js | 184 |  创建 topic 时可以选择管理员维护的 area，在列表和详细信息查看中加入 area 标签显示
 | v2/topic.js | 185 |  创建 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
 | v2/topic.js | 186 |  创建 topic 时可以关联已发布的图片，或Board
@@ -70,11 +71,11 @@
 | board.js | 35 |  用户Board信息查看, 显示Board中的图片列表
 | board.js | 136 |  用户Board信息删除
 | board.js | 205 |  管理员修改 Board 信息
-| dashboard.js | 10 |  管理员维护界面 Dashboard, 统计数据的获取
-| dashboard.js | 60 |  管理员维护界面 tag 列表
-| dashboard.js | 65 |  管理员维护界面 board 列表
-| dashboard.js | 89 |  管理员维护界面 用户 列表
-| dashboard.js | 114 |  管理员地区管理界面
+| dashboard.js | 12 |  管理员维护界面 Dashboard, 统计数据的获取
+| dashboard.js | 65 |  管理员维护界面 tag 列表
+| dashboard.js | 70 |  管理员维护界面 board 列表
+| dashboard.js | 94 |  管理员维护界面 用户 列表
+| dashboard.js | 119 |  管理员地区管理界面
 | forum.js | 108 |  Forum信息删除
 | image.js | 307 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
 | team.js | 1 |  v2 小组列表
@@ -106,7 +107,6 @@
 | dashboard/users.html | 80 |  管理员用户列表，点击添加用户弹出新增模态框，创建用户
 | dashboard/users.html | 81 |  管理员用户列表，点击删除用户可以删除选定用户
 | dashboard/users.html | 98 |  管理员用户列表，点击修改弹出修改模态框并可修改用户信息
-| topic/_pic_create_modal.html | 5 | [@hhdem](https://github.com/hhdem) chrome 插件直接采集
 | topic/_templates.html | 27 |  关注board按钮实现
 | user/boards.html | 1 |  用户 Board 列表页面
 | user/index.html | 3 |  我的页面中增加 Board 管理

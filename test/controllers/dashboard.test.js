@@ -5,17 +5,20 @@ var support = require('../support/support');
 
 describe('test/controllers/dashboard.test.js', function () {
 
-    var userCounter, boardCounter, forumCounter, topicCounter;
+    var userCounter, boardCounter, forumCounter, topicCounter, imageCounter;
     before(function (done) {
         support.userCounter({}, function (err, counter) {
             userCounter = counter;
-            support.topicCounter({}, function (err, topicCount) {
+            support.topicCounter({type: 'text'}, function (err, topicCount) {
                 topicCounter = topicCount;
-                support.boardCounter({}, function (err, boardCount) {
-                    boardCounter = boardCount;
-                    support.forumCounter({}, function (err, forumCount) {
-                        forumCounter = forumCount;
-                        done();
+                support.topicCounter({type: 'image'}, function (err, imageCount) {
+                    imageCounter = imageCount;
+                    support.boardCounter({}, function (err, boardCount) {
+                        boardCounter = boardCount;
+                        support.forumCounter({}, function (err, forumCount) {
+                            forumCounter = forumCount;
+                            done();
+                        });
                     });
                 });
             });
@@ -37,6 +40,15 @@ describe('test/controllers/dashboard.test.js', function () {
                 .set('Cookie', support.adminUserCookie)
                 .expect(200, function (err, res) {
                     res.text.should.containEql('<span class="light pull-right">'+ topicCounter +'</span>');
+                    done(err);
+                });
+        });
+
+        it('right number of images', function (done) {
+            request.get('/admin/dashboard')
+                .set('Cookie', support.adminUserCookie)
+                .expect(200, function (err, res) {
+                    res.text.should.containEql('<span class="light pull-right">'+ imageCounter +'</span>');
                     done(err);
                 });
         });

@@ -54,7 +54,7 @@ var index = function (req, res, next) {
     });
 };
 
-// TODO Board 信息查看接口
+// DONE Board 信息查看接口
 var show = function (req, res, next) {
     var boardId = String(req.params.id);
 
@@ -62,15 +62,15 @@ var show = function (req, res, next) {
 
     if (!validator.isMongoId(boardId)) {
         res.status(400);
-        return res.send({success: false, error_msg: '不是有效的话题id'});
+        return res.send({success: false, error_msg: '不是有效的Board id'});
     }
 
     ep.fail(next);
 
-    BoardProxy.getFullBoard(boardId, ep.done(function (err, msg, board, author, topics) {
+    BoardProxy.getFullBoard(boardId, ep.done(function (msg, board, author, topics) {
         if (!board) {
             res.status(404);
-            return res.send({success: false, error_msg: '话题不存在'});
+            return res.send({success: false, error_msg: 'Board不存在'});
         }
 
         board.author = _.pick(author, ['loginname', 'avatar_url']);

@@ -122,7 +122,7 @@ exports.getFullBoard = function (id, callback) {
     var events = ['board', 'creator', 'topics'];
     proxy
         .assign(events, function (board, creator, topics) {
-            callback(null, '', board, creator, topics);
+            return callback(null, '', board, creator, topics);
         })
         .fail(callback);
 

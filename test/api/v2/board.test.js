@@ -7,12 +7,13 @@ var config = require('../../../config');
 var jwt = require('jsonwebtoken');
 
 describe('test/api/v2/board.test.js', function () {
-    var mockUser, mockImage;
+    var mockUser, mockImage, mockBoard;
 
     before(function (done) {
         support.createUser(function (err, user) {
             mockUser = user;
             support.createBoard('new board title', user.id, 'public', function (err, board) {
+                mockBoard = board;
                 support.createImage(user.id, board, function (err, image) {
                     mockImage = image;
                     done();
@@ -136,6 +137,41 @@ describe('test/api/v2/board.test.js', function () {
                     should.not.exists(err);
                     res.body.success.should.false();
                     res.body.error_msg.should.equal('您的账户被禁用');
+                    done();
+                });
+        });
+    });
+
+    describe('get /api/v2/boards/:id', function () {
+        it('should show board info', function (done) {
+            request.get('/api/v2/boards/' + mockBoard.id)
+                .set('Authorization', 'Bearer ' + mockUser.accessToken)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.true();
+                    res.body.data._id.should.equal(mockBoard.id);
+                    done();
+                });
+        });
+
+        it('should not show board info and return not valid id', function (done) {
+            request.get('/api/v2/boards/' + mockUser.id)
+                .set('Authorization', 'Bearer ' + mockUser.accessToken)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.false();
+                    res.body.error_msg.should.equal('Board不存在');
+                    done();
+                });
+        });
+
+        it('should show board info', function (done) {
+            request.get('/api/v2/boards/a' + mockBoard.id)
+                .set('Authorization', 'Bearer ' + mockUser.accessToken)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    res.body.success.should.false();
+                    res.body.error_msg.should.equal('不是有效的Board id');
                     done();
                 });
         });
