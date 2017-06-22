@@ -93,7 +93,15 @@ exports.index = function (req, res, next) {
     });
 
     // 获得可以查看的Board列表
-    BoardProxy.getBoardsByQuery({$or: [{type: 'public'}, {user_id: req.session.user._id}]}, {}, ep.done('boards'));
+    let queryBoard = {
+        $or: [{type: 'public'}]
+    };
+    if (!!req.session.user) {
+        queryBoard.$or.push({
+            user_id: req.session.user._id
+        });
+    }
+    BoardProxy.getBoardsByQuery(queryBoard, {}, ep.done('boards'));
     ep.on('boards', function(boards) {
         let boardIds = [];
         _.forEach(boards, function (board) {

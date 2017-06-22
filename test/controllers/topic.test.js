@@ -179,6 +179,15 @@ describe('test/controllers/topic.test.js', function () {
                     done(err);
                 });
         });
+
+        it('should not find a topic with wrong topic id', function (done) {
+            request.post('/topic/' + support.testBoard._id + '/top')
+                .set('Cookie', support.adminUserCookie)
+                .expect(404, function (err, res) {
+                    res.text.should.containEql('此话题不存在或已被删除。');
+                    done(err);
+                });
+        });
     });
 
     describe('#good', function () {
@@ -196,6 +205,15 @@ describe('test/controllers/topic.test.js', function () {
                 .set('Cookie', support.adminUserCookie)
                 .expect(200, function (err, res) {
                     res.text.should.containEql('此话题已取消加精。');
+                    done(err);
+                });
+        });
+
+        it('should not find a topic with wrong topic id', function (done) {
+            request.post('/topic/' + support.testBoard._id + '/good')
+                .set('Cookie', support.adminUserCookie)
+                .expect(404, function (err, res) {
+                    res.text.should.containEql('此话题不存在或已被删除。');
                     done(err);
                 });
         });
@@ -300,6 +318,15 @@ describe('test/controllers/topic.test.js', function () {
                 .set('Cookie', support.adminUserCookie)
                 .expect(200, function (err, res) {
                     res.text.should.containEql('此话题已取消锁定。');
+                    done(err);
+                });
+        });
+
+        it('should not find a topic with wrong topic id', function (done) {
+            request.post('/topic/' + support.testBoard._id + '/lock')
+                .set('Cookie', support.adminUserCookie)
+                .expect(404, function (err, res) {
+                    res.text.should.containEql('此话题不存在或已被删除。');
                     done(err);
                 });
         });

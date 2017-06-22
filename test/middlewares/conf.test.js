@@ -11,4 +11,14 @@ describe('test/middlewares/conf.test.js', function () {
       done();
     }});
   });
+
+    it('should alert no wechat oauth', function (done) {
+        var _appID = config.WECHAT_OAUTH.appID;
+        config.WECHAT_OAUTH.appID = 'your WECHAT_APP_ID';
+        conf.wechat({}, {send: function (str) {
+            str.should.equal('call the admin to set wechat oauth.');
+            config.WECHAT_OAUTH.appID = _appID;
+            done();
+        }});
+    });
 });
