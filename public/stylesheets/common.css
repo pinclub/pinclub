@@ -82,6 +82,11 @@ dd, dt, li {
     line-height: 30px;
 }
 
+ol.inline, ol.unstyled, ul.inline, ul.unstyled {
+    margin-left: 0;
+    list-style: none;
+}
+
 .btn {
     background: #fff;
     background: linear-gradient( #FAFAFA, #F2F2F2);

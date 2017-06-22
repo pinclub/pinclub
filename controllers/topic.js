@@ -14,7 +14,6 @@ var Topic = require('../proxy').Topic;
 var Forum = require('../proxy').Forum;
 var TopicCollect = require('../proxy').TopicCollect;
 var EventProxy = require('eventproxy');
-var tools = require('../common/tools');
 var store = require('../common/store');
 var config = require('../config');
 var _ = require('lodash');
@@ -58,7 +57,7 @@ exports.index = function (req, res, next) {
 
     Topic.getFullTopic(topic_id, ep.done(function (message, topic, author, replies) {
         if (message) {
-            logger.error('getFullTopic error topic_id: ' + topic_id)
+            logger.error('getFullTopic error topic_id: ' + topic_id);
             return res.renderError(message);
         }
 
@@ -86,7 +85,7 @@ exports.index = function (req, res, next) {
 
         // get other_topics
         var options = {limit: 5, sort: '-last_reply_at'};
-        var query = {author_id: topic.author_id, _id: {'$nin': [topic._id]}};
+        var query = {author_id: topic.author_id, type:'text', _id: {'$nin': [topic._id]}};
         Topic.getTopicsByQuery(query, options, ep.done('other_topics'));
 
         // get no_reply_topics
@@ -95,7 +94,7 @@ exports.index = function (req, res, next) {
                 ep.emit('no_reply_topics', no_reply_topics);
             } else {
                 Topic.getTopicsByQuery(
-                    {reply_count: 0, forum: {$nin: ['job', 'dev']}, type: 'text'},
+                    {reply_count: 0, _id: {'$nin': [topic._id]}, type: 'text'},
                     {limit: 5, sort: '-create_at'},
                     ep.done('no_reply_topics', function (no_reply_topics) {
                         cache.set('no_reply_topics', no_reply_topics, 60 * 1);
@@ -108,7 +107,7 @@ exports.index = function (req, res, next) {
     if (!currentUser) {
         ep.emit('is_collect', null);
     } else {
-        TopicCollect.getTopicCollect(currentUser._id, topic_id, ep.done('is_collect'))
+        TopicCollect.getTopicCollect(currentUser._id, topic_id, ep.done('is_collect'));
     }
 };
 
@@ -431,8 +430,8 @@ exports.de_collect = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            if (removeResult.result.n == 0) {
-                return res.json({status: 'failed'})
+            if (removeResult.result.n === 0) {
+                return res.json({status: 'failed'});
             }
 
             User.getUserById(req.session.user._id, function (err, user) {
@@ -461,7 +460,7 @@ exports.upload = function (req, res, next) {
             res.json({
                 success: false,
                 msg: 'File size too large. Max is ' + config.file_limit
-            })
+            });
         });
 
         store.upload(file, {filename: filename}, function (err, result) {

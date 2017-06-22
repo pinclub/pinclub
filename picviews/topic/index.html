@@ -1,9 +1,14 @@
+<% if (topic.forum && topic.forum.css_text) { %>
+  <style>
+    <%= topic.forum.css_text %>
+  </style>
+<% } %>
 <div id='sidebar'>
   <div class='panel'>
     <div class='header'>
       <span class='col_fade'>作者</span>
     </div>
-    <div class='innerTopic'>
+    <div class='inner'>
       <%- partial('../user/card', { object: topic.author, as: 'user' }) %>
     </div>
   </div>
@@ -16,7 +21,7 @@
     <div class='header'>
       <span class='col_fade'>作者其它话题</span>
     </div>
-    <div class='innerTopic'>
+    <div class='inner'>
       <% if (typeof(author_other_topics) === 'undefined' || author_other_topics.length > 0) { %>
       <ul class='unstyled'>
         <%- partial('../topic/small', { collection: author_other_topics, as: 'topic' }) %>
@@ -31,7 +36,7 @@
     <div class='header'>
       <span class='col_fade'>无人回复的话题</span>
     </div>
-    <div class='innerTopic'>
+    <div class='inner'>
       <% if (typeof(no_reply_topics) !== 'undefined' && no_reply_topics.length > 0) { %>
       <ul class='unstyled'>
         <%- partial('../topic/small', { collection: no_reply_topics, as: 'topic' }) %>
@@ -503,5 +508,11 @@
     }
 
   })()
+
   // END 图片预览
 </script>
+<% if (topic.forum && topic.forum.js_text) { %>
+<script type="text/javascript">
+    <%- topic.forum.js_text %>
+</script>
+<% } %>

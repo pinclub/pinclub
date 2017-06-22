@@ -32,12 +32,12 @@
 | topic.js | 30 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
 | api/v1/message.test.js | 27 | [@hhdem](https://github.com/hhdem) ~~accessToken 的问题导致测试用例失败~~
 | api/v2/image.test.js | 104 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算~~
-| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
-| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | common/counter.test.js | 54 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 创建主题后增加用户积分和主题数~~
 | common/counter.test.js | 92 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 删除主题后减少用户积分和主题数~~
 | common/counter.test.js | 180 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 收藏主题后增加用户收藏主题数~~
 | common/counter.test.js | 212 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 取消收藏主题后减少用户收藏主题数~~
+| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
+| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | index.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index_pic.html | 13 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
