@@ -1,7 +1,7 @@
 var mongoose  = require('mongoose');
 var BaseModel = require("./base_model");
 var Schema    = mongoose.Schema;
-var ObjectId  = Schema.ObjectId;
+var ObjectId  = Schema.Types.ObjectId;
 
 var BoardSchema = new Schema({
     user_id: { type: ObjectId, ref: 'User' },

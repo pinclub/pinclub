@@ -92,16 +92,26 @@ exports.index = function (req, res, next) {
         res.send({success: true, data: topics});
     });
 
-    TopicProxy.getImagesByQuery(query, options, function (err, topics) {
-        if (!!req.session.user) {
-            // DONE (hhdem) 此处需要优化, 不要每次都获得全部喜欢的图片列表, 改为根据返回的图片列表, 查询是否like
-            let topic_t_ids = _.map(topics, 'id');
-            TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, topic_t_ids, {}, ep.done('liked_topics'));
-        } else {
-            ep.emit('liked_topics', []);
-        }
-        ep.emit('topics', topics);
+    // 获得可以查看的Board列表
+    BoardProxy.getBoardsByQuery({$or: [{type: 'public'}, {user_id: req.session.user._id}]}, {}, ep.done('boards'));
+    ep.on('boards', function(boards) {
+        let boardIds = [];
+        _.forEach(boards, function (board) {
+            boardIds.push(board.id);
+        });
+        query.board = {$in: boardIds};
+        TopicProxy.getImagesByQuery(query, options, function (err, topics) {
+            if (!!req.session.user) {
+                // DONE (hhdem) 此处需要优化, 不要每次都获得全部喜欢的图片列表, 改为根据返回的图片列表, 查询是否like
+                let topic_t_ids = _.map(topics, 'id');
+                TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, topic_t_ids, {}, ep.done('liked_topics'));
+            } else {
+                ep.emit('liked_topics', []);
+            }
+            ep.emit('topics', topics);
+        });
     });
+
 
 };
 
