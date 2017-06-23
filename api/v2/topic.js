@@ -90,7 +90,7 @@ var index = function (req, res, next) {
     ep.all('topics', 'liked_topics', function (topics, liked_topics) {
         let liked_t_ids = _.map(liked_topics, 'topic_id');
         topics = topics.map(function (topic) {
-            let structedTopic = structureHelper.image(topic);
+            let structedTopic = structureHelper.topic(topic);
             liked_t_ids.forEach(function(lti){
                 let tid = lti.toString();
                 if (topic.id === tid) {

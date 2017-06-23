@@ -87,6 +87,10 @@ ol.inline, ol.unstyled, ul.inline, ul.unstyled {
     list-style: none;
 }
 
+a:hover {
+    color: #444444;
+}
+
 .btn {
     background: #fff;
     background: linear-gradient( #FAFAFA, #F2F2F2);

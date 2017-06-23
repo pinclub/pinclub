@@ -1,39 +1,59 @@
 <div class='cell'>
-    <a class="user_avatar pull-left" href="/user/${topic.author.loginname}">
-        <img src="${topic.author.avatar_url}"
-             title="${topic.author.loginname}"
-                />
-    </a>
 
-    <span class="reply_count pull-left">
-        <span class="count_of_replies" title="回复数">
-          ${topic.reply_count}
-        </span>
-        <span class="count_seperator">/</span>
-        <span class="count_of_visits" title='点击数'>
-          ${topic.visit_count}
-        </span>
-    </span>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr >
+            <td width="48" valign="top" align="center">
+            <a class="user_avatar pull-left" href="/user/${topic.author.loginname}">
+                <img src="${topic.author.avatar_url}"
+                     title="${topic.author.loginname}"
+                        />
+            </a>
+            </td>
+            <td width="auto" valign="middle" class="topic_title_wrapper">
+                <span class="title">
+                    {{if topic.top}}
+                    <span class='put_top'>置顶</span>
+                    {{/if}}
+                    {{if topic.good}}
+                    <span class='put_good'>精华</span>
+                    {{/if}}
+                    {{if typeof(tab) !== 'undefined' &&  tab === 'all' && topic.tabName}}
+                    <span class="topiclist-tab">${topic.tabName}</span>
+                    {{/if}}
+                    <a class='topic_title' href='/topic/${topic.id}' title='${topic.title}'>
+                        ${topic.title}
+                    </a>
+                </span>
+                <span class="clearfix"></span>
+                <span class="small">
+                    {{if topic.forum && topic.forum.title}}
+                    <a class="forum_name" href="/forums/${topic.forum.id}">
+                        ${topic.forum.title}
+                    </a>&nbsp;•&nbsp;
+                    {{/if}}
+                    <a class="user_avatar" href="/user/${topic.author.loginname}">
+                        ${topic.author.loginname}
+                    </a>
+                    {{if topic.reply && topic.reply.author}}
+                    &nbsp;•&nbsp;
+                    <a class='last_time' href="/topic/${topic.id}#${topic.reply.id}">
+                        <span class="last_active_time">${topic.reply.author.loginname}</span> 于 ${topic.reply.create_at_ago} 回复
+                    </a>
+                    {{/if}}
+                </span>
+            </td>
+            <td width="70" align="right" valign="middle">
+            <span class="reply_count pull-right">
+                <span class="count_of_replies" title="回复数">
+                  ${topic.reply_count}
+                </span>
+                <span class="count_seperator">/</span>
+                <span class="count_of_visits" title='点击数'>
+                  ${topic.visit_count}
+                </span>
+            </span>
+            </td>
+        </tr>
 
-    {{if topic.reply && topic.reply.author}}
-    <a class='last_time pull-right' href="/topic/${topic.id}#${topic.reply.id}">
-        <img class="user_small_avatar" src="${topic.reply.author.avatar_url}">
-        <span class="last_active_time">${topic.reply.create_at_ago}</span>
-    </a>
-    {{/if}}
-
-    <div class="topic_title_wrapper">
-        {{if topic.top}}
-        <span class='put_top'>置顶</span>
-        {{/if}}
-        {{if topic.good}}
-        <span class='put_good'>精华</span>
-        {{/if}}
-        {{if typeof(tab) !== 'undefined' &&  tab === 'all' && topic.tabName}}
-        <span class="topiclist-tab">${topic.tabName}</span>
-        {{/if}}
-        <a class='topic_title' href='/topic/${topic.id}' title='${topic.title}'>
-            ${topic.title}
-        </a>
-    </div>
+    </table>
 </div>
