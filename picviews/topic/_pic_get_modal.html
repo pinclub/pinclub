@@ -1,0 +1,45 @@
+<!-- Get 图片的modal层-->
+<div class="modal fade" id="get_image_modal" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Get图片</h5>
+            </div>
+            <div class="modal-body">
+                <div id="get_image_view">
+                    <div class="pin-create">
+                        <div class="preview">
+                            <div id="get-preview-image" class="image">
+                            </div>
+                            <textarea id="get-preview-image-desc" placeholder="点击添加描述..."
+                                      class="description"></textarea>
+                        </div>
+                        <div class="right-part">
+                            <%- partial('../board/_board_create_search') %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="get-image-close" class="btn " data-dismiss="modal">Close</button>
+                <button type="button" id="get-image-submit" class="btn " data-image="" data-desc="" data-image-id=""
+                        data-board-id="">Get Image
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Get 成功后提示成功 -->
+<div class="modal fade" id="got_success_image_modal" role="dialog" aria-hidden="true" aria-labelledby="gotModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Get图片</h5>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>

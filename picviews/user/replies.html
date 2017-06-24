@@ -2,25 +2,17 @@
 
 <div id='content'>
   <div class='panel'>
-    <div class='header'>
-      <ul class='breadcrumb'>
-        <li><a href='/'>主页</a></li>
-        <li class='active'><a href="/user/<%=user.loginname%>"><%=user.loginname%>的主页</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class='panel'>
     <div class="header"><%= user.loginname %> 参与的话题</div>
-    <div class="innerTopic padding">
-    <% if(typeof(topics) !== 'undefined' && topics.length > 0){ %>
-    <%- partial('../topic/list',
-    {topics:topics,pages:pages,current_pages:current_page,base:'/user/'+user.loginname+'/replies'}) %>
-    <% }else{ %>
-    <div class='innerTopic'>
-      <p>无话题</p>
-    </div>
-    <% } %>
-  </div>
+      <% if (typeof(replies) !== 'undefined' && replies.length > 0) { %>
+      <%- partial('../topic/abstractTopic', { collection: replies, as: 'reply' }) %>
+      <div class='cell more'>
+        <a class='dark' href="/user/<%= user.loginname %>/replies">查看更多»</a>
+      </div>
+      <% } else { %>
+      <div class='innerTopic'>
+        <p>无话题</p>
+      </div>
+      <% } %>
   </div>
 </div>
 

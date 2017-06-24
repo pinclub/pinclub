@@ -23,32 +23,8 @@ $(".grid-item .actions .right a").click(function (e) {
 var topic_page = 1;
 var pic_page = 1;
 var topic_forum = '';
-var topic_tab = '';
 $('#page-marker').on('lazyshow', function () {
-    // $.ajax({
-    //     url: "/api/v2/topics?page=" + topic_page
-    // }).done(function (responseText) {
-    //     console.info(responseText);
-    //     var itemLength = 0;
-    //     if (!!responseText.data && _.isArray(responseText.data)) {
-    //         itemLength = _.size(responseText.data);
-    //     }
-    //     var elements = [];
-    //     responseText.data.forEach(function (item) {
-    //         elements.push($("#topicListTmp").tmpl({topic: item}));
-    //     });
-    //     $('#topic_list').append(elements);
-    //     if (itemLength >= 10) {
-    //         $(window).lazyLoadXT();
-    //         $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
-    //     } else {
-    //         $("#page-marker").remove();
-    //     }
-    //     topic_page++;
-    //
-    // });
-
-    loadTopicList(topic_page, topic_forum, topic_tab);
+    loadTopicList(topic_page, topic_forum);
 
 }).lazyLoadXT({visibleOnly: false});
 
@@ -96,13 +72,17 @@ $(document).on('click', '.like-btn', function (event) {
 // 绑定首页板块连接的点击事件
 $(document).on('click', '.topic-tab', function (event) {
     topic_page = 1;
+    var loginname;
     if (!!event.currentTarget.dataset.id) {
         topic_forum = event.currentTarget.dataset.id;
+    }
+    if (!!event.currentTarget.dataset.loginname) {
+        loginname = event.currentTarget.dataset.loginname;
     }
     $('#topic_list').html('');
     $('#content_text .topic-tab').removeClass('current-tab');
     $(this).addClass('current-tab');
-    loadTopicList(topic_page, topic_forum);
+    loadTopicList(topic_page, topic_forum, loginname);
 });
 
 // 绑定更多相似图片按钮点击事件
@@ -292,7 +272,7 @@ function likePic(picid) {
     });
 }
 
-function loadTopicList (page, forum) {
+function loadTopicList (page, forum, loginname) {
     var params = '';
     if (!page) {
         page = 1;
@@ -301,6 +281,9 @@ function loadTopicList (page, forum) {
     if (!!forum) {
         params += '&forum=' + forum;
         topic_forum = forum;
+    }
+    if (!!loginname) {
+        params += '&loginname=' + loginname;
     }
     $.ajax({
         url: "/api/v2/topics?" + params
@@ -312,14 +295,14 @@ function loadTopicList (page, forum) {
         }
         var elements = [];
         responseText.data.forEach(function (item) {
-            elements.push($("#topicListTmp").tmpl({topic: item}));
+            elements.push($("#topicListTmp").tmpl({topic: item, avator: true}));
         });
         $('#topic_list').append(elements);
         if (itemLength >= 10) {
             $(window).lazyLoadXT();
             $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
-        } else {
-            $("#page-marker").remove();
+        // } else {
+        //     $("#page-marker").remove();
         }
         topic_page++;
 

@@ -8,7 +8,7 @@ var _ = require('lodash');
 var TopicSchema = new Schema({
     title: {type: String},
     content: {type: String},
-    author_id: {type: ObjectId, ref: 'User'},
+    author: {type: ObjectId, ref: 'User'},
     top: {type: Boolean, default: false}, // 置顶帖
     good: {type: Boolean, default: false}, // 精华帖
     lock: {type: Boolean, default: false}, // 被锁定主题
@@ -50,7 +50,7 @@ var TopicSchema = new Schema({
 TopicSchema.plugin(BaseModel);
 TopicSchema.index({create_at: -1});
 TopicSchema.index({top: -1, last_reply_at: -1});
-TopicSchema.index({author_id: 1, create_at: -1});
+TopicSchema.index({author: 1, create_at: -1});
 
 TopicSchema.virtual('tabName').get(function () {
     var tab = this.tab;

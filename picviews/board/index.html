@@ -2,9 +2,10 @@
 .css('/public/stylesheets/board.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
-<div id="board_list" class="wrapper">
-    <div id="waterfall" class="row">
-        <div class="col-md-2">
+
+<div id="board_list" class="wrapper row">
+    <div id="waterfall">
+        <div class=" col-xs-6 col-md-4 col-lg-2">
             <div class="add-board">
                 <div class="inner">
                     <i></i>
@@ -13,7 +14,7 @@
             </div>
         </div>
         <% for(var i = 0; i < boards.length; i++) { %>
-        <div class="col-md-2">
+        <div class=" col-xs-6 col-md-4 col-lg-2">
             <div class="grid-item">
                 <a class="link" href="#" onclick="return false;">
                     <% for(var j = 0; j < boards[i].topics.length; j++) { %>

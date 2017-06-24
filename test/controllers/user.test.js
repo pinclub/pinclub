@@ -33,11 +33,9 @@ describe('test/controllers/user.test.js', function () {
       request.get('/user/' + testUser.loginname)
       .expect(200, function (err, res) {
         var texts = [
-          '注册时间',
-          'Nothing to say.',
-          '最近创建的话题',
-          '无话题',
-          '最近参与的话题',
+          '加入本站',
+          '没有写签名. What a pity.',
+          '全部',
           '无话题'
         ];
         texts.forEach(function (text) {

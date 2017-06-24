@@ -13,7 +13,7 @@ var config = require('../config');
  */
 exports.add = function (req, res, next) {
     var content = req.body.r_content;
-    var topic_id = req.params.topic_id;
+    var topic = req.params.topic;
     var reply_id = req.body.reply_id;
 
     var str = validator.trim(String(content));
@@ -24,7 +24,7 @@ exports.add = function (req, res, next) {
     var ep = EventProxy.create();
     ep.fail(next);
 
-    Topic.getTopic(topic_id, ep.doneLater(function (topic) {
+    Topic.getTopic(topic, ep.doneLater(function (topic) {
         if (!topic) {
             ep.unbind();
             // just 404 page
@@ -38,16 +38,16 @@ exports.add = function (req, res, next) {
     }));
 
     ep.all('topic', function (topic) {
-        User.getUserById(topic.author_id, ep.done('topic_author'));
+        User.getUserById(topic.author, ep.done('topic_author'));
     });
 
     ep.all('topic', 'topic_author', function (topic, topicAuthor) {
-        Reply.newAndSave(content, topic_id, req.session.user._id, reply_id, ep.done(function (reply) {
-            Topic.updateLastReply(topic_id, reply._id, ep.done(function () {
+        Reply.newAndSave(content, topic, req.session.user._id, reply_id, ep.done(function (reply) {
+            Topic.updateLastReply(topic, reply._id, ep.done(function () {
                 ep.emit('reply_saved', reply);
                 //发送at消息，并防止重复 at 作者
                 var newContent = content.replace('@' + topicAuthor.loginname + ' ', '');
-                at.sendMessageToMentionUsers(newContent, topic_id, req.session.user._id, reply._id);
+                at.sendMessageToMentionUsers(newContent, topic, req.session.user._id, reply._id);
             }));
         }));
 
@@ -61,14 +61,14 @@ exports.add = function (req, res, next) {
     });
 
     ep.all('reply_saved', 'topic', function (reply, topic) {
-        if (topic.author_id.toString() !== req.session.user._id.toString()) {
-            message.sendReplyMessage(topic.author_id, req.session.user._id, topic._id, reply._id);
+        if (topic.author.toString() !== req.session.user._id.toString()) {
+            message.sendReplyMessage(topic.author, req.session.user._id, topic._id, reply._id);
         }
         ep.emit('message_saved');
     });
 
     ep.all('reply_saved', 'message_saved', 'score_saved', function (reply) {
-        res.redirect('/topic/' + topic_id + '#' + reply._id);
+        res.redirect('/topic/' + topic + '#' + reply._id);
     });
 };
 
@@ -87,7 +87,7 @@ exports.delete = function (req, res, next) {
             res.json({status: 'no reply ' + reply_id + ' exists'});
             return;
         }
-        if (reply.author_id.toString() === req.session.user._id.toString() || req.session.user.is_admin) {
+        if (reply.author.id === req.session.user._id.toString() || req.session.user.is_admin) {
             reply.deleted = true;
             reply.save();
             res.json({status: 'success'});
@@ -100,7 +100,7 @@ exports.delete = function (req, res, next) {
             return;
         }
 
-        Topic.reduceCount(reply.topic_id, _.noop);
+        Topic.reduceCount(reply.topic, _.noop);
     });
 };
 /*
@@ -113,7 +113,7 @@ exports.showEdit = function (req, res, next) {
         if (!reply) {
             return res.render404('此回复不存在或已被删除。');
         }
-        if (req.session.user._id.equals(reply.author_id) || req.session.user.is_admin) {
+        if (req.session.user._id.equals(reply.author.id) || req.session.user.is_admin) {
             res.render('reply/edit', {
                 reply_id: reply._id,
                 content: reply.content
@@ -135,7 +135,7 @@ exports.update = function (req, res, next) {
             return res.render404('此回复不存在或已被删除。');
         }
 
-        if (String(reply.author_id) === req.session.user._id.toString() || req.session.user.is_admin) {
+        if (String(reply.author.id) === req.session.user._id.toString() || req.session.user.is_admin) {
 
             if (content.trim().length > 0) {
                 reply.content = content;
@@ -144,7 +144,7 @@ exports.update = function (req, res, next) {
                     if (err) {
                         return next(err);
                     }
-                    res.redirect('/topic/' + reply.topic_id + '#' + reply._id);
+                    res.redirect('/topic/' + reply.topic + '#' + reply._id);
                 });
             } else {
                 return res.renderError('回复的字数太少。', 400);
@@ -162,7 +162,7 @@ exports.up = function (req, res, next) {
         if (err) {
             return next(err);
         }
-        if (reply.author_id.equals(userId) && !config.debug) {
+        if (reply.author.equals(userId) && !config.debug) {
             // 不能帮自己点赞
             res.send({
                 success: false,

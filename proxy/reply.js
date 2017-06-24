@@ -26,32 +26,21 @@ exports.getReplyById = function (id, callback) {
   if (!id) {
     return callback(null, null);
   }
-  Reply.findOne({_id: id}, function (err, reply) {
-    if (err) {
-      return callback(err);
-    }
-    if (!reply) {
-      return callback(err, null);
-    }
-
-    var author_id = reply.author_id;
-    User.getUserById(author_id, function (err, author) {
+  Reply.findOne({_id: id}).populate('author', 'loginname avatar_url id email').exec(function (err, reply) {
       if (err) {
-        return callback(err);
-      }
-      reply.author = author;
-      // TODO: 添加更新方法，有些旧帖子可以转换为markdown格式的内容
-      if (reply.content_is_html) {
-        return callback(null, reply);
-      }
-      at.linkUsers(reply.content, function (err, str) {
-        if (err) {
           return callback(err);
-        }
-        reply.content = str;
-        return callback(err, reply);
+      }
+      if (!reply) {
+          return callback(err, null);
+      }
+
+      at.linkUsers(reply.content, function (err, str) {
+          if (err) {
+              return callback(err);
+          }
+          reply.content = str;
+          return callback(err, reply);
       });
-    });
   });
 };
 
@@ -64,7 +53,7 @@ exports.getReplyById = function (id, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getRepliesByTopicId = function (id, cb) {
-  Reply.find({topic_id: id, deleted: false}, '', {sort: 'create_at'}, function (err, replies) {
+  Reply.find({topic: id, deleted: false}, '', {sort: 'create_at'}).populate('author', 'loginname avatar_url id email').exec(function (err, replies) {
     if (err) {
       return cb(err);
     }
@@ -78,12 +67,6 @@ exports.getRepliesByTopicId = function (id, cb) {
     });
     for (var j = 0; j < replies.length; j++) {
       (function (i) {
-        var author_id = replies[i].author_id;
-        User.getUserById(author_id, function (err, author) {
-          if (err) {
-            return cb(err);
-          }
-          replies[i].author = author || { _id: '' };
           if (replies[i].content_is_html) {
             return proxy.emit('reply_find');
           }
@@ -94,7 +77,6 @@ exports.getRepliesByTopicId = function (id, cb) {
             replies[i].content = str;
             proxy.emit('reply_find');
           });
-        });
       })(j);
     }
   });
@@ -115,8 +97,8 @@ exports.newAndSave = function (content, topicId, authorId, replyId, callback) {
   }
   var reply       = new Reply();
   reply.content   = content;
-  reply.topic_id  = topicId;
-  reply.author_id = authorId;
+  reply.topic  = topicId;
+  reply.author = authorId;
 
   if (replyId) {
     reply.reply_id = replyId;
@@ -132,7 +114,7 @@ exports.newAndSave = function (content, topicId, authorId, replyId, callback) {
  * @param callback 回调函数
  */
 exports.getLastReplyByTopId = function (topicId, callback) {
-  Reply.find({topic_id: topicId, deleted: false}, '_id', {sort: {create_at : -1}, limit : 1}, callback);
+  Reply.find({topic: topicId, deleted: false}, '_id', {sort: {create_at : -1}, limit : 1}, callback);
 };
 
 exports.getRepliesByAuthorId = function (authorId, opt, callback) {
@@ -140,12 +122,12 @@ exports.getRepliesByAuthorId = function (authorId, opt, callback) {
     callback = opt;
     opt      = null;
   }
-  Reply.find({author_id: authorId}, {}, opt, callback);
+  Reply.find({author: authorId}, {}, opt).deepPopulate('topic topic.author topic.forum').exec(callback);
 };
 
-// 通过 author_id 获取回复总数
+// 通过 author 获取回复总数
 exports.getCountByAuthorId = function (authorId, callback) {
-  Reply.count({author_id: authorId}, callback);
+  Reply.count({author: authorId}, callback);
 };
 
 exports.getCountByQuery = function (query, callback) {

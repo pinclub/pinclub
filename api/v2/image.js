@@ -34,7 +34,7 @@ var validator = require('validator');
           "data": [
               {
                   "id": "",
-                  "author_id": "",
+                  "author": "",
                   "tab": "ask",
                   "content": "",
                   "title": "",
@@ -78,7 +78,8 @@ exports.index = function (req, res, next) {
 
     ep.all('topics', 'liked_topics', function (topics, liked_topics) {
         let liked_t_ids = _.map(liked_topics, 'topic');
-        topics = topics.map(function (topic) {
+        let structedTopics = [];
+        _.forEach(topics, function (topic) {
             let structedTopic = structureHelper.image(topic);
             liked_t_ids.forEach(function(lti){
                 let tid = lti.toString();
@@ -86,10 +87,10 @@ exports.index = function (req, res, next) {
                     structedTopic.liked = true;
                 }
             });
-            return structedTopic;
+            structedTopics.push(structedTopic);
         });
 
-        res.send({success: true, data: topics});
+        res.send({success: true, data: structedTopics});
     });
 
     // 获得可以查看的Board列表
@@ -367,7 +368,7 @@ exports.getImage = function (req, res, next) {
     ep.on('topic_from', function(fromTopic) {
         var topicImage = _.pick(fromTopic, structureHelper.image_copy_fields);
         topicImage.title = desc;
-        topicImage.author_id = currentUser;
+        topicImage.author = currentUser;
         topicImage.get_from_topic = fromTopic._id;
         topicImage.board = board_id;
         TopicProxy.newAndSaveImage(topicImage, function (err, image) {

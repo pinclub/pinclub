@@ -1,0 +1,3 @@
+db.getCollection('topics').update({}, {$rename : {"author_id" : "author"}}, false, true);
+db.getCollection('replies').update({}, {$rename : {"author_id" : "author"}}, false, true);
+db.getCollection('replies').update({}, {$rename : {"topic_id" : "topic"}}, false, true);

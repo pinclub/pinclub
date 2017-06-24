@@ -36,7 +36,7 @@ var validator = require('validator');
           "data": [
               {
                   "id": "",
-                  "author_id": "",
+                  "author": "",
                   "tab": "ask",
                   "content": "",
                   "title": "",
@@ -68,6 +68,7 @@ var index = function (req, res, next) {
     var page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;
     var forum = req.query.forum;
+    var author = req.query.author;
     var limit = Number(req.query.limit) || config.list_topic_count;
 
     var query = {};
@@ -79,6 +80,9 @@ var index = function (req, res, next) {
         }
     } else if (forum === 'all') {
         delete query.forum;
+    }
+    if (!!author) {
+        query.author = author;
     }
     query.deleted = false;
     query.type = type;
@@ -135,7 +139,7 @@ var show = function (req, res, next) {
             res.status(404);
             return res.send({success: false, error_msg: '话题不存在'});
         }
-        topic = _.pick(topic, ['id', 'author_id', 'forum', 'content', 'title', 'last_reply', 'last_reply_at',
+        topic = _.pick(topic, ['id', 'author', 'forum', 'content', 'title', 'last_reply', 'last_reply_at',
             'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'image']);
 
         if (mdrender) {
@@ -254,7 +258,7 @@ exports.update = function (req, res, next) {
             return res.send({success: false, error_msg: '此话题不存在或已被删除。'});
         }
 
-        if (topic.author_id.equals(req.user._id) || req.user.is_admin) {
+        if (topic.author.equals(req.user._id) || req.user.is_admin) {
             // 验证
             var editError;
             if (title === '') {

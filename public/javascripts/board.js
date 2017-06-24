@@ -1,6 +1,7 @@
 
 // 绑定Board 查询事件
 $(document).on('keyup', '.pin-create .right-part .search-input', function (event) {
+
     if (!event.currentTarget) {
         return;
     }
@@ -10,6 +11,9 @@ $(document).on('keyup', '.pin-create .right-part .search-input', function (event
 
 // 绑定添加Board按钮
 $(document).on('click', '.pin-create .right-part .createboard', function (event) {
+    if (!auth()) {
+        return;
+    }
     if (!event.currentTarget) {
         return;
     }
@@ -20,6 +24,9 @@ $(document).on('click', '.pin-create .right-part .createboard', function (event)
 
 // 绑定修改Board事件
 $(document).on('click', '#modify_board', function (event) {
+    if (!auth()) {
+        return;
+    }
     if (!event.currentTarget) {
         return;
     }
@@ -37,6 +44,9 @@ $(document).on('click', '#modify_board', function (event) {
 
 // 绑定新建Board事件
 $(document).on('click', '.add-board', function (event) {
+    if (!auth()) {
+        return;
+    }
     if (!event.currentTarget) {
         return;
     }
@@ -51,12 +61,14 @@ function selectBoard (selectedElem) {
     if (!boardid) {
         return;
     }
+    var boardtitle = selectedElem.dataset.title;
     var selectedBoard = $(selectedElem);
 
     var boardE = selectedBoard.parent().children('#'+boardid);
     var selectedE = selectedBoard.parent().children('.selected');
     if ("undefined" != typeof getImageObject) {
         getImageObject.board_id = boardid;
+        getImageObject.board_title = boardtitle;
     }
     if (!boardE.hasClass('selected')) {
         selectedE.removeClass('selected');
@@ -118,6 +130,7 @@ function showBoardList (target, boards) {
     if (boards.length) {
         if ("undefined" != typeof getImageObject) {
             getImageObject.board_id = boards[0]._id;
+            getImageObject.board_title = boards[0].title;
         }
     } else {
         $('#board_message_alert .alert-content').html('创建一个 Board 吧!');

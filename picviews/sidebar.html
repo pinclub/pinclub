@@ -5,13 +5,8 @@
 <div id='sidebar'>
 
   <div class='panel'>
-    <% if (typeof(user) !== 'undefined' || current_user) { %>
-    <div class='header'>
-      <span class='col_fade'>个人信息</span>
-    </div>
-    <div class='innerTopic'>
-      <%- partial('user/card',{ object: typeof(user) === 'undefined' ? current_user : user, as: 'user' }) %>
-    </div>
+    <% if (current_user) { %>
+      <%- partial('user/card',{ object: current_user, as: 'user' }) %>
     <% } else { %>
     <div class='innerTopic'>
       <p><%= config.description %></p>
@@ -31,19 +26,6 @@
     </div>
     <% } %>
   </div>
-
-  <% if (current_user) { %>
-  <div class="panel">
-    <div class='innerTopic' style="text-align: center;">
-      <a href="/topic/create" class="btn"><strong>
-        发布话题</strong><span></span></a>
-
-      <a id='create_pic_btn' data-toggle="modal" data-target="#image_upload" class="btn wbtn"><strong>
-        发布图片</strong><span></span></a>
-
-    </div>
-  </div>
-  <% } %>
 
   <% if (!current_user || !current_user.isAdvanced) { %>
     <%- partial('./_ads') %>

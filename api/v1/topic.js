@@ -36,7 +36,7 @@ var validator = require('validator');
           "data": [
               {
                   "id": "",
-                  "author_id": "",
+                  "author": "",
                   "forum": xxxxx,
                   "content": "",
                   "title": "",
@@ -81,7 +81,7 @@ var index = function (req, res, next) {
 
     ep.all('topics', function (topics) {
         topics.forEach(function (topic) {
-            UserModel.findById(topic.author_id, ep.done(function (author) {
+            UserModel.findById(topic.author, ep.done(function (author) {
                 if (mdrender) {
                     topic.content = renderHelper.markdown(at.linkUsers(topic.content));
                 }
@@ -93,7 +93,7 @@ var index = function (req, res, next) {
 
         ep.after('author', topics.length, function () {
             topics = topics.map(function (topic) {
-                return _.pick(topic, ['id', 'author_id', 'forum', 'content', 'title', 'last_reply_at',
+                return _.pick(topic, ['id', 'author', 'forum', 'content', 'title', 'last_reply_at',
                     'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'replay']);
             });
 
@@ -122,7 +122,7 @@ var show = function (req, res, next) {
             res.status(404);
             return res.send({success: false, error_msg: '话题不存在'});
         }
-        topic = _.pick(topic, ['id', 'author_id', 'forum', 'content', 'title', 'last_reply', 'last_reply_at',
+        topic = _.pick(topic, ['id', 'author', 'forum', 'content', 'title', 'last_reply', 'last_reply_at',
             'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author']);
 
         if (mdrender) {
@@ -231,7 +231,7 @@ exports.update = function (req, res, next) {
             return res.send({success: false, error_msg: '此话题不存在或已被删除。'});
         }
 
-        if (topic.author_id.equals(req.user._id) || req.user.is_admin) {
+        if (topic.author.equals(req.user._id) || req.user.is_admin) {
             // 验证
             var editError;
             if (title === '') {

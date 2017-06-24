@@ -60,7 +60,7 @@ describe('test/api/v1/reply.test.js', function () {
         });
     });
 
-    it('should fail when topic_id is not valid', function (done) {
+    it('should fail when topic id is not valid', function (done) {
       request.post('/api/v1/topic/' + mockTopic.id + 'not_valid' + '/replies')
         .send({
           content: 'reply a topic from api',

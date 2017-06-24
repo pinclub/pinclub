@@ -36,9 +36,8 @@ $(document).on('click', '.preview_image_btn', function(event){
     $('#preview_modal').modal('show');
     $('body .modal-backdrop').css({"background-color": "#eee"});
     $.ajax({
-        url: "api/v2/images/"+dataset.id
+        url: "/api/v2/images/"+dataset.id
     }).done(function (response) {
-        console.log(response);
         var result = response.data;
         var boardImages = result.board.images;
         var profileSourceHtml = $("#profileSourceTemplate").tmpl(result);

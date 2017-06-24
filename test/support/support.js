@@ -46,7 +46,7 @@ var createImage = exports.createImage = function (authorId, board, callback) {
     var image = {};
     image.title = 'image title' + key;
     image.content = 'test image content' + key;
-    image.author_id = authorId;
+    image.author = authorId;
     image.type = 'image';
     image.image = 'xxxxx';
     image.board = board;

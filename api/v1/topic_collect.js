@@ -38,7 +38,7 @@ function list(req, res, next) {
     ep.all('topics', function (topics) {
       topics = topics.map(function (topic) {
         topic.author = _.pick(topic.author, ['loginname', 'avatar_url']);
-        return _.pick(topic, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
+        return _.pick(topic, ['id', 'author', 'tab', 'content', 'title', 'last_reply_at',
           'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author']);
       });
       res.send({success: true, data: topics});

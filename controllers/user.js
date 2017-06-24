@@ -6,7 +6,10 @@ var utility = require('utility');
 var util = require('util');
 var TopicModel = require('../models').Topic;
 var ReplyModel = require('../models').Reply;
+var Forum = require('../proxy').Forum;
+var Board = require('../proxy').Board;
 var tools = require('../common/tools');
+var cache = require('../common/cache');
 var config = require('../config');
 var EventProxy = require('eventproxy');
 var validator = require('validator');
@@ -14,6 +17,7 @@ var _ = require('lodash');
 
 exports.index = function (req, res, next) {
     var user_name = req.params.name;
+    var currentUser = req.session.user;
     User.getUserByLoginName(user_name, function (err, user) {
         if (err) {
             return next(err);
@@ -23,7 +27,7 @@ exports.index = function (req, res, next) {
             return;
         }
 
-        var render = function (recent_topics, recent_replies) {
+        var render = function (recent_topics, recent_replies, forums, boards) {
             user.url = (function () {
                 if (user.url && user.url.indexOf('http') !== 0) {
                     return 'http://' + user.url;
@@ -40,35 +44,79 @@ exports.index = function (req, res, next) {
                 recent_topics: recent_topics,
                 recent_replies: recent_replies,
                 token: token,
+                forums: forums,
+                boards: boards,
                 pageTitle: util.format('@%s 的个人主页', user.loginname),
             });
         };
 
         var proxy = new EventProxy();
-        proxy.assign('recent_topics', 'recent_replies', render);
+        proxy.assign('recent_topics', 'recent_replies', 'forums', 'boards', render);
         proxy.fail(next);
 
-        var query = {author_id: user._id, type: 'text'};
+        var query = {author: user._id, type: 'text'};
         var opt = {limit: 5, sort: '-create_at'};
         Topic.getTopicsByQuery(query, opt, proxy.done('recent_topics'));
 
         Reply.getRepliesByAuthorId(user._id, {limit: 20, sort: '-create_at'},
-            proxy.done(function (replies) {
+            proxy.done('recent_replies', function (replies) {
 
-                var topic_ids = replies.map(function (reply) {
-                    return reply.topic_id.toString();
-                });
-                topic_ids = _.uniq(topic_ids).slice(0, 5); //  只显示最近5条
+                return replies;
 
-                var query = {_id: {'$in': topic_ids}};
-                var opt = {};
-                Topic.getTopicsByQuery(query, opt, proxy.done('recent_replies', function (recent_replies) {
-                    recent_replies = _.sortBy(recent_replies, function (topic) {
-                        return topic_ids.indexOf(topic._id.toString());
-                    });
-                    return recent_replies;
-                }));
+                // var topic_ids = replies.map(function (reply) {
+                //     return reply.topic.id;
+                // });
+                // topic_ids = _.uniq(topic_ids).slice(0, 5); //  只显示最近5条
+                //
+                // var query = {_id: {'$in': topic_ids}};
+                // var opt = {};
+                // Topic.getTopicsByQuery(query, opt, proxy.done('recent_replies', function (recent_replies) {
+                //     recent_replies = _.sortBy(recent_replies, function (topic) {
+                //         return topic_ids.indexOf(topic._id.toString());
+                //     });
+                //     return recent_replies;
+                // }));
             }));
+
+        // 获取板块信息
+        var queryForum = {};
+        queryForum.type = 'public';
+        if (!!currentUser) {
+            queryForum.type = {$ne: 'private'};
+        }
+        var forumsCacheKey = JSON.stringify(queryForum) + 'pages';
+        cache.get(forumsCacheKey, proxy.done(function (forums) {
+            if (forums) {
+                proxy.emit('forums', forums);
+            } else {
+                Forum.getForumsByQuery(queryForum, {limit: 10}, proxy.done(function (forums) {
+                    cache.set(forumsCacheKey, forums, 60 * 1);
+                    proxy.emit('forums', forums);
+                }));
+            }
+        }));
+        // 获取用户Board
+        var queryBoard = {type: 'public'};
+        if (!user.is_admin) {
+            queryBoard.user_id = user;
+        } else if (user.is_admin || (currentUser && user.id !== currentUser.id)) {
+            delete queryBoard.type;
+        }
+        Board.getBoardsByQuery(queryBoard, {}, function (err, boards) {
+            _.forEach(boards, function(board) {
+                Topic.getImagesByQuery({
+                    board: board.id
+                }, {
+                    limit: 4
+                }, function (err, topics) {
+                    board.topics = topics;
+                    proxy.emit('boardtopic');
+                });
+            });
+            proxy.after('boardtopic', boards.length, function () {
+                proxy.emit('boards', boards);
+            });
+        });
     });
 };
 
@@ -267,7 +315,7 @@ exports.listTopics = function (req, res, next) {
         proxy.assign('topics', 'pages', render);
         proxy.fail(next);
 
-        var query = {'author_id': user._id};
+        var query = {'author': user._id};
         var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
         Topic.getTopicsByQuery(query, opt, proxy.done('topics'));
 
@@ -289,34 +337,35 @@ exports.listReplies = function (req, res, next) {
             return;
         }
 
-        var render = function (topics, pages) {
+        var render = function (replies, pages) {
             res.render('user/replies', {
                 user: user,
-                topics: topics,
+                replies: replies,
                 current_page: page,
                 pages: pages
             });
         };
 
         var proxy = new EventProxy();
-        proxy.assign('topics', 'pages', render);
+        proxy.assign('replies', 'pages', render);
         proxy.fail(next);
 
         var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
-        Reply.getRepliesByAuthorId(user._id, opt, proxy.done(function (replies) {
+        Reply.getRepliesByAuthorId(user._id, opt, proxy.done('replies', function (replies) {
             // 获取所有有评论的主题
-            var topic_ids = replies.map(function (reply) {
-                return reply.topic_id.toString();
-            });
-            topic_ids = _.uniq(topic_ids);
-
-            var query = {'_id': {'$in': topic_ids}};
-            Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
-                topics = _.sortBy(topics, function (topic) {
-                    return topic_ids.indexOf(topic._id.toString());
-                });
-                return topics;
-            }));
+            return replies;
+            // var topic_ids = replies.map(function (reply) {
+            //     return reply.topic.id;
+            // });
+            // topic_ids = _.uniq(topic_ids);
+            //
+            // var query = {'_id': {'$in': topic_ids}};
+            // Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
+            //     topics = _.sortBy(topics, function (topic) {
+            //         return topic_ids.indexOf(topic._id.toString());
+            //     });
+            //     return topics;
+            // }));
         }));
 
         Reply.getCountByAuthorId(user._id, proxy.done('pages', function (count) {
@@ -370,9 +419,9 @@ exports.deleteAll = function (req, res, next) {
                 res.json({status: 'success'});
             });
         // 删除主题
-        TopicModel.update({author_id: user._id}, {$set: {deleted: true}}, {multi: true}, ep.done('del_topics'));
+        TopicModel.update({author: user._id}, {$set: {deleted: true}}, {multi: true}, ep.done('del_topics'));
         // 删除评论
-        ReplyModel.update({author_id: user._id}, {$set: {deleted: true}}, {multi: true}, ep.done('del_replys'));
+        ReplyModel.update({author: user._id}, {$set: {deleted: true}}, {multi: true}, ep.done('del_replys'));
         // 点赞数也全部干掉
         ReplyModel.update({}, {$pull: {'ups': user._id}}, {multi: true}, ep.done('del_ups'));
     }));

@@ -8,7 +8,7 @@ var message    = require('../../common/message');
 var config     = require('../../config');
 
 var create = function (req, res, next) {
-  var topic_id = req.params.topic_id;
+  var topic = req.params.topic;
   var content  = req.body.content || '';
   var reply_id = req.body.reply_id;
 
@@ -21,12 +21,12 @@ var create = function (req, res, next) {
     return res.send({success: false, error_msg: '回复内容不能为空'});
   }
 
-  if (!validator.isMongoId(topic_id)) {
+  if (!validator.isMongoId(topic)) {
     res.status(400);
     return res.send({success: false, error_msg: '不是有效的话题id'});
   }
   
-  Topic.getTopic(topic_id, ep.done(function (topic) {
+  Topic.getTopic(topic, ep.done(function (topic) {
     if (!topic) {
       res.status(404);
       return res.send({success: false, error_msg: '话题不存在'});
@@ -39,16 +39,16 @@ var create = function (req, res, next) {
   }));
 
   ep.all('topic', function (topic) {
-    User.getUserById(topic.author_id, ep.done('topic_author'));
+    User.getUserById(topic.author, ep.done('topic_author'));
   });
 
   ep.all('topic', 'topic_author', function (topic, topicAuthor) {
-    Reply.newAndSave(content, topic_id, req.user.id, reply_id, ep.done(function (reply) {
-      Topic.updateLastReply(topic_id, reply._id, ep.done(function () {
+    Reply.newAndSave(content, topic, req.user.id, reply_id, ep.done(function (reply) {
+      Topic.updateLastReply(topic, reply._id, ep.done(function () {
         ep.emit('reply_saved', reply);
         //发送at消息，并防止重复 at 作者
         var newContent = content.replace('@' + topicAuthor.loginname + ' ', '');
-        at.sendMessageToMentionUsers(newContent, topic_id, req.user.id, reply._id);
+        at.sendMessageToMentionUsers(newContent, topic, req.user.id, reply._id);
       }));
     }));
 
@@ -61,8 +61,8 @@ var create = function (req, res, next) {
   });
 
   ep.all('reply_saved', 'topic', function (reply, topic) {
-    if (topic.author_id.toString() !== req.user.id.toString()) {
-      message.sendReplyMessage(topic.author_id, req.user.id, topic._id, reply._id);
+    if (topic.author.toString() !== req.user.id.toString()) {
+      message.sendReplyMessage(topic.author, req.user.id, topic._id, reply._id);
     }
     ep.emit('message_saved');
   });
@@ -94,7 +94,7 @@ var ups = function (req, res, next) {
       res.status(404);
       return res.send({success: false, error_msg: '评论不存在'});
     }
-    if (reply.author_id.equals(userId) && !config.debug) {
+    if (reply.author.equals(userId) && !config.debug) {
       res.status(403);
       return res.send({success: false, error_msg: '不能帮自己点赞'});
     } else {

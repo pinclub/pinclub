@@ -38,7 +38,7 @@ exports.getTopicById = function (id, callback) {
         }
         proxy.emit('topic', topic);
 
-        User.getUserById(topic.author_id, proxy.done('author'));
+        User.getUserById(topic.author, proxy.done('author'));
 
         if (topic.last_reply) {
             Reply.getReplyById(topic.last_reply, proxy.done(function (last_reply) {
@@ -76,6 +76,8 @@ exports.getTopicsByQuery = function (query, opt, callback) {
     Topic.find(query, {}, opt)
         .populate('board', 'title desc _id topic_count')
         .populate('forum', 'title content _id topic_count')
+        .populate('author')
+        .populate('last_reply')
         .exec(function (err, topics) {
         if (err) {
             return callback(err);
@@ -84,42 +86,43 @@ exports.getTopicsByQuery = function (query, opt, callback) {
             return callback(null, []);
         }
 
-        var proxy = new EventProxy();
-        proxy.after(JSON.stringify(query)+'topic_ready', topics.length, function () {
+        // var proxy = new EventProxy();
+        // proxy.after(JSON.stringify(query)+'topic_ready', topics.length, function () {
             topics = _.compact(topics); // 删除不合规的 topic
             return callback(null, topics);
-        });
-        proxy.fail(callback);
-
-        topics.forEach(function (topic, i) {
-            var ep = new EventProxy();
-            ep.all('author' + i, 'reply' + i, function (author, reply) {
-                // 保证顺序
-                // 作者可能已被删除
-                if (author) {
-                    topic.author = author;
-                    topic.reply = reply;
-                } else {
-                    topics[i] = null;
-                }
-                proxy.emit(JSON.stringify(query) + 'topic_ready');
-            });
-
-            User.getUserById(topic.author_id, ep.done('author' + i));
-            // 获取主题的最后回复
-            Reply.getReplyById(topic.last_reply, ep.done('reply' + i));
-            //if (topic.prototype == 'text') {
-            //    ep.done('board' + i, null);
-            //} else {
-            //    Board.getBoardById(topic.board, ep.done('board' + i));
-            //}
-        });
+        // });
+        // proxy.fail(callback);
+        //
+        // topics.forEach(function (topic, i) {
+        //     var ep = new EventProxy();
+        //     ep.all('reply' + i, function (reply) {
+        //         // 保证顺序
+        //         // 作者可能已被删除
+        //         if (reply) {
+        //             topic.reply = reply;
+        //         } else {
+        //             topics[i] = null;
+        //         }
+        //         proxy.emit(JSON.stringify(query) + 'topic_ready');
+        //     });
+        //     // 获取主题的最后回复
+        //     // Reply.getReplyById(topic.last_reply, ep.done('reply' + i));
+        //     //if (topic.prototype == 'text') {
+        //     //    ep.done('board' + i, null);
+        //     //} else {
+        //     //    Board.getBoardById(topic.board, ep.done('board' + i));
+        //     //}
+        // });
     });
 };
 
 exports.getImagesByQuery = function (query, opt, callback) {
     // query.deleted = false;
-    Topic.find(query, {}, opt).populate('board', 'id title topic_count create_at type').exec(function (err, topics) {
+    Topic.find(query, {}, opt)
+        .populate('board', 'id title topic_count create_at type')
+        .populate('author')
+        .populate('last_reply')
+        .exec(function (err, topics) {
         if (err) {
             return callback(err);
         }
@@ -127,31 +130,28 @@ exports.getImagesByQuery = function (query, opt, callback) {
             return callback(null, []);
         }
 
-        var proxy = new EventProxy();
-        proxy.after('topic_ready', topics.length, function () {
+        // var proxy = new EventProxy();
+        // proxy.after('topic_ready', topics.length, function () {
             topics = _.compact(topics); // 删除不合规的 topic
             return callback(null, topics);
-        });
-        proxy.fail(callback);
-
-        topics.forEach(function (topic, i) {
-            var ep = new EventProxy();
-            ep.all('author', 'reply', function (author, reply) {
-                // 保证顺序
-                // 作者可能已被删除
-                if (author) {
-                    topic.author = author;
-                    topic.reply = reply;
-                } else {
-                    topics[i] = null;
-                }
-                proxy.emit('topic_ready');
-            });
-
-            User.getUserById(topic.author_id, ep.done('author'));
-            // 获取主题的最后回复
-            Reply.getReplyById(topic.last_reply, ep.done('reply'));
-        });
+        // });
+        // proxy.fail(callback);
+        //
+        // topics.forEach(function (topic, i) {
+        //     var ep = new EventProxy();
+        //     ep.all('reply' + i, function (reply) {
+        //         // 保证顺序
+        //         if (reply) {
+        //             topic.reply = reply;
+        //         } else {
+        //             topics[i] = null;
+        //         }
+        //         proxy.emit('topic_ready');
+        //     });
+        //
+        //     // 获取主题的最后回复
+        //     Reply.getReplyById(topic.last_reply, ep.done('reply' + i));
+        // });
     });
 };
 
@@ -178,9 +178,9 @@ exports.getTopicsByBoardId = function (id, cb) {
         });
         for (var j = 0; j < topics.length; j++) {
             (function (i) {
-                var author_id = topics[i].user_id;
+                var author = topics[i].user_id;
                 topics[i] = structureHelper.image(topics[i]);
-                User.getUserById(author_id, function (err, author) {
+                User.getUserById(author, function (err, author) {
                     if (err) {
                         return cb(err);
                     }
@@ -227,7 +227,7 @@ exports.getFullTopic = function (id, callback) {
             return topic;
         }));
 
-        User.getUserById(topic.author_id, proxy.done(function (author) {
+        User.getUserById(topic.author, proxy.done(function (author) {
             if (!author) {
                 proxy.unbind();
                 return callback(null, '话题的作者丢了。');
@@ -271,7 +271,7 @@ exports.getFullImage = function (id, callback) {
         }
         proxy.emit('topic', topic);
 
-        User.getUserById(topic.author_id, proxy.done(function (author) {
+        User.getUserById(topic.author, proxy.done(function (author) {
             if (!author) {
                 proxy.unbind();
                 return callback(null, '话题的作者丢了。');
@@ -350,7 +350,7 @@ exports.newAndSave = function (title, content, forum, authorId, callback) {
     topic.title = title;
     topic.content = content;
     topic.forum = forum;
-    topic.author_id = authorId;
+    topic.author = authorId;
     topic.type = 'text';
     topic.save(callback);
 };

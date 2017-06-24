@@ -34,7 +34,7 @@ router.get('/user/:loginname', userController.show);
 router.post('/accesstoken', middleware.auth, toolsController.accesstoken);
 
 // 评论
-router.post('/topic/:topic_id/replies', middleware.auth, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: true}), replyController.create);
+router.post('/topic/:topic/replies', middleware.auth, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: true}), replyController.create);
 router.post('/reply/:reply_id/ups', middleware.auth, replyController.ups);
 
 // 通知

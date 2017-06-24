@@ -1,24 +1,53 @@
-<div class='user_card'>
-  <div>
-    <a class='user_avatar' href="/user/<%= user.loginname %>">
-      <img src="<%= proxy(user.avatar_url) %>" title="<%= user.loginname %>"/>
-    </a>
-    <span class='user_name'><a class='dark' href="/user/<%= user.loginname %>"><%= user.loginname %></a></span>
 
-    <div class='board clearfix'>
-      <div class='floor'>
-        <span class='big'>积分: <%= user.score %> </span>
-      </div>
+    <div id="Profile" class="text-center">
+        <% if (typeof(user) !== 'undefined' || current_user) { %>
+
+        <div class="profile-basic">
+            <a href="/user/<%= current_user.loginname %>" title="<%= current_user.loginname %>" class="img x loaded" style="text-indent: 0px;">
+                <img width="54" height="54" src="<%= current_user.avatar_url %>" data-baiduimageplus-ignore="1">
+            </a>
+            <a href="/user/<%= current_user.loginname %>" class="userlink"><%= current_user.loginname %></a>
+            <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
+        </div>
+
+        <div class="profile-stats">
+            <a href="/user/<%= current_user.loginname %>/get" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.image_count + current_user.get_image_count %></strong>图片</a>
+            <a href="/topics" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.topic_count %></strong>主题</a>
+            <a href="/boards" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.board_count %></strong>画板</a>
+            <a href="/user/<%= current_user.loginname %>/score" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.score %></strong>积分</a>
+        </div>
+        <div class="profile-acts convo">
+            <div class="links">
+                <a href="/topic/create" class="btn"><strong>
+                    发布话题</strong><span></span></a>
+
+                <a id='create_pic_btn' data-toggle="modal" data-target="#image_upload" class="btn wbtn"><strong>
+                    发布图片</strong><span></span></a>
+            </div>
+        </div>
+        <% } else { %>
+        <div class="profile-basic">
+            <p style="line-height: 50px;"><%= config.description %></p>
+        </div>
+        <div class="profile-acts convo">
+            <div class="links">
+                <a href="#" class="btn" data-toggle="modal" data-target="#signin_modal"><strong>
+                    登录</strong><span></span></a>
+                <a href="/signup" class="btn wbtn"><strong>
+                    注册</strong><span></span></a>
+            </div>
+        </div>
+        <div class="attribution" style="padding: 20px 25px;">
+            <a href="/auth/github" class="btn wbtn" style="float: left;"><strong>
+                GitHub</strong><span></span></a>
+            <div class="buttons small " >
+                <!--TODO Signin with wechat and QQ account-->
+                <a href="/auth/wechat" title="微信帐号登录" rel="nofollow" class="wechat" target="_blank"></a>
+                <a href="/auth/qzone" title="QQ帐号登录" rel="nofollow" class="qzone"></a>
+            </div>
+        </div>
+        <% } %>
     </div>
-    <div class="space clearfix"></div>
-    <span class="signature"><% if (user.signature) {%>
-            <%-escapeSignature(user.signature)%>
-        <%} else {%>
-            Nothing to say.
-        <%}%>
-    </span>
-  </div>
-</div>
 
 <% if (current_user) { %>
 <script>

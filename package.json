@@ -40,6 +40,7 @@
     "method-override": "2.3.5",
     "moment": "2.15.2",
     "mongoose": "4.4.9",
+    "mongoose-deep-populate": "^3.0.0",
     "multiline": "1.0.2",
     "node-uuid": "1.4.7",
     "nodemailer": "2.3.0",

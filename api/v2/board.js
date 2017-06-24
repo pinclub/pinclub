@@ -312,7 +312,7 @@ function collectList(req, res, next) {
         ep.all('boards', function (boards) {
             boards = boards.map(function (board) {
                 board.author = _.pick(board.author, ['loginname', 'avatar_url']);
-                return _.pick(board, ['id', 'author_id', 'tab', 'content', 'title', 'last_reply_at',
+                return _.pick(board, ['id', 'author', 'tab', 'content', 'title', 'last_reply_at',
                     'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author']);
             });
             res.send({success: true, data: boards});

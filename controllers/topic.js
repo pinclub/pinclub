@@ -19,6 +19,7 @@ var config = require('../config');
 var _ = require('lodash');
 var cache = require('../common/cache');
 var logger = require('../common/logger');
+var structure_helper = require('../common/structure_helper');
 
 /**
  * Topic page
@@ -85,7 +86,7 @@ exports.index = function (req, res, next) {
 
         // get other_topics
         var options = {limit: 5, sort: '-last_reply_at'};
-        var query = {author_id: topic.author_id, type:'text', _id: {'$nin': [topic._id]}};
+        var query = {author: topic.author, type:'text', _id: {'$nin': [topic._id]}};
         Topic.getTopicsByQuery(query, options, ep.done('other_topics'));
 
         // get no_reply_topics
@@ -185,7 +186,7 @@ exports.showEdit = function (req, res, next) {
             return;
         }
 
-        if (String(topic.author_id) === String(req.session.user._id) || req.session.user.is_admin) {
+        if (String(topic.author) === String(req.session.user._id) || req.session.user.is_admin) {
             Forum.getForumsByQuery({type : {$ne: 'private'}}, {}, function (err, forums) {
                 res.render('topic/edit', {
                     action: 'edit',
@@ -216,7 +217,7 @@ exports.update = function (req, res, next) {
             return;
         }
 
-        if (topic.author_id.equals(req.session.user._id) || req.session.user.is_admin) {
+        if (topic.author.equals(req.session.user._id) || req.session.user.is_admin) {
             title = validator.trim(title);
             forum = validator.trim(forum);
             content = validator.trim(content);
@@ -278,7 +279,7 @@ exports.delete = function (req, res, next) {
         if (err) {
             return res.send({success: false, message: err.message});
         }
-        if (!req.session.user.is_admin && !(topic.author_id.equals(req.session.user._id))) {
+        if (!req.session.user.is_admin && !(topic.author.equals(req.session.user._id))) {
             res.status(403);
             return res.send({success: false, message: '无权限'});
         }

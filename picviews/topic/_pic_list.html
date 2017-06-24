@@ -1,108 +1,21 @@
-<div id="page-marker"></div>
-
 <!-- 模板文件 -->
 <%- partial('_templates') %>
 
 <!-- Upload 图片的 Modal 层 -->
 <%- partial('_pic_create_modal') %>
 
+<!-- Preview 的 Modal 层-->
+<%- partial('_pic_preview_modal') %>
+
 <!-- Get 图片的modal层-->
-<div class="modal fade" id="get_image_modal" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Get图片</h5>
-            </div>
-            <div class="modal-body">
-                <div id="get_image_view">
-                    <div class="pin-create">
-                        <div class="preview">
-                            <div id="get-preview-image" class="image">
-                            </div>
-                            <textarea id="get-preview-image-desc" placeholder="点击添加描述..."
-                                      class="description"></textarea>
-                        </div>
-                        <div class="right-part">
-                            <%- partial('../board/_board_create_search') %>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="get-image-close" class="btn " data-dismiss="modal">Close</button>
-                <button type="button" id="get-image-submit" class="btn " data-image="" data-desc="" data-image-id=""
-                        data-board-id="">Get Image
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 查看图片图层 -->
-<div id="preview_modal" role="dialog" aria-hidden="true" aria-labelledby="previewModalLabel">
-
-    <div class="pin-view" role="document">
-        <div class="pin-view-wrapper">
-            <div class="main-part">
-                <div class="image-piece piece">
-                    <div class="tool-bar">
-                        <a data-id="" data-name="" data-src="" href="#" class="repin-btn btn rbtn get-pic-btn"
-                           id="preview_modal_rpin_btn">
-                            <span class="text"> Get</span>
-                        </a>
-                        <a id="preview_modal_like_btn" data-id="" data-name="" data-src="" href="#" class="like-btn btn-with-icon btn">
-                            <i class="heart"></i>
-                        </a>
-                        <div class="right-part">
-                            <a id="zoomBtn" href="/pins/324257310/zoom/" target="_blank" title="查看原图" class="zoomin btn-with-icon btn"><i class="class"></i></a>
-                        </div>
-                    </div>
-                    <div class="main-image">
-                        <div id="baidu_image_holder" class="image-holder">
-
-                        </div>
-                    </div>
-                    <div class="tool-bar-bottom">
-                        <a href="#" class="repin-btn btn-with-icon btn">
-                            <i class="class"></i>
-                            <span class="text"> 采集 <span class="num">88</span></span>
-                            <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
-                        </a>
-                        <a href="#" onclick="return false;" class="like-btn btn-with-icon btn">
-                            <i class="class"></i><span class="text"> 喜欢 <span class="num">3</span></span>
-                        </a>
-                        <a href="#" onclick="return false;" class="comment-btn btn-with-icon btn">
-                            <i class="class"></i>
-                            <span class="text"> 评论 <span class="num"></span></span>
-                        </a>
-                        <div class="right-part">
-                            <a title="举报这张采集" href="#" onclick="return false;" class="report-btn btn-with-icon btn"><i class="class"></i></a>
-
-                            <a href="/go/?pin_id=1090982775" rel="nofollow" target="_blank" class="source btn">
-                                <i class="class"></i>查看来源 dribbble.com
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="info-piece piece">
-
-                </div>
-            </div>
-            <div class="side-part">
-                <div class="board-piece piece">
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="close-layer"><i></i></div>
-</div>
+<%- partial('_pic_get_modal') %>
 
 <%- Loader('/public/javascripts/pics.min.js')
 .js('/public/libs/masonry.pkgd.js')
 .js('/public/libs/imagesloaded.pkgd.min.js')
 .js('/public/libs/Q.Uploader.image.all.js')
 .js('/public/libs/load-image.all.min.js')
+.js('/public/javascripts/forum.js')
 .js('/public/javascripts/pics.js')
 .js('/public/javascripts/board.js')
 .js('/public/javascripts/pics_create.js')

@@ -42,7 +42,7 @@ exports.delete = function (req, res, next) {
         if (err) {
             return res.send({success: false, message: err.message});
         }
-        if (!req.session.user.is_admin && !(image.author_id.equals(req.session.user._id))) {
+        if (!req.session.user.is_admin && !(image.author.equals(req.session.user._id))) {
             res.status(403);
             return res.send({success: false, message: '无权限'});
         }
@@ -287,7 +287,6 @@ function upload (req, res, next) {
                     user.image_count += 1;
                     user.save();
                     req.session.user.image_count += 1;
-                    topicImage.author_id = user.id;
                     topicImage.author = user;
                     ep.emit('new_image', topicImage);
 
@@ -338,7 +337,7 @@ function upload (req, res, next) {
                 data: [structureHelper.image(topicImage)]
             });
             //发送at消息
-            at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author_id);
+            at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author);
         });
 
         store.upload(file, {filename: filename, userId: req.session.user._id}, function (err, result) {
@@ -381,7 +380,7 @@ function upload (req, res, next) {
             }
 
             topicImage.type = 'image';
-            topicImage.author_id = req.session.user;
+            topicImage.author = req.session.user;
 
 
             Board.getBoardById(topicImage.board, function (err, board) {
@@ -487,7 +486,6 @@ exports.createFromChrome = function (req, res, next) {
                     user.save();
                     req.session.user.image_count += 1;
                     req.session.user = user;
-                    topicImage.author_id = user.id;
                     topicImage.author = user;
                     ep.emit('new_image', topicImage);
 
@@ -504,7 +502,7 @@ exports.createFromChrome = function (req, res, next) {
                 data: [structureHelper.image(topicImage)]
             });
             //发送at消息
-            at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author_id);
+            at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author);
         });
 
         // 获得文件类型
@@ -587,7 +585,7 @@ exports.createFromChrome = function (req, res, next) {
 
                     }
                     topicImage.type = 'image';
-                    topicImage.author_id = req.session.user;
+                    topicImage.author = req.session.user;
 
                     Board.getBoardById(boardId, function (err, board) {
                         console.info('start board', new Date());

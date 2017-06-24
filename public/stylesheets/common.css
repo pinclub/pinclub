@@ -76,6 +76,7 @@ img {
 
 ul {
     padding-left: 0;
+    margin-bottom: 0;
 }
 
 dd, dt, li {
@@ -89,6 +90,14 @@ ol.inline, ol.unstyled, ul.inline, ul.unstyled {
 
 a:hover {
     color: #444444;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 150%;
+    margin: 0px 0px 10px 0px;
+    padding: 0px;
 }
 
 .btn {

@@ -12,4 +12,8 @@ module.exports = function (schema) {
   schema.methods.update_at_ago = function () {
     return tools.formatDate(this.update_at, true);
   };
+
+    schema.methods.last_reply_at_age = function () {
+        return tools.formatDate(this.last_reply_at, true);
+    };
 };

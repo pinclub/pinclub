@@ -16,14 +16,14 @@ var show = function (req, res, next) {
             res.status(404);
             return res.send({success: false, error_msg: '用户不存在'});
         }
-        var query = {author_id: user._id};
+        var query = {author: user._id};
         var opt = {limit: 15, sort: '-create_at'};
         TopicProxy.getTopicsByQuery(query, opt, ep.done('recent_topics'));
 
         ReplyProxy.getRepliesByAuthorId(user._id, {limit: 20, sort: '-create_at'},
             ep.done(function (replies) {
                 var topic_ids = replies.map(function (reply) {
-                    return reply.topic_id.toString();
+                    return reply.topic.id;
                 });
                 topic_ids = _.uniq(topic_ids).slice(0, 5); //  只显示最近5条
 
