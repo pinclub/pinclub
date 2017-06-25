@@ -109,3 +109,10 @@ h1 {
 .modal-content {
     border-radius: 0px;
 }
+
+.site_version {
+    line-height: 12px;
+    font-size: 12px;
+    color: #aaaaaa;
+    top: -12px;
+}
