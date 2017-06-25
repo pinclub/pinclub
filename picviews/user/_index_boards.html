@@ -4,17 +4,27 @@
 .done(assets, config.site_static_host, config.mini_assets)
 %>
 <div id="waterfall">
-    <% for(var i = 0; i < boards.length; i++) { %>
-    <div class="col-md-6">
-        <div class="grid-item">
-            <a class="link" href="/boards/<%= boards[i].id %>">
-                <% for(var j = 0; j < boards[i].topics.length; j++) { %>
-                <img src="<% if (j==0) {%><%= boards[i].topics[j].image_430 %><%} else {%><%= boards[i].topics[j].image_86 %><%}%>" class="<% if (j==0) {%>large<%}%>">
-                <% } %>
-                <div class="shadows"><div class="large-shadow"></div><div class="shadow"></div><div class="shadow"></div><div class="shadow"></div></div>
-                <div class="over "><h3><%= boards[i].title %></h3><h4></h4><div class="pin-count"><%= boards[i].topic_count %></div></div>
-            </a>
+    <% if (boards.length > 0) { %>
+        <% for(var i = 0; i < boards.length; i++) { %>
+        <div class="col-md-6">
+            <div class="grid-item">
+                <a class="link" href="/boards/<%= boards[i].id %>">
+                    <% for(var j = 0; j < boards[i].topics.length; j++) { %>
+                    <img src="<% if (j==0) {%><%= boards[i].topics[j].image_430 %><%} else {%><%= boards[i].topics[j].image_86 %><%}%>" class="<% if (j==0) {%>large<%}%>">
+                    <% } %>
+                    <div class="shadows"><div class="large-shadow"></div><div class="shadow"></div><div class="shadow"></div><div class="shadow"></div></div>
+                    <div class="over "><h3><%= boards[i].title %></h3><h4></h4><div class="pin-count"><%= boards[i].topic_count %></div></div>
+                </a>
+            </div>
         </div>
-    </div>
-    <% }%>
+        <% }%>
+    <% } else { %>
+        <div class="col-md-6">
+            <div class="add-board">
+                <div class="inner">
+                    <span style="line-height: 320px;">TA暂无Board</span>
+                </div>
+            </div>
+        </div>
+    <% } %>
 </div>

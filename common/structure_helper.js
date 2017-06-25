@@ -24,9 +24,13 @@ exports.user = function (user) {
 
 exports.topic = function (topic) {
     let avatar_url = topic.author.avatar_url;
+    let id = topic.id;
     if (topic instanceof mongoose.Model) {
         topic = topic.toObject();
         topic.author.avatar_url = avatar_url;
+        if (id) {
+            topic.id = id;
+        }
     }
     topic.author = _.pick(topic.author, ['id', 'loginname', 'avatar_url']);
     topic.forum = _.pick(topic.forum, ['id', 'title', 'topic_count', 'content']);
@@ -42,9 +46,13 @@ exports.topic = function (topic) {
 
 exports.image = function (topic) {
     let avatar_url = topic.author.avatar_url;
+    let id = topic.id;
     if (topic instanceof mongoose.Model) {
         topic = topic.toObject();
         topic.author.avatar_url = avatar_url;
+        if (id) {
+            topic.id = id;
+        }
     }
     topic.author = _.pick(topic.author, ['id', 'loginname', 'avatar_url']);
     if (!!topic.board && !topic.board.id && !!topic.board._id) {

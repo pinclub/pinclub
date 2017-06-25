@@ -26,6 +26,7 @@
                     </tr>
                 </table>
             </div>
+            <% if (user.collect_topic_count || user.collect_image_count || user.url || user.location || user.githubUsername || user.weibo) {%>
             <div class="cell widgets">
                 <ul class='unstyled'>
                     <% if (user.collect_topic_count) {%>
@@ -70,7 +71,8 @@
                     <% } %>
                 </ul>
             </div>
-            <div class="inner">
+            <% } %>
+            <div class="cell">
                 <% if (user.signature) {%>
                 <%= user.signature %>
                 <% } else { %>
