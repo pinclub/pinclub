@@ -1,3 +1,4 @@
+var insertImageBoardAfterGet = true;
 // import this file need
 var getImageObject = {};
 // 点击 Get 图片到自己的 Board, 弹出 Modal 层
@@ -28,7 +29,6 @@ $(document).on('click', '#get-image-submit', function (event) {
     getImageObject.desc = $('#get-preview-image-desc').val();
     getImageObject.image_fixed = event.currentTarget.dataset.image;
     console.log('getImageObject:', getImageObject);
-    var insertGot = event.currentTarget.classList.contains('insertGot');
     $.ajax({
         type: "POST",
         url: "/api/v2/images/get",
@@ -37,7 +37,7 @@ $(document).on('click', '#get-image-submit', function (event) {
         console.log(response);
         if (response.success) {
             // DONE (hhdem) get的图片，免刷新直接插入图片列表中
-            if (insertGot && gridMasonry) {
+            if (insertImageBoardAfterGet && gridMasonry) {
                 var itemHtml = $("#picBoxTmp").tmpl({item: response.data, highlight: true});
                 var jpicelements = $(itemHtml);
                 gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
@@ -56,3 +56,7 @@ $(document).on('click', '#get-image-submit', function (event) {
         }
     });
 });
+
+function isInsertImageBoardAfterGet (isInsert) {
+    insertImageBoardAfterGet = isInsert;
+}

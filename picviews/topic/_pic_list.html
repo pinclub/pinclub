@@ -1,31 +1,21 @@
-<!-- 模板文件 -->
-<%- partial('_templates') %>
+<script id="topicListTmp" type="text/x-jquery-tmpl">
+    <%- partial('_abstract') %>
+</script>
 
 <!-- Upload 图片的 Modal 层 -->
-<%- partial('_pic_create_modal') %>
+<%- partial('_pic_create_modal', {insertImage: true}) %>
 
 <!-- Preview 的 Modal 层-->
 <%- partial('_pic_preview_modal') %>
 
 <!-- Get 图片的modal层-->
-<%- partial('_pic_get_modal') %>
+<%- partial('_pic_get_modal', {insertImage: true}) %>
 
 <%- Loader('/public/javascripts/pics.min.js')
 .js('/public/libs/masonry.pkgd.js')
 .js('/public/libs/imagesloaded.pkgd.min.js')
-.js('/public/libs/Q.Uploader.image.all.js')
-.js('/public/libs/load-image.all.min.js')
 .js('/public/javascripts/forum.js')
 .js('/public/javascripts/pics.js')
-.js('/public/javascripts/board.js')
-.js('/public/javascripts/pics_create.js')
-.js('/public/javascripts/pics_preview.js')
+.js('/public/javascripts/pics_like.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
-
-<% if (typeof(user) !== 'undefined' || current_user) { %>
-<%- Loader('/public/javascripts/boards_init.min.js')
-.js('/public/javascripts/board_init.js')
-.done(assets, config.site_static_host, config.mini_assets)
-%>
-<% } %>

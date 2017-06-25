@@ -70,9 +70,9 @@ exports.show = function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                board.topics = topics;
                 res.render('board/topics', {
-                    board: board
+                    board: board,
+                    topics: topics
                 });
             });
         });

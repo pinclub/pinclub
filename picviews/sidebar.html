@@ -68,31 +68,3 @@
   <% } %>
 
 </div>
-
-<!-- 创建图片时要选择的Board列表 -->
-<script id="boardTemplate" type="text/x-jquery-tmpl">
-    <%- partial('board/_board_list') %>
-</script>
-
-<%- partial('topic/_pic_create_modal') %>
-
-<%- Loader('/public/pics.min.js')
-.js('/public/libs/masonry.pkgd.js')
-.js('/public/libs/imagesloaded.pkgd.min.js')
-.js('/public/libs/Q.Uploader.image.all.js')
-.js('/public/libs/load-image.all.min.js')
-.js('/public/javascripts/board.js')
-.js('/public/javascripts/pics_create.js')
-.done(assets, config.site_static_host, config.mini_assets)
-%>
-
-<% if (typeof(user) !== 'undefined' || current_user) { %>
-<%- Loader('/public/boards.min.js')
-.js('/public/javascripts/board_init.js')
-.done(assets, config.site_static_host, config.mini_assets)
-%>
-<% } %>
-
-<script type="text/javascript">
-  isInsertImageBoardAfterCreate(false);
-</script>

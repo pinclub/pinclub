@@ -200,8 +200,11 @@
         <% } %>
     });
 </script>
-<!-- 模板文件 -->
-<%- partial('../topic/_templates') %>
+
+<script id="topicListTmp" type="text/x-jquery-tmpl">
+    <%- partial('../topic/_abstract') %>
+</script>
+
 <!-- scripts -->
 <%- Loader('/public/javascripts/user_index.min.js')
 .js('/public/javascripts/forum.js')

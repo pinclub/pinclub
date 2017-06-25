@@ -57,17 +57,6 @@ $('#pic-page-marker').on('lazyshow', function () {
 
 // TODO 考虑是否使用 http://www.dropzonejs.com/ 上传插件修改上传代码, 支持拖拽上传
 
-// 绑定like按钮的点击事件
-$(document).on('click', '.like-btn', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget.dataset.id) {
-        return;
-    }
-    console.log(event.currentTarget.dataset.id);
-    likePic (event.currentTarget.dataset.id);
-});
 
 // 绑定首页板块连接的点击事件
 $(document).on('click', '.topic-tab', function (event) {
@@ -91,54 +80,6 @@ $(document).on('click', '.more-similar-btn', function (event) {
         return;
     }
     similarPics(event.currentTarget.dataset.id);
-});
-
-// 点击 Get 图片到自己的 Board, 弹出 Modal 层
-$(document).on('click', '#pic_list .get-pic-btn', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget.dataset.id || !event.currentTarget.dataset.src) {
-        return;
-    }
-    console.log(event.currentTarget.dataset.id);
-    console.log(event.currentTarget.dataset.src);
-    getImageObject.topic_id = event.currentTarget.dataset.id;
-    $('#get-preview-image-desc').val('');
-    $('#get-preview-image').html('<img src="'+event.currentTarget.dataset.src+'">');
-    $('#get-image-submit').attr('data-id', event.currentTarget.dataset.id);
-    $('#get-image-submit').attr('data-image', event.currentTarget.dataset.src);
-    $('#get_image_modal').modal('show');
-});
-
-// 保存要Get的图片信息
-$(document).on('click', '#get-image-submit', function (event) {
-    console.log(event.currentTarget.dataset);
-    getImageObject.desc = $('#get-preview-image-desc').val();
-    getImageObject.image_fixed = event.currentTarget.dataset.image;
-    console.log('getImageObject:', getImageObject);
-    $.ajax({
-        type: "POST",
-        url: "/api/v2/images/get",
-        data: getImageObject
-    }).done(function (response) {
-        console.log(response);
-        if (response.success) {
-            // DONE (hhdem) get的图片，免刷新直接插入图片列表中
-            var itemHtml = $("#picBoxTmp").tmpl({item: response.data, highlight: true});
-            var jpicelements = $(itemHtml);
-            gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
-            gridMasonry.imagesLoaded().progress(function () {
-                gridMasonry.masonry('layout');
-            });
-            $('#get_image_modal').modal('hide');
-        }
-    }).error(function(res){
-        if (res.status == 401) {
-            $('#get_image_modal').modal('hide');
-            $('#signin_modal').modal('show');
-        }
-    });
 });
 
 // chrome插件的弹出页面，进行Get图片操作
@@ -234,41 +175,6 @@ function similarPics(picid) {
         gridMasonry.imagesLoaded().progress(function () {
             gridMasonry.masonry('layout');
         });
-    });
-}
-
-function likePic(picid) {
-    if (!picid) {
-        return;
-    }
-    var data = {
-        id: picid
-    };
-    $.ajax({
-        type: "POST",
-        url: "/api/v2/images/like",
-        data: data
-    }).done(function (response) {
-        if(!response.success) {
-
-            return console.error("Error：", response);
-        }
-        var likeA = $('#'+picid + ' .actions .right a');
-        if (likeA.hasClass('unlike')) {
-            $('#'+picid + ' .actions .right a').removeClass('unlike');
-        } else {
-            $('#'+picid + ' .actions .right a').addClass('unlike');
-        }
-        var likePreviewBtn = $('#preview_modal #preview_modal_like_btn');
-        if (likePreviewBtn.hasClass('unlike')) {
-            likePreviewBtn.removeClass('unlike');
-        } else {
-            likePreviewBtn.addClass('unlike');
-        }
-    }).error(function(res){
-        if (res.status == 401) {
-            $('#signin_modal').modal('show');
-        }
     });
 }
 

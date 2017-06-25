@@ -422,7 +422,7 @@ exports.create = function (req, res, next) {
         if (type && type.type == 'image') {
             res.render('image/create_chrome', {
                 src: req.query.media,
-                desc: req.query.title,
+                desc: unescape(req.query.title),
                 profile_source: req.query.url
             });
         } else {

@@ -3,14 +3,6 @@
 .css('/public/stylesheets/users.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
-<!-- 模板文件 -->
-<%- partial('../topic/_templates') %>
-
-<!-- Preview 的 Modal 层-->
-<%- partial('../topic/_pic_preview_modal') %>
-
-<!-- Get 图片的modal层-->
-<%- partial('../topic/_pic_get_modal') %>
 
 <div class="wrapper row">
     <div class="col-md-12">
@@ -22,8 +14,8 @@
 
 <div id="pic_list" class="grid row">
     <div class="grid-sizer"></div>
-    <% for(var i = 0; i < board.topics.length; i++) {
-        var item = board.topics[i];
+    <% for(var i = 0; i < topics.length; i++) {
+        var item = topics[i];
     %>
 
     <div class="grid-item" id="<%= item.id %>">
@@ -77,12 +69,10 @@
 <%- Loader('/public/javascripts/boards.min.js')
 .js('/public/libs/masonry.pkgd.js')
 .js('/public/libs/imagesloaded.pkgd.min.js')
-.js('/public/javascripts/pics_preview.js')
-.js('/public/javascripts/board.js')
-.js('/public/javascripts/pics_get.js')
 .js('/public/javascripts/pics_like.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
+
 <script>
 
     var gridMasonry = $('.grid').masonry({
@@ -91,7 +81,7 @@
         columnWidth: '.grid-sizer',
         gutter: 10,
         horizontalOrder: true,
-        <% if (board.topics.length > 6) { %>
+        <% if (topics.length > 6) { %>
         fitWidth: true
         <% } %>
     });
@@ -101,11 +91,10 @@
         });
     });
 
-
 </script>
-<% if (typeof(user) !== 'undefined' || current_user) { %>
-<%- Loader('/public/javascripts/boards_init.min.js')
-.js('/public/javascripts/board_init.js')
-.done(assets, config.site_static_host, config.mini_assets)
-%>
-<% } %>
+
+<!-- Get 图片的modal层-->
+<%- partial('../topic/_pic_get_modal', {insertImage: true}) %>
+
+<!-- Preview 的 Modal 层-->
+<%- partial('../topic/_pic_preview_modal') %>

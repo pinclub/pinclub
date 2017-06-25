@@ -256,8 +256,10 @@ exports.getFullImage = function (id, callback) {
     var events = ['topic', 'author', 'replies'];
     proxy
         .assign(events, function (topic, author, replies) {
+            let create_at_ago = topic.create_at_ago();
             topic = topic.toObject();
             topic.author = author;
+            topic.create_at_ago = create_at_ago;
             callback(null, '', topic, replies);
         })
         .fail(callback);

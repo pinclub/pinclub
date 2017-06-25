@@ -49,6 +49,11 @@
         <% } %>
     </div>
 
+
+    <!-- 模板文件 -->
+    <%- partial('../topic/_pic_create_modal', {insertImage: false}) %>
+
+
 <% if (current_user) { %>
 <script>
   $(document).ready(function () {

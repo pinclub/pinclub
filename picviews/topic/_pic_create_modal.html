@@ -1,4 +1,9 @@
 
+<%- Loader('/public/stylesheets/_pic_create_modal.min.css')
+.css('/public/stylesheets/_pic_create_modal.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+
 <!-- Upload 图片的 Modal 层 -->
 <!-- DONE(hhdem) modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口 -->
 <!-- DONE(hhdem) 点击上传图片后弹出的模态框中确认上传按钮样式错误 -->
@@ -54,3 +59,17 @@
         </div>
     </div>
 </div>
+
+<%- Loader('/public/javascripts/_pic_create_modal.min.js')
+.js('/public/libs/Q.Uploader.image.all.js')
+.js('/public/libs/load-image.all.min.js')
+.js('/public/javascripts/board.js')
+.js('/public/javascripts/pics_create.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+
+<% if (!insertImage) { %>
+<script>
+    isInsertImageBoardAfterCreate(false);
+</script>
+<% } %>

@@ -1,0 +1,1301 @@
+// preview
+// DONE(hhdem) 目前只有点击右上角的Close才能关闭 查看 窗口, 需要点击白色遮罩层也要关闭 查看 窗口
+#preview_modal {
+  position: fixed;
+  top: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -100;
+  overflow: auto;
+  margin: 0 auto;
+  //width: 992px;
+}
+
+#preview_modal::-webkit-scrollbar {
+  display: none;
+}
+
+#preview_modal .pin-view {
+  width: 992px;
+  margin: 0 auto;
+  z-index: 1040;
+}
+
+
+
+#preview_modal .pin-view::-webkit-scrollbar {
+  //display: none;
+}
+
+
+.pin-view .pin-view-wrapper {
+  width: 1014px;
+  margin: 0 auto;
+  position: relative
+}
+
+.pin-view .pin-view-wrapper:after {
+  content: "";
+  clear: both;
+  display: table
+}
+
+.pin-view .piece {
+  background: #fff;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(34,25,25,.4);
+  margin-bottom: 16px
+}
+
+.pin-view .info-piece {
+  padding-bottom: 0;
+}
+
+.pin-view .info-piece .info {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.pin-view .info-piece .info .img {
+  width: 50px;
+  height: 50px;
+}
+
+.pin-view .info-piece .info .img img {
+  width: 50px;
+  height: 50px;
+}
+
+.pin-view .info-piece .info .sub {
+  position: absolute;
+  top: 32px;
+  left: 60px;
+  color: #999;
+}
+
+.pin-view .info-piece .info .space {
+  padding: 0 5px;
+}
+
+.pin-view .info-piece .likes {
+  padding: 20px 0 12px;
+}
+
+.pin-view .info-piece .likes h4 {
+  margin-bottom: 16px;
+  display: block;
+  font-weight: 700;
+  font-size: 100%;
+}
+
+.pin-view .info-piece .description {
+  line-height: 1.2;
+  color: #444;
+  background-color: #FAFAFA;
+  padding: 15px;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+.pin-view .info-piece .comments {
+  margin: 0 -20px;
+  border-top: 1px solid #F5F2F2;
+}
+
+.pin-view .main-part {
+  width: 698px;
+  float: left
+}
+
+.pin-view .side-part {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px
+}
+
+.pin-view .tool-bar {
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1
+}
+
+.pin-view .tool-bar .right-part {
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.pin-view .tool-bar .btn {
+  margin-right: 10px
+}
+
+.pin-view .tool-bar .right-part .btn {
+  margin-right: 0
+}
+
+.pin-view .tool-bar .heart {
+  width: 12px
+}
+
+.pin-view .tool-bar .liked .heart {
+  background: url(../images/action_like.svg) 0 -60px no-repeat!important
+}
+
+.no-svg .pin-view .tool-bar .liked .heart {
+  background: url(../images/action_like.svg) 0 -60px no-repeat!important
+}
+
+.pin-view .tool-bar .zoomin i {
+  background: url(../images/pin_view/zoom_in.svg) -2px -2px no-repeat;
+  width: 16px;
+  height: 18px
+}
+
+.no-svg .pin-view .tool-bar .zoomin i {
+  background-image: url(../images/pin_view/zoom_in.png)
+}
+
+.pin-view .tool-bar-bottom {
+  position: relative;
+  margin-top: 16px
+}
+
+.pin-view .tool-bar-bottom .right-part {
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.pin-view .tool-bar-bottom .btn {
+  background: #FAFAFA;
+  border: 1px solid #EDEDED;
+  margin-right: 10px
+}
+
+.pin-view .tool-bar-bottom .right-part .btn:last-child {
+  margin-right: 0
+}
+
+.pin-view .tool-bar-bottom .btn:hover {
+  background: #FFF;
+  border-color: #DDD
+}
+
+.pin-view .tool-bar-bottom .repin-btn i {
+  background: url(../images/bt_action_icons.svg) -30px 0 no-repeat
+}
+
+.no-svg .pin-view .tool-bar-bottom .repin-btn i {
+  background-image: url(../images/bt_action_icons.png)
+}
+
+.pin-view .tool-bar-bottom .repin-btn:hover i {
+  background-position: -30px -30px
+}
+
+.pin-view .tool-bar-bottom .repin-btn:active i {
+  background-position: -30px -60px
+}
+
+.pin-view .tool-bar-bottom .like-btn i {
+  background: url(../images/bt_action_icons.svg) 0 0 no-repeat
+}
+
+.no-svg .pin-view .tool-bar-bottom .like-btn i {
+  background-image: url(../images/bt_action_icons.png)
+}
+
+.pin-view .tool-bar-bottom .like-btn:hover i {
+  background-position: 0 -30px
+}
+
+.pin-view .tool-bar-bottom .like-btn:active i {
+  background-position: 0 -60px
+}
+
+.pin-view .tool-bar-bottom .comment-btn i {
+  background: url(../images/bt_action_icons.svg) -60px 0 no-repeat
+}
+
+.no-svg .pin-view .tool-bar-bottom .comment-btn i {
+  background-image: url(../images/bt_action_icons.png)
+}
+
+.pin-view .tool-bar-bottom .comment-btn:hover i {
+  background-position: -60px -30px
+}
+
+.pin-view .tool-bar-bottom .comment-btn:active i {
+  background-position: -60px -60px
+}
+
+.pin-view .tool-bar-bottom .download-btn i {
+  background-image: url("../images/about/chrome/download_local.png");
+  background-repeat: no-repeat;
+  background-size: 15px;
+  width: 15px;
+  background-position: -1px -1px
+}
+
+.pin-view .tool-bar-bottom .download-btn i.new {
+  position: relative;
+  left: 0rem;
+  top: -.5rem;
+  right: 0;
+  margin: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.pin-view .tool-bar-bottom .report-btn i {
+  background: url(../images/report_icon.svg) 0 -20px no-repeat;
+  width: 16px;
+  height: 16px
+}
+
+.no-svg .pin-view .tool-bar-bottom .report-btn i {
+  background-image: url(../images/report_icon.png)
+}
+
+.pin-view .tool-bar-bottom .report-btn:hover i {
+  background-position: 0 -40px
+}
+
+.pin-view .tool-bar-bottom .btn .num {
+  color: #999
+}
+
+.pin-view .tool-bar-bottom .source i {
+  background: url(../images/pin_view/website.svg) 0 0 no-repeat;
+  margin-right: 4px
+}
+
+.no-svg .pin-view .tool-bar-bottom .source i {
+  background-image: url(../images/pin_view/website.png)
+}
+
+.pin-view .tool-bar-bottom .right-part .come-from {
+  display: inline-block;
+  background: #FAFAFA;
+  border: 1px solid #EDEDED;
+  color: #444;
+  font-size: 14px
+}
+
+.pin-view .tool-bar-bottom .right-part .come-from:hover {
+  border: 1px solid #DDD;
+  color: #9A0000
+}
+
+.pin-view .tool-bar-bottom .right-part .come-from.creation-user {
+  background: #F7F7F7;
+  color: #444
+}
+
+.pin-view .tool-bar-bottom .right-part .come-from.creation-user span {
+  margin: 0 4px
+}
+
+.pin-view .tool-bar-bottom .right-part .come-from i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  background: url(../images/pin_view/website.svg) 0 0 no-repeat
+}
+
+.no-svg .pin-view .tool-bar-bottom .right-part .come-from i {
+  background-image: url(../images/pin_view/website.png)
+}
+
+.pin-view .tool-bar-bottom .right-part .come-from:hover i {
+  background-position: 0 -30px
+}
+
+.pin-view .main-image {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  background: url(../images/img_bg_2.png) 0 0 repeat
+}
+
+.pin-view .main-image img {
+  display: block;
+  margin: 0 auto
+}
+
+.pin-view .info-piece {
+  padding-bottom: 0
+}
+
+.pin-view .info-piece .info {
+  margin-bottom: 15px;
+  position: relative
+}
+
+.pin-view .info-piece .info .img {
+  width: 50px;
+  height: 50px
+}
+
+.pin-view .info-piece .info .img img {
+  width: 50px;
+  height: 50px
+}
+
+.pin-view .info-piece .info .main {
+  position: absolute;
+  top: 0;
+  left: 60px;
+  font-size: 20px
+}
+
+.pin-view .info-piece .info .main span {
+  color: #8c7e7e
+}
+
+.pin-view .info-piece .info .sub {
+  position: absolute;
+  top: 32px;
+  left: 60px;
+  color: #999
+}
+
+.pin-view .user-tags {
+  padding: 0 0 14px
+}
+
+.pin-view .user-tags:before {
+  content: "";
+  display: block;
+  margin-left: -20px;
+  height: 1px;
+  margin-bottom: 18px;
+  background-color: #f5f2f2
+}
+
+.pin-view .user-tags .title {
+  margin-bottom: 8px
+}
+
+.pin-view .user-tags>.tag {
+  display: inline-block;
+  height: 26px;
+  padding: 0;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 1px;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  color: #444;
+  background-color: #ededed;
+  cursor: pointer
+}
+
+.pin-view .user-tags>.tag a {
+  display: inline-block;
+  padding: 4px 10px;
+  line-height: 1.3
+}
+
+.pin-view .user-tags>.tag a:hover {
+  text-decoration: none
+}
+
+.pin-view .user-tags>.tag .icon.close {
+  border-left: 1px solid #ddd;
+  font-style: normal;
+  padding: 4px;
+  vertical-align: top;
+  display: none
+}
+
+.pin-view .user-tags.self>.tag .icon.close {
+  display: inline-block
+}
+
+.pin-view .info-piece .info .space {
+  padding: 0 5px
+}
+
+.pin-view .info-piece .more-comments {
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 14px 20px;
+  border-top: 1px solid #EDEDED;
+  margin: 0 -20px
+}
+
+.pin-view .info-piece .description {
+  line-height: 1.2;
+  color: #444;
+  background-color: #FAFAFA;
+  padding: 15px;
+  margin-bottom: 20px;
+  word-wrap: break-word
+}
+
+.pin-view .info-piece .comments {
+  margin: 0 -20px
+}
+
+.pin-view .info-piece .comments .comment {
+  padding: 14px 20px;
+  border-bottom: 1px solid #EDEDED;
+  overflow: hidden;
+  font-size: 14px;
+  position: relative
+}
+
+.pin-view .info-piece .comments .comment.new {
+  background: #FAFAFA
+}
+
+.pin-view .info-piece .comments .comment img {
+  display: block;
+  width: 50px
+}
+
+.pin-view .info-piece .comments .comment .meta {
+  color: #999;
+  margin: 2px 0 6px 60px
+}
+
+.pin-view .info-piece .comments .comment .meta a {
+  text-decoration: none
+}
+
+.pin-view .info-piece .comments .comment .text {
+  margin-left: 60px;
+  line-height: 1.2
+}
+
+.pin-view .info-piece .comments .img {
+  float: left
+}
+
+.pin-view .info-piece .comments .img img {
+  width: 50px;
+  height: 50px
+}
+
+.pin-view .info-piece .comments .delete {
+  float: right;
+  background: url("../images/comment_act_icon.png") -19px 0 no-repeat;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: 7px
+}
+
+.pin-view .info-piece .comments .delete:hover {
+  background-position: -19px -20px
+}
+
+.pin-view .info-piece .comments .delete:active {
+  background-position: -19px -40px
+}
+
+.pin-view .info-piece .comments .reply-button {
+  float: right;
+  background: url("../images/comment_act_icon.png") 0 0 no-repeat;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: 7px
+}
+
+.pin-view .info-piece .comments .reply-button:hover {
+  background-position: 0 -20px
+}
+
+.pin-view .info-piece .comments .reply-button:active {
+  background-position: 0 -40px
+}
+
+.pin-view .info-piece .comments .report-button {
+  float: right;
+  background: url(../images/report_icon.svg) 3px 0 no-repeat;
+  width: 20px;
+  height: 20px;
+  cursor: pointer
+}
+
+.no-svg .pin-view .info-piece .comments .report-button {
+  background-image: url(../images/report_icon.png)
+}
+
+.pin-view .info-piece .comments .report-button:hover {
+  background-position: 3px -20px
+}
+
+.pin-view .info-piece .comments .report-button:active {
+  background-position: 3px -40px
+}
+
+.pin-view .info-piece .comments .comment .action-buttons {
+  visibility: hidden;
+  width: 80px;
+  height: 30px;
+  position: absolute;
+  right: 20px;
+  top: 14px
+}
+
+.pin-view .info-piece .comments .comment:hover .action-buttons {
+  visibility: visible
+}
+
+.pin-view .info-piece .likes {
+  padding: 20px 0 12px
+}
+
+.pin-view .info-piece .likes h4 {
+  margin-bottom: 16px;
+  display: block;
+  font-weight: 700
+}
+
+.pin-view .info-piece .likes .img {
+  display: block;
+  float: left;
+  margin: 0 8px 8px 0
+}
+
+.pin-view .board-piece .board-info {
+  margin-bottom: 10px;
+  position: relative
+}
+
+.pin-view .board-piece .board-info .img {
+  width: 38px;
+  height: 38px
+}
+
+.pin-view .board-piece .board-info .img img {
+  width: 38px;
+  height: 38px
+}
+
+.pin-view .board-piece .board-info .name {
+  position: absolute;
+  left: 44px;
+  top: 0;
+  line-height: 1.2;
+  font-size: 15px;
+  white-space: nowrap;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+
+.pin-view .board-piece .board-info .sub {
+  position: absolute;
+  left: 44px;
+  top: 22px;
+  font-size: 13px;
+  color: #999
+}
+
+.pin-view .board-piece .board-pins {
+  margin-bottom: 10px;
+  height: 360px;
+  width: 272px;
+  overflow-y: auto;
+  overflow-x: hidden
+}
+
+.pin-view .board-piece .board-pins .item {
+  margin-bottom: 2px;
+  position: relative;
+}
+
+.pin-view .board-piece .board-pins .item img {
+  position: relative;
+}
+
+.pin-view .board-piece .board-pins .item .cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,.5);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
+}
+
+.pin-view .board-piece .board-pins .item:hover .cover {
+  background: rgba(255,255,255,.2);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35)
+}
+
+.pin-view .board-piece .board-pins .selected .cover {
+  background: 0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15)
+}
+
+#board_pins_waterfall {
+  position: relative;
+  //min-height: 380px
+}
+
+.pin-view .board-piece .board-pins .loading {
+  display: none!important
+}
+
+.pin-view .board-piece .board-pins .long {
+  height: 150px;
+  overflow: hidden;
+  position: relative
+}
+
+.pin-view .board-piece .board-pins .long .stop {
+  position: absolute;
+  width: 78px;
+  height: 16px;
+  left: 0;
+  bottom: 0;
+  background: url(../images/long_image_shadow.png) repeat-x left top
+}
+
+.pin-view .board-piece .follow-btn {
+  display: block
+}
+
+.pin-view .siblings-piece {
+  padding: 0
+}
+
+.pin-view .siblings-piece .inner {
+  color: #999;
+  text-decoration: none;
+  line-height: 1.2;
+  position: relative;
+  display: block;
+  padding: 12px
+}
+
+.pin-view .siblings-piece .inner:hover {
+  background: #FAFAFA
+}
+
+.pin-view .siblings-piece .inner .site {
+  color: #444
+}
+
+.pin-view .siblings-piece .inner:hover .site {
+  color: #9A0000
+}
+
+.pin-view .siblings-piece .inner .pins {
+  margin-top: 6px
+}
+
+.pin-view .siblings-piece .inner img {
+  width: 86px;
+  height: 86px;
+  float: left
+}
+
+.pin-view .siblings-piece .inner img.space {
+  margin-right: 2px
+}
+
+.pin-view .siblings-piece .inner .arrow {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  right: 20px;
+  top: 16px;
+  background: url(../images/icon_arrow.png) 0 0 no-repeat
+}
+
+.pin-view .siblings-piece .inner:hover .arrow {
+  background-position: 0 -30px
+}
+
+.pin-view .pin-view-promo {
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(34,25,25,.4)
+}
+
+.pin-view .pin-view-promo img {
+  display: block
+}
+
+.pin-view .pin-view-promo iframe {
+  display: block;
+  border: 0;
+  width: 278px;
+  height: 250px;
+  background: #fff
+}
+
+.cst-scrollbar::-webkit-scrollbar {
+  width: 8px
+}
+
+.cst-scrollbar::-webkit-scrollbar-track {
+  background: transparent
+}
+
+.cst-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0,0,0,.03);
+}
+
+.cst-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.5)
+}
+
+#pin_view_add_comment {
+  margin: 0 -20px;
+  padding: 14px 20px 14px 80px;
+  border-bottom: 1px solid #EDEDED;
+  position: relative
+}
+
+#pin_view_add_comment .img {
+  position: absolute;
+  left: 20px;
+  top: 14px
+}
+
+#pin_view_add_comment .img img {
+  width: 50px;
+  height: 50px
+}
+
+#pin_view_add_comment textarea {
+  width: 576px;
+  height: 39px;
+  min-height: 39px;
+  resize: vertical;
+  margin-bottom: 10px;
+  display: block
+}
+
+#pin_view_add_comment .post {
+  float: right;
+  display: none
+}
+
+.pin-view .repin-info-piece {
+  margin-bottom: 16px
+}
+
+.pin-view .repin-info-piece .unit {
+  padding: 20px 20px 20px 80px;
+  position: relative;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(34,25,25,.4);
+  height: 50px
+}
+
+.pin-view .repin-info-piece.two .unit {
+  width: 239px;
+  float: left
+}
+
+.pin-view .repin-info-piece.two .board {
+  margin-right: 20px
+}
+
+.pin-view .repin-info-piece .board .pins {
+  display: block;
+  width: 55px;
+  height: 55px;
+  position: absolute;
+  left: 20px;
+  top: 20px
+}
+
+.pin-view .repin-info-piece .board .pins img {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  float: left;
+  margin: 0 2px 2px 0
+}
+
+.pin-view .repin-info-piece .unit .info span {
+  display: block;
+  color: #999;
+  margin-top: 6px
+}
+
+.pin-view .repin-info-piece .unit .info a {
+  font-size: 16px;
+  color: #444;
+  width: 158px;
+  display: block;
+  height: 22px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 6px
+}
+
+.pin-view .repin-info-piece .unit .follow-btn {
+  position: absolute;
+  right: 20px;
+  top: 33px
+}
+
+.pin-view .repin-info-piece .repins-from .img {
+  position: absolute;
+  left: 20px;
+  top: 20px
+}
+
+.pin-view .category-info-piece {
+  margin-bottom: 20px;
+  background: #F2F2F2;
+  height: 32px;
+  line-height: 32px;
+  color: #777;
+  padding-left: 10px
+}
+
+.pin-view .category-info-piece a {
+  padding: 0 5px
+}
+
+.pin-view .bottom-part {
+  background: url(../images/pin_view/dark_bg.png) repeat
+}
+
+#pin_view_layer .pin-view .bottom-part {
+  background: 0
+}
+
+.pin-view .bottom-part .title-el {
+  padding: 20px 0 10px 0;
+  color: #777;
+  font-size: 18px;
+  border-bottom: 1px solid #ccc
+}
+
+.pin-view .bottom-part .related-boards {
+  display: none
+}
+
+.pin-view .bottom-part .related-boards .load-more-board {
+  display: block
+}
+
+.pin-view .bottom-part .related-boards .board-box {
+  margin-top: 16px;
+  margin-right: -20px
+}
+
+.pin-view .bottom-part .related-boards .board-box .Board {
+  position: relative;
+  top: 0;
+  left: 0;
+  margin: 0 16px 16px 0;
+  float: left
+}
+
+#recommend-pins .waterfall {
+  margin-top: 15px;
+  position: relative
+}
+
+.pin-view .extra-box {
+  overflow: hidden;
+  margin: 11px -20px -16px;
+  padding-top: 5px
+}
+
+.pin-view .pin-info {
+  padding: 16px 20px;
+  margin: 0 0;
+  box-shadow: 0 1px 3px rgba(34,25,25,.4)
+}
+
+.pin-view .gift-info {
+  background-color: #FAFAFA;
+  position: relative
+}
+
+.pin-view .gift-info .info-foo {
+  min-height: 35px
+}
+
+.pin-view .gift-info .info-title {
+  margin-bottom: 10px;
+  min-height: 16px
+}
+
+.pin-view .gift-info .info-title h4 {
+  margin-left: 22px;
+  line-height: 1.5em;
+  max-width: 510px
+}
+
+.pin-view .gift-info .info-price .price-now {
+  font-size: 18px
+}
+
+.pin-view .gift-info .info-price .price-dot {
+  line-height: 18px;
+  margin: 3px;
+  vertical-align: middle
+}
+
+.pin-view .gift-info .info-price .price-offer {
+  color: #999;
+  font-size: 12px;
+  margin-right: 2px
+}
+
+.pin-view .gift-info .info-price .price-offer .price-through {
+  text-decoration: line-through;
+  font-style: normal
+}
+
+.pin-view .gift-info .goto-buy {
+  position: absolute;
+  right: 20px;
+  top: 16px;
+  font-size: 16px;
+  color: #FFF;
+  border-radius: 2px;
+  display: inline-block;
+  text-align: center;
+  padding: 9px 14px;
+  line-height: 1;
+  background: #F2594B;
+  text-decoration: none;
+  border: 0;
+  box-shadow: none
+}
+
+.pin-view .gift-info .goto-buy:hover {
+  background: #FD6550
+}
+
+.pin-view .gift-info .info-foo .info-title .icon {
+  margin-top: 2px
+}
+
+.pin-view .gift-info .info-bar {
+  border-top: 1px solid #ccc;
+  padding-top: 16px;
+  margin-top: 16px;
+  line-height: 14px
+}
+
+.pin-view .gift-info .info-bar.no-foo {
+  border: 0;
+  margin-top: 0;
+  padding-top: 0
+}
+
+.pin-view .gift-info .info-bar .info-fit {
+  display: block;
+  overflow: hidden;
+  max-width: 660px;
+  white-space: nowrap;
+  text-overflow: ellipsis
+}
+
+.pin-view .gift-info .info-fit.info-fit-bottom {
+  margin-top: 8px
+}
+
+.pin-view .gift-info .fit-item {
+  margin: 0 8px
+}
+
+.pin-view .extra-imgs {
+  padding-top: 16px
+}
+
+.pin-view .extra-imgs .img-holder {
+  display: block;
+  background: url(../images/shopping/img_bg.png) 0 0 repeat;
+  text-align: center;
+  margin-bottom: 10px;
+  line-height: 0;
+  position: relative
+}
+
+.pin-view .extra-imgs .img-holder a.img {
+  background: transparent
+}
+
+.pin-view .extra-imgs .img-holder a.img img:hover {
+  opacity: .9
+}
+
+.pin-view .extra-imgs .more-imgs {
+  border: 1px solid #F2F2F2;
+  cursor: pointer;
+  color: #900000
+}
+
+.pin-view .extra-imgs .more-imgs:hover {
+  border-color: #DDD
+}
+
+.pin-view .extra-imgs .more-imgs .imgs {
+  height: 152px;
+  width: 648px;
+  padding: 9px 0 9px 9px
+}
+
+.pin-view .extra-imgs .more-imgs .imgs a {
+  display: block;
+  width: 152px;
+  height: 152px;
+  float: left;
+  margin-right: 10px;
+  background: url(../images/shopping/img_bg.png) 0 0 repeat
+}
+
+.pin-view .extra-imgs .more-imgs .imgs a img {
+  width: 152px;
+  height: 152px
+}
+
+.pin-view .extra-imgs .more-imgs .open {
+  display: block;
+  text-align: center;
+  height: 28px;
+  line-height: 28px;
+  color: #999;
+  text-decoration: none;
+  border-top: 1px solid #EDEDED;
+  cursor: pointer;
+  font-size: 15px
+}
+
+.pin-view .extra-imgs .more-imgs:hover .open {
+  color: #C90000
+}
+
+.pin-view .extra-imgs .more-imgs .open i {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  background: url(../images/shopping/uncover_icon.png) 0 0 no-repeat;
+  margin-left: 10px
+}
+
+.pin-view .extra-imgs .more-imgs:hover .open i {
+  background-position: 0 -20px
+}
+
+.pin-view .creation-info {
+  padding: 20px 20px;
+  color: #777
+}
+
+.pin-view .creation-info .info-header {
+  font-size: 16px
+}
+
+.pin-view .creation-info .meta-tag {
+  color: #9E7E6B
+}
+
+.pin-view .creation-info .meta-tag .tag-icon {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin: -4px 4px 0 4px;
+  background: url(../images/pin_view/creation_info.png) no-repeat 0 -90px
+}
+
+.pin-view .creation-info .info-panel {
+  padding: 15px 15px;
+  width: 289px;
+  background: #FAFAFA;
+  border-radius: 2px;
+  -webkit-border-radius: 2px
+}
+
+.pin-view .creation-info .info-body {
+  padding-bottom: 20px
+}
+
+.pin-view .creation-info .info-left {
+  float: left;
+  font-size: 14px
+}
+
+.pin-view .creation-info .info-left .info-line {
+  margin-bottom: 19px
+}
+
+.pin-view .creation-info .info-left .info-line.last {
+  margin-bottom: 0
+}
+
+.pin-view .creation-info .info-body .icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  vertical-align: middle;
+  background: url(../images/pin_view/creation_info.png) no-repeat 0 0
+}
+
+.pin-view .creation-info .info-left .portrait:hover {
+  background-position: 0 -20px
+}
+
+.pin-view .creation-info .info-right {
+  float: right;
+  padding-bottom: 0
+}
+
+.pin-view .creation-info .info-right .size label {
+  display: block;
+  padding-bottom: 8px
+}
+
+.pin-view .creation-info .info-right .size label input {
+  margin-right: 8px;
+  height: 14px
+}
+
+.pin-view .creation-info .info-right .size .num {
+  position: absolute;
+  left: 520px
+}
+
+.pin-view .creation-info .info-right .size label {
+  display: block;
+  padding-bottom: 19px
+}
+
+.pin-view .creation-info .info-right .material .num {
+  left: 460px
+}
+
+.pin-view .creation-info .info-right .material .price {
+  left: 580px;
+  position: absolute;
+  border-top: 0;
+  padding: 0;
+  font-size: 14px
+}
+
+.pin-view .creation-info .info-right .price {
+  border-top: 1px solid #ededed;
+  padding: 8px 0;
+  font-size: 18px;
+  font-weight: 700
+}
+
+.pin-view .creation-info .info-right .price .doubt {
+  background-position: 0 -45px
+}
+
+.pin-view .creation-info .info-right .price .doubt:hover {
+  background-position: 0 -65px
+}
+
+.pin-view .creation-info .info-footer {
+  padding-top: 20px;
+  border-top: 1px solid #ededed
+}
+
+.pin-view .creation-info .info-footer .btn {
+  float: right;
+  margin-left: 12px
+}
+
+.pin-view .creation-info .info-footer .btn .download-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  margin-top: -2px;
+  background: url(../images/pin_view/download_icon.png) no-repeat
+}
+
+#preview_modal .close-layer i {
+  background: url(../images/btn_close_layer.png) 0 0 no-repeat;
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  cursor: pointer;
+  margin: -18px 0 0 -18px;
+}
+
+#preview_modal .close-layer {
+  width: 56px;
+  height: 56px;
+  right: 14px;
+  top: 0;
+  z-index: 1038;
+}
+
+.grid-item a.preview-image .cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 960px) {
+  #preview_modal {
+    padding: 40px 0;
+    width: auto;
+  }
+
+  #preview_modal .pin-view {
+    width: 500px;
+    margin: 0 auto;
+  }
+
+  .pin-view .pin-view-wrapper {
+    width: auto;
+  }
+
+  .pin-view .side-part {
+    position: relative;
+    width: 500px
+  }
+
+  .pin-view .main-part {
+    width: auto;
+  }
+}
+
+@media (max-width: 414px) {
+  #preview_modal {
+    padding: 40px 0;
+    width: auto;
+  }
+
+  #preview_modal .pin-view {
+    width: 300px;
+    margin: 0 auto;
+    z-index: 1040;
+  }
+
+  .pin-view .pin-view-wrapper {
+    width: auto;
+  }
+
+  .pin-view .side-part {
+    position: relative;
+    width: 300px
+  }
+
+  .pin-view .main-part {
+    width: auto;
+  }
+}

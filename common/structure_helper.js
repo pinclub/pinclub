@@ -5,7 +5,7 @@ var moment = require('moment');
 var mongoose = require('mongoose');
 
 var image_show_fields = ['_id', 'id', 'author', 'tab', 'content', 'title', 'last_reply_at',
-    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply', 'image', 'image_colors',
+    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'create_at_ago', 'author', 'reply', 'image', 'image_colors',
     'image_fixed', 'image_86', 'image_430', 'image_source', 'type', 'board', 'like_count', 'geted_count', 'profile_source'];
 
 var image_copy_fields = ['author', 'content', 'title',
@@ -16,7 +16,7 @@ var user_show_fields = ['loginname', 'avatar_url', 'githubUsername',
     'collect_topic_count', 'like_image_count', 'get_image_count', 'topic_collect_count'];
 
 var topic_user_fields = ['_id', 'id', 'author', 'author', 'tab', 'content', 'title', 'last_reply_at',
-    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'author', 'reply', 'image', 'forum'];
+    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'create_at_ago', 'author', 'reply', 'image', 'forum'];
 
 exports.user = function (user) {
     return _.pick(user, user_show_fields);

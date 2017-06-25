@@ -98,7 +98,7 @@ var uploader = new Q.Uploader({
 
             console.log(task.name + ": 服务器返回 " + (task.response || ""));
             // 如果需要插入则把新创建的图片插入到列表中
-            if (insertImageBoardAfterCreate) {
+            if (insertImageBoardAfterCreate && gridMasonry) {
                 var resJson = JSON.parse(task.response);
                 var item = resJson.data[0];
                 var itemHtml = $("#picBoxTmp").tmpl({
@@ -116,10 +116,12 @@ var uploader = new Q.Uploader({
 
                 //gridMasonry.append(jpicelements)
                 //    .masonry('prepended', jpicelements);
-                gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
-                gridMasonry.imagesLoaded().progress(function () {
-                    gridMasonry.masonry('layout');
-                });
+                if (!!gridMasonry) {
+                    gridMasonry.append(jpicelements).masonry('insertItems', 1, jpicelements);
+                    gridMasonry.imagesLoaded().progress(function () {
+                        gridMasonry.masonry('layout');
+                    });
+                }
             }
             //this.list  为上传任务列表
             //this.index 为当前上传任务索引

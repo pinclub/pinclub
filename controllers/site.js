@@ -116,7 +116,7 @@ exports.index = function (req, res, next) {
     var tabName = renderHelper.tabName(tab);
     proxy.all('topics', 'tops', 'no_reply_topics', 'pages', 'forums',
         function (topics, tops, no_reply_topics, pages, forums) {
-            res.render('index_pic', {
+            res.render('index', {
                 topics: topics,
                 current_page: page,
                 list_topic_count: limit,

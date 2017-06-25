@@ -1,3 +1,7 @@
+<%- Loader('/public/stylesheets/_pic_create_modal.min.css')
+.css('/public/stylesheets/_pic_create_modal.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
 <!-- Get 图片的modal层-->
 <div class="modal fade" id="get_image_modal" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
@@ -43,3 +47,21 @@
         </div>
     </div>
 </div>
+
+<script id="picBoxTmp" type="text/x-jquery-tmpl">
+    <%- partial('_pic_box') %>
+</script>
+
+<%- Loader('/public/javascripts/_pic_get_modal.min.js')
+.js('/public/libs/Q.Uploader.image.all.js')
+.js('/public/libs/load-image.all.min.js')
+.js('/public/javascripts/board.js')
+.js('/public/javascripts/pics_get.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+
+<% if (!insertImage) { %>
+<script>
+    isInsertImageBoardAfterGet(false);
+</script>
+<% } %>

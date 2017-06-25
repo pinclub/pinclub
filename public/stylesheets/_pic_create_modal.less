@@ -1,0 +1,298 @@
+#image_upload .upload-area {
+  border: 2px dashed #EDEDED;
+  //height: 206px;
+  text-align: center;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#image_upload .upload-area .normal {
+  margin-top: 40px;
+}
+
+#image_upload .upload-area .note {
+  font-size: 16px;
+}
+
+#image_upload .upload-area .dropzone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  opacity: .0001;
+  background: #fff;
+}
+
+#image_upload #img_input2 {
+  display: none;
+}
+
+.pin-create {
+  min-height: 350px;
+}
+
+.pin-create .preview {
+  position: absolute;
+  width: 180px;
+  top: 0px;
+  left: 0;
+  bottom: 0;
+  padding: 20px;
+  background: #F2F2F2;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.pin-create .preview .image {
+  position: relative;
+  display: block;
+  //width: 180px;
+  max-height: 310px;
+  overflow: hidden;
+}
+
+.pin-create .preview .image > img {
+  width: 180px;
+  display: block;
+}
+
+.pin-create .preview .description {
+  display: block;
+  padding: 10px 0;
+  margin-top: 10px;
+  border-width: 0;
+  min-height: 50px;
+  width: 140px;
+  height: 60px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #777;
+  background-color: transparent;
+  overflow: hidden;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color .5s,padding .5s,width .5s;
+}
+
+.pin-create .preview .description:hover {
+  background-color: #e6e6e6
+}
+
+.pin-create .preview .description:focus {
+  width: 140px;
+  padding: 10px;
+  border-width: 1px;
+  background-color: #fff;
+  overflow: auto;
+  cursor: text
+}
+
+.pin-create .right-part {
+  width: 330px;
+  margin-left: 225px;
+  position: relative;
+}
+
+.pin-create .search-input, .pin-create .tag-input {
+  width: 316px;
+  margin-bottom: 12px;
+}
+
+.pin-create .board-divider, .pin-create .text-block-divider {
+  width: 100%;
+  height: 1px;
+}
+
+.pin-create .board-divider.blur {
+  box-shadow: inset 0 1px 0 rgba(0,0,0,.02),inset 0 2px 0 rgba(0,0,0,.02),inset 0 3px 0 rgba(0,0,0,.02)
+}
+
+.pin-create .text-block-divider.blur {
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.02),inset 0 -2px 0 rgba(0,0,0,.02),inset 0 -3px 0 rgba(0,0,0,.02)
+}
+
+.pin-create .boardlist {
+  position: relative;
+  height: 220px;
+  overflow: auto
+}
+
+.pin-create .boardlist .item {
+  padding: 10px 0 10px 32px;
+  color: #4a4a4a;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .1s,background-image .1s;
+}
+
+.pin-create .boardlist .item:hover {
+  background-color: #f2f2f2
+}
+
+.pin-create .boardlist .item.selected {
+  background-color: #f8f8f8
+}
+
+.pin-create .boardlist .item.selected .controller {
+  display: block
+}
+
+.pin-create .boardlist .recent .icon.history {
+  background-image: url(../images/board_list_icons.svg);
+}
+
+.pin-create .boardlist .item .icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  margin-top: -2px;
+  background-repeat: no-repeat;
+}
+
+.pin-create .boardlist .item .controller {
+  float: right;
+  display: none;
+  width: 24px;
+  height: 24px;
+  background-image: url(../images/ic-sele.svg);
+  background-repeat: no-repeat;
+  margin-right: 10px;
+  margin-top: -2px;
+}
+
+.pin-create .createboard {
+  cursor: pointer;
+  padding: 8px 0 8px 10px;
+  color: #4a4a4a;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+.pin-create .right-part .text-block .createboard {
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ededed;
+  transition: border-color .2s;
+}
+
+.pin-create .right-part .text-block .tag-bar .title {
+  padding-right: 10px;
+}
+
+.pin-create .right-part .text-block .tag-bar {
+  color: #999;
+  overflow: hidden;
+  height: 20px;
+}
+
+.pin-create .right-part .text-block .tag-bar .tag {
+  display: inline-block;
+  padding: 0 8px 0 0;
+  margin-bottom: 10px;
+  vertical-align: top;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  line-height: 20px;
+  color: #9e7e6b;
+  cursor: pointer;
+}
+
+.pin-create .right-part .text-block .tag-bar .tag:first-child {
+  padding-left: 4px;
+}
+
+.pin-create .createboard .icon.add {
+  display: inline-block;
+  width: 16px;
+  height: 20px;
+  margin-right: 10px;
+  background-image: url(../images/board_list_icons.svg);
+  background-position: -82px 0;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+.tag-input>.tag-labels {
+  display: inline;
+  vertical-align: middle;
+}
+
+.pin-create .right-part .text-block .tag-input>input {
+  height: 34px;
+}
+
+.pin-create .right-part .text-block .tag-input>.placeholder {
+  top: 10px;
+}
+
+
+.tag-inputs .placeholder {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  color: #bbb
+}
+
+.tag-input>input {
+  border: 0;
+  background-color: transparent;
+  box-shadow: none;
+  width: 98px;
+  height: 24px;
+  vertical-align: middle
+}
+
+.tag-input>input:hover,.tag-input>input:focus {
+  box-shadow: none
+}
+
+.tag-input>.tag-labels {
+  display: inline;
+  vertical-align: middle
+}
+
+.tag-input>.tag-labels>.tag-label {
+  display: inline-block;
+  border-radius: 1px;
+  margin: 2px 4px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.2;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  color: #4a4a4a;
+  background-color: #ededed;
+  cursor: pointer
+}
+
+.tag-input>.tag-labels>.tag-label>.close {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 8px;
+  background-position: 0 0;
+  background-repeat: no-repeat
+}
+
+.tag-input>.tag-labels>.tag-label:hover>.close {
+  background-position: 0 -30px
+}
+
+
+.clear-input {
+  display: inline-block;
+  padding: 0 10px;
+  height: 36px;
+  font-size: 16px;
+  line-height: 1;
+  color: #777;
+  background: #FCFCFC;
+  border: 1px solid #CCC;
+  border-radius: 3px;
+  width: 250px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+  -webkit-transition: color .2s linear,border-color .3s linear;
+}
