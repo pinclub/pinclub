@@ -5,7 +5,7 @@ var moment = require('moment');
 var mongoose = require('mongoose');
 
 var image_show_fields = ['_id', 'id', 'author', 'tab', 'content', 'title', 'last_reply_at',
-    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'create_at_ago', 'author', 'reply', 'image', 'image_colors',
+    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'create_at_ago', 'author', 'last_reply', 'image', 'image_colors',
     'image_fixed', 'image_86', 'image_430', 'image_source', 'type', 'board', 'like_count', 'geted_count', 'profile_source'];
 
 var image_copy_fields = ['author', 'content', 'title',
@@ -16,7 +16,7 @@ var user_show_fields = ['loginname', 'avatar_url', 'githubUsername',
     'collect_topic_count', 'like_image_count', 'get_image_count', 'topic_collect_count'];
 
 var topic_user_fields = ['_id', 'id', 'author', 'author', 'tab', 'content', 'title', 'last_reply_at',
-    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'create_at_ago', 'author', 'reply', 'image', 'forum'];
+    'good', 'top', 'reply_count', 'visit_count', 'create_at', 'create_at_ago', 'author', 'last_reply', 'image', 'forum'];
 
 exports.user = function (user) {
     return _.pick(user, user_show_fields);
@@ -24,21 +24,23 @@ exports.user = function (user) {
 
 exports.topic = function (topic) {
     let avatar_url = topic.author.avatar_url;
+    let last_reply_create_at_ago = topic.last_reply?topic.last_reply.create_at : null;
     let id = topic.id;
     if (topic instanceof mongoose.Model) {
+        last_reply_create_at_ago = topic.last_reply?topic.last_reply.create_at_ago() : null;
         topic = topic.toObject();
         topic.author.avatar_url = avatar_url;
         if (id) {
             topic.id = id;
         }
     }
-    topic.author = _.pick(topic.author, ['id', 'loginname', 'avatar_url']);
-    topic.forum = _.pick(topic.forum, ['id', 'title', 'topic_count', 'content']);
+    topic.author = _.pick(topic.author, ['_id', 'id', 'loginname', 'avatar_url']);
+    topic.forum = _.pick(topic.forum, ['_id', 'id', 'title', 'topic_count', 'content']);
 
-    if (!!topic.reply && !!topic.reply.author) {
-        topic.reply.author = _.pick(topic.reply.author, ['id', 'loginname', 'avatar_url']);
-        topic.reply.create_at_ago = topic.reply.create_at_ago();
-        topic.reply = _.pick(topic.reply, ['content', 'create_at_ago', 'author', 'id']);
+    if (!!topic.last_reply && !!topic.last_reply.author) {
+        topic.last_reply.author = _.pick(topic.last_reply.author, ['_id', 'id', 'loginname', 'avatar_url']);
+        topic.last_reply.create_at_ago = last_reply_create_at_ago;
+        topic.last_reply = _.pick(topic.last_reply, ['content', 'create_at_ago', 'author', 'id', '_id']);
         topic.last_reply_at = moment(topic.last_reply_at).format("yyyy-MM-dd HH:mm:ss");
     }
     return _.pick(topic, topic_user_fields);
@@ -46,8 +48,10 @@ exports.topic = function (topic) {
 
 exports.image = function (topic) {
     let avatar_url = topic.author.avatar_url;
+    let last_reply_create_at_ago = topic.last_reply?topic.last_reply.create_at : null;
     let id = topic.id;
     if (topic instanceof mongoose.Model) {
+        last_reply_create_at_ago = topic.last_reply?topic.last_reply.create_at_ago() : null;
         topic = topic.toObject();
         topic.author.avatar_url = avatar_url;
         if (id) {
@@ -60,10 +64,10 @@ exports.image = function (topic) {
     }
     topic.board = _.pick(topic.board, ['id', 'title', 'topic_count', 'user_id', 'images']);
 
-    if (!!topic.reply && !!topic.reply.author) {
-        topic.reply.author = _.pick(topic.reply.author, ['id', 'loginname', 'avatar_url']);
-        topic.reply.create_at_ago = topic.reply.create_at_ago();
-        topic.reply = _.pick(topic.reply, ['content', 'create_at_ago', 'author', 'id']);
+    if (!!topic.last_reply && !!topic.last_reply.author) {
+        topic.last_reply.author = _.pick(topic.reply.author, ['id', 'loginname', 'avatar_url']);
+        topic.last_reply.create_at_ago = last_reply_create_at_ago;
+        topic.last_reply = _.pick(topic.last_reply, ['content', 'create_at_ago', 'author', 'id']);
         topic.last_reply_at = moment(topic.last_reply_at).format("yyyy-MM-dd HH:mm:ss");
     }
     return _.pick(topic, image_show_fields);

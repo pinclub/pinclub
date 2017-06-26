@@ -88,6 +88,10 @@ ol.inline, ol.unstyled, ul.inline, ul.unstyled {
     list-style: none;
 }
 
+a {
+    color: #0f0f0f;
+}
+
 a:hover {
     color: #444444;
 }
@@ -115,4 +119,8 @@ h1 {
     font-size: 12px;
     color: #aaaaaa;
     top: -12px;
+}
+
+.modal-backdrop {
+    background-color: #eee;
 }

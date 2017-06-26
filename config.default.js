@@ -96,6 +96,9 @@ var config = {
     // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
     admins: {user_login_name: true},
 
+    // 新用户需要激活, 默认不需要激活
+    account_need_active: false,
+
     // github 登陆的配置
     GITHUB_OAUTH: {
         clientID: 'your GITHUB_CLIENT_ID',

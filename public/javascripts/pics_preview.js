@@ -34,7 +34,6 @@ $(document).on('click', '.preview_image_btn', function(event){
     $('#baidu_image_holder').html('<img src="'+event.currentTarget.dataset.src+'">');
     $('#preview_modal #zoomBtn').attr('href', event.currentTarget.dataset.src);
     $('#preview_modal').modal('show');
-    $('body .modal-backdrop').css({"background-color": "#eee"});
     $.ajax({
         url: "/api/v2/images/"+dataset.id
     }).done(function (response) {

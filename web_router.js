@@ -24,6 +24,7 @@ var auth = require('./middlewares/auth');
 var limit = require('./middlewares/limit');
 var github = require('./controllers/github');
 var search = require('./controllers/search');
+var static = require('./controllers/static');
 var dashboard = require('./controllers/dashboard');
 var passport = require('passport');
 var configMiddleware = require('./middlewares/conf');
@@ -137,6 +138,9 @@ router.get('/robots.txt', staticController.robots);
 
 //rss
 router.get('/rss', rss.index);
+
+//captcha
+router.get('/captcha', static.captcha);
 
 // github oauth
 router.get('/auth/github', configMiddleware.github, passport.authenticate('github'));

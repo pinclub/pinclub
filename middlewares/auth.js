@@ -37,7 +37,7 @@ exports.userRequired = function (req, res, next) {
 exports.userSigninRequired = function (req, res, next) {
     if (!req.session || !req.session.user || !req.session.user._id) {
         req.session._loginReferer = req.headers.referer;
-        res.render('sign/signin');
+        res.render('sign/signin', {page: 'signin'});
         return;
     }
 

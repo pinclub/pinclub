@@ -37,7 +37,7 @@
                             <span class="text"> 评论 <span class="num"></span></span>
                         </a>
                         <div class="right-part">
-                            <a title="举报这张采集" href="#" onclick="return false;" class="report-btn btn-with-icon btn"><i class="class"></i></a>
+                            <a title="举报" href="#" onclick="return false;" class="report-btn btn-with-icon btn"><i class="class"></i></a>
 
                             <a href="/go/?pin_id=1090982775" rel="nofollow" target="_blank" class="source btn">
                                 <i class="class"></i>查看来源 dribbble.com
@@ -80,7 +80,7 @@
 
 <!--预览图片时弹出的图片来源-->
 <script id="profileSourceTemplate" type="text/x-jquery-tmpl">
-    <a title="举报这张采集" href="#" onclick="return false;" class="report-btn btn-with-icon btn"><i class="class"></i></a>
+    <a title="举报" href="#" onclick="return false;" class="report-btn btn-with-icon btn"><i class="class"></i></a>
     {{if profile_source == 'upload'}}
         <a href="#" onclick="return false;" class="source btn">
         © 来自 <span class="brown-link">${author.loginname}</span> 的上传
@@ -112,7 +112,13 @@
             创建于<span data-ts="1495091308" class="ts-words space">{{if create_at_ago}}${create_at_ago}{{else}}${create_at}{{/if}}</span>
         </div>
     </div>
-    <div class="description">${title}</div>
+    <div class="description">
+    {{if title}}
+        ${title}
+    {{else}}
+        未填写描述
+    {{/if}}
+    </div>
     <div class="comments"></div>
     <div class="likes clearfix">
         {{if like_users.length>0}}

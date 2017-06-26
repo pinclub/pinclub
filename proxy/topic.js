@@ -74,10 +74,10 @@ exports.getCountByQuery = function (query, callback) {
 exports.getTopicsByQuery = function (query, opt, callback) {
     // query.deleted = false;
     Topic.find(query, {}, opt)
-        .populate('board', 'title desc _id topic_count')
-        .populate('forum', 'title content _id topic_count')
+        .populate('board')
+        .populate('forum')
         .populate('author')
-        .populate('last_reply')
+        .deepPopulate('last_reply last_reply.author')
         .exec(function (err, topics) {
         if (err) {
             return callback(err);

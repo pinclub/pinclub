@@ -1,49 +1,161 @@
-<%- partial('../sign/sidebar') %>
-<%- include ../navbar.html %>
-<div id='content'>
-    <div class='panel'>
-        <div class='header'>
-            <ul class='breadcrumb'>
-                <li><a href='/'>主页</a></li>
-                <li class='active'>登录</li>
-            </ul>
+<%- Loader('/public/stylesheets/signin.min.css')
+.css('/public/stylesheets/signin.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<%- include ../static/particles.html %>
+
+<div id='content ' class="col-md-3 col-md-offset-5">
+    <div class="row">
+        <div class="logo col-md-4 col-md-offset-4">
+            <a href='/'>
+                <% if (config.site_logo) {%>
+                <img src="<%- staticFile(config.site_logo) %>"/>
+                <%} else {%>
+                <%- config.name %>
+                <%}%>
+            </a>
         </div>
-        <div class='innerTopic'>
-            <% if(typeof(error) !== 'undefined' && error){ %>
-            <div class="alert alert-danger" role="alert">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <strong><%= error %></strong>
+        <div class="col-md-12 index-tab-navs" role="tablist">
+            <div class="nav nav-tabs" role="tablist">
+                <a class="fade in <% if (page === 'signin') {%>active<%}%>" role="presentation" href="#collapseSignin" aria-controls="collapseSignin" id="headingSignin" type="button" role="tab" data-toggle="tab">
+                    Signin
+                </a>
+                <a class="fade in <% if (page === 'signup') {%>active<%}%>" role="presentation" href="#collapseSignup" aria-controls="collapseSignup" id="headingSignup" type="button" role="tab" data-toggle="tab">
+                    Signup
+                </a>
             </div>
-            <% } %>
-            <form id='signin_form' class='form-horizontal' action='/signin' method='post'>
-                <fieldset>
-                    <div class='form-group'>
-                        <label class='control-label' for='name'>用户名</label>
-
-                        <div class='controls'>
-                            <input class='form-control' id='name' name='name' size='30' type='text'/>
-                        </div>
-                    </div>
-                    <div class='form-group'>
-                        <label class='control-label' for='pass'>密码</label>
-
-                        <div class='controls'>
-                            <input class='form-control' id='pass' name='pass' size='30' type='password'/>
-                        </div>
-                    </div>
-                    <input type='hidden' name='_csrf' value='<%= csrf %>'/>
-
-                    <div class='form-actions'>
-                        <input type='submit' class='span-primary' value='登录'/>
-                        <a href="/auth/github">
-            <span class="span-info">
-              通过 GitHub 登录
-            </span>
-                        </a>
-                        <a id="forgot_password" href='/search_pass'>忘记密码了?</a>
-                    </div>
-                </fieldset>
-            </form>
         </div>
     </div>
+    <div class="tab-content">
+        <div class='panel tab-pane fade <% if (page === 'signin') {%>in active<%}%>' role="tabpanel" id="collapseSignin">
+            <div class='innerTopic'>
+                <% if(page === 'signin' && typeof(error) !== 'undefined' && error){ %>
+                <div class="alert alert-danger fade in" role="alert">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <strong><%= error %></strong>
+                </div>
+                <% } %>
+                <form id='signin_form' class='form-horizontal' action='/signin' method='post'>
+                    <fieldset>
+                        <div class='form-group'>
+                            <label class='control-label' for='name'>用户名</label>
+
+                            <div class='controls'>
+                                <input class='form-control' id='name' name='name' size='30' type='text'/>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='control-label' for='pass'>密码</label>
+
+                            <div class='controls'>
+                                <input class='form-control' id='pass' name='pass' size='30' type='password'/>
+                            </div>
+                        </div>
+                        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+
+                        <div class='form-actions'>
+                            <button type='submit' class='btn' value='登录'>登录</button>
+                            <a href="/auth/github" class='btn' >
+                                  通过 GitHub 登录
+                            </a>
+                            <a id="forgot_password" href='/search_pass'>忘记密码?</a>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="panel tab-pane fade <% if (page === 'signup') {%>in active<%}%>" id="collapseSignup" role="tabpanel">
+            <div class='innerTopic'>
+                <% if (page === 'signup' && typeof(error) !== 'undefined' && error) { %>
+                    <div class="alert alert-danger fade in" role="alert">
+                        <a class="close" data-dismiss="alert" href="#">&times;</a>
+                        <strong><%= error %></strong>
+                    </div>
+                <% } %>
+                <% if (typeof(success) !== 'undefined' && success) { %>
+                    <div class="alert alert-success">
+                        <strong><%= success %></strong>
+                    </div>
+                    <div>
+                        <a href="/">>返回首页</a>
+                    </div>
+                <% } else { %>
+                <form id='signup_form' class='form-horizontal' action='/signup' method='post'>
+                    <fieldset>
+                        <div class='form-group'>
+                            <label class='control-label' for='loginname'>用户名</label>
+
+                            <div class='controls'>
+                                <% if (typeof(loginname) !== 'undefined') { %>
+                                <input class='form-control' id='loginname' name='loginname' size='30' type='text'
+                                       value='<%= loginname %>'/>
+                                <% } else { %>
+                                <input class='form-control' id='loginname' name='loginname' size='30' type='text' value=''/>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='control-label' for='pass'>密码</label>
+
+                            <div class='controls'>
+                                <input class='form-control' id='pass' name='pass' size='30' type='password'/>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='control-label' for='re_pass'>确认密码</label>
+
+                            <div class='controls'>
+                                <input class='form-control' id='re_pass' name='re_pass' size='30' type='password'/>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='control-label' for='email'>电子邮箱</label>
+
+                            <div class='controls'>
+                                <% if (typeof(email) !== 'undefined') { %>
+                                <input class='form-control' id='email' name='email' size='30' type='text'
+                                       value='<%= email %>'/>
+                                <% } else { %>
+                                <input class='form-control' id='email' name='email' size='30' type='text'/>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='control-label' for='email'>证明你不是机器人</label>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <img src="/captcha"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <span>=</span>
+                                </div>
+                                <div class='controls col-md-5'>
+                                    <input class='form-control' id='captcha' name='captcha' size='30' type='text' placeholder="输入结果"/>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+
+                        <div class='form-actions'>
+                            <button type='submit' class='btn' value='注册'>注册</button>
+                            <a href="/auth/github" class='btn'>通过 GitHub 登录</a>
+                        </div>
+                    </fieldset>
+                </form>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <%- include _footer.html %>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $('a[data-toggle="tab"]').removeClass('active');
+            $(e.target).addClass('active');
+        });
+    });
+</script>

@@ -1,4 +1,5 @@
 var app = require('../../app');
+var session = require('supertest-session');
 var request = require('supertest')(app);
 var mm = require('mm');
 var config = require('../../config');
@@ -16,12 +17,31 @@ describe('test/controllers/sign.test.js', function () {
     var loginname = 'testuser' + now;
     var email = 'testuser' + now + '@gmail.com';
     var pass = 'wtffffffffffff';
+    var captcha = '1234';
+    var testSession = null;
+
+    beforeEach(function () {
+        testSession = session(app);
+    });
 
     afterEach(function () {
         mm.restore();
     });
 
     describe('sign up', function () {
+        var authenticatedSession;
+
+        beforeEach(function (done) {
+            testSession.get('/captcha')
+                .expect(200)
+                .end(function (err) {
+                    if (err) {
+                        return done(err);
+                    }
+                    authenticatedSession = testSession;
+                    return done();
+                });
+        });
 
         it('should visit sign up page', function (done) {
             request.get('/signup')
@@ -48,14 +68,15 @@ describe('test/controllers/sign.test.js', function () {
                 data.to.should.match(new RegExp(loginname + '@gmail\\.com'));
                 done();
             });
-            request.post('/signup')
+            authenticatedSession.post('/signup')
                 .send({
                     loginname: loginname,
                     email: email,
                     pass: pass,
                     re_pass: pass,
+                    captcha: '1234'
                 })
-                .expect(200, function (err, res) {
+                .expect(200).end(function (err, res) {
                     should.not.exists(err);
                     res.text.should.containEql('欢迎加入');
                     UserProxy.getUserByLoginName(loginname, function (err, user) {
@@ -64,26 +85,29 @@ describe('test/controllers/sign.test.js', function () {
                         done();
                     });
                 });
+
         });
 
         it('should not sign up a user when loginname is exists', function (done) {
-            request.post('/signup')
+            authenticatedSession.post('/signup')
                 .send({
                     loginname: loginname,
                     email: email + '1',
                     pass: pass,
                     re_pass: pass,
+                    captcha: '1234'
                 })
                 .expect(422, done);
         });
 
         it('should not sign up a user when email is exists', function (done) {
-            request.post('/signup')
+            authenticatedSession.post('/signup')
                 .send({
                     loginname: loginname + '1',
                     email: email,
                     pass: pass,
                     re_pass: pass,
+                    captcha: '1234'
                 })
                 .expect(422, done);
         });

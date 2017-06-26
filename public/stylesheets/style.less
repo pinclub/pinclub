@@ -854,9 +854,11 @@ img.unread {
 
 .markdown-text img {
   cursor: pointer;
+
 }
 
 .markdown-text {
+
   h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
     font-size: inherit;
     color: inherit;
@@ -963,7 +965,7 @@ img.unread {
 
 .navbar-nav > li > a {
   float: none;
-  padding: 10px 15px;
+  padding: 10px;
   color: #777;
   text-decoration: none;
   text-shadow: 0 1px 0 #fff;
@@ -1840,4 +1842,55 @@ textarea.editor {
   background-image: url(../images/dock_shadow.png);
   background-repeat: repeat-x;
   padding: 0px;
+}
+
+.item_hot_topic_title {
+  font-size: 13px;
+  line-height: 120%;
+  text-shadow: 0px 1px 0px #fff;
+}
+
+.with-line {
+  font-size: 16px;
+  color: #999;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.with-line:after, .with-line:before {
+  content: "";
+  border-top: 1px solid #ededed;
+  display: block;
+  position: absolute;
+  width: 40%;
+  top: 15px;
+}
+
+.with-line:before {
+  left: 0;
+}
+
+.with-line:after {
+  right: 0;
+}
+
+.transparent {
+  background-color: transparent;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.chrome_download {
+
+}
+
+.chrome {
+  background: url(../images/chrome.png) 0 0 no-repeat;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-top: 3px;
 }

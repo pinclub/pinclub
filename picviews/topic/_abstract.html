@@ -30,19 +30,19 @@
                 <span class="clearfix"></span>
                 <span class="small">
                     {{if topic.forum && topic.forum.title}}
-                    <a class="forum_name" href="/forums/${topic.forum.id}">
+                    <a class="forum_name" href="/forums/${topic.forum._id}">
                         ${topic.forum.title}
                     </a>&nbsp;•&nbsp;
                     {{/if}}
                     <a class="user_avatar" href="/user/${topic.author.loginname}">
                         ${topic.author.loginname}
                     </a>
-                    {{if topic.reply && topic.reply.author}}
+                    {{if topic.last_reply && topic.last_reply.author}}
                     &nbsp;•&nbsp;
-                    ${topic.reply.create_at_ago}
+                    ${topic.last_reply.create_at_ago}
                     &nbsp;•&nbsp;
-                    <a class='last_time' href="/topic/${topic.id}#${topic.reply.id}">
-                        最后回复者为 <span class="last_active_time">${topic.reply.author.loginname}</span>
+                    <a class='last_time' href="/topic/${topic.id}#${topic.last_reply._id}">
+                        最后回复者为 <span class="last_active_time">${topic.last_reply.author.loginname}</span>
                     </a>
                     {{/if}}
                 </span>

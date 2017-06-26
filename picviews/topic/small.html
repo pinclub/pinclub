@@ -1,4 +1,15 @@
-<li>
-  <div><a class='dark topic_title' href="/topic/<%= topic._id %>" title="<%= topic.title %>"><%= topic.title %></a>
-  </div>
-</li>
+<div class="cell">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="24" valign="middle" align="center">
+                <a href="/user/<%= topic.author.loginname%>"><img src="<%= topic.author.avatar_url%>" class="avatar" border="0" align="default" style="max-width: 24px; max-height: 24px;"></a>
+            </td>
+            <td width="10"></td>
+            <td width="auto" valign="middle">
+                <span class="item_hot_topic_title">
+                    <a class='dark' href="/topic/<%= topic._id %>" title="<%= topic.title %>"><%= topic.title %></a>
+                </span>
+            </td>
+        </tr>
+    </table>
+</div>

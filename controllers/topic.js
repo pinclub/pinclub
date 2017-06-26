@@ -98,7 +98,14 @@ exports.index = function (req, res, next) {
                     {reply_count: 0, _id: {'$nin': [topic._id]}, type: 'text'},
                     {limit: 5, sort: '-create_at'},
                     ep.done('no_reply_topics', function (no_reply_topics) {
-                        cache.set('no_reply_topics', no_reply_topics, 60 * 1);
+                        let cacheNRT = [];
+                        for (let i = 0; i < no_reply_topics.length; i++) {
+                            let aurl = no_reply_topics[i].author.avatar_url;
+                            let nrtObject = no_reply_topics[i].toObject();
+                            nrtObject.author.avatar_url = aurl;
+                            cacheNRT.push(nrtObject);
+                        }
+                        cache.set('no_reply_topics', cacheNRT, 60 * 1);
                         return no_reply_topics;
                     }));
             }

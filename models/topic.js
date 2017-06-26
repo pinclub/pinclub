@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var BaseModel = require("./base_model");
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
@@ -48,6 +49,11 @@ var TopicSchema = new Schema({
 });
 
 TopicSchema.plugin(BaseModel);
+TopicSchema.plugin(deepPopulate, {
+    whitelist: [
+        'last_reply.author'
+    ]
+});
 TopicSchema.index({create_at: -1});
 TopicSchema.index({top: -1, last_reply_at: -1});
 TopicSchema.index({author: 1, create_at: -1});

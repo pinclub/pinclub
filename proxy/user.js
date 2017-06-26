@@ -115,7 +115,9 @@ exports.newAndSave = function (name, loginname, pass, email, avatar_url, active,
         _id: user._id
     }, config.jwt_token, {expiresIn: 3600});
     user.accessToken = accessToken;
-    user.save(callback);
+    user.save(function(err) {
+        callback(err, user);
+    });
 };
 
 var makeGravatar = function (email) {
