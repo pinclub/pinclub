@@ -38,13 +38,8 @@ exports.index = function (req, res, next) {
     if (!!forum) {
         query.forum = forum;
     }
-
     var limit = config.list_topic_count;
     var options = {skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at'};
-
-    Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
-        return topics;
-    }));
 
     // 取排行榜上的用户
     cache.get('tops', proxy.done(function (tops) {
@@ -79,20 +74,37 @@ exports.index = function (req, res, next) {
     }));
     // END 取0回复的主题
 
-    // 取分页数据
-    var pagesCacheKey = JSON.stringify(query) + 'pages';
-    cache.get(pagesCacheKey, proxy.done(function (pages) {
-        if (pages) {
-            proxy.emit('pages', pages);
-        } else {
-            Topic.getCountByQuery(query, proxy.done(function (all_topics_count) {
-                var pages = Math.ceil(all_topics_count / limit);
-                cache.set(pagesCacheKey, pages, 60 * 1);
-                proxy.emit('pages', pages);
-            }));
+    proxy.on('forums',
+        function (forums) {
+        if (!query.forum) {
+            var forumIds = _.map(forums, '_id');
+            query.forum = {$in: forumIds};
         }
-    }));
-    // END 取分页数据
+        proxy.emit('forums2', forums);
+        Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
+            return topics;
+        }));
+
+        // 取分页数据
+        var pagesCacheKey = JSON.stringify(query) + 'pages';
+        cache.get(pagesCacheKey, proxy.done(function (pages) {
+            if (pages) {
+                proxy.emit('pages', pages);
+            } else {
+                Topic.getCountByQuery(query, proxy.done(function (all_topics_count) {
+                    var pages = Math.ceil(all_topics_count / limit);
+                    cache.set(pagesCacheKey, pages, 60 * 1);
+
+                    Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
+                        return topics;
+                    }));
+
+                    proxy.emit('pages', pages);
+                }));
+            }
+        }));
+        // END 取分页数据
+    });
 
     // 取板块数据
     var queryForum = {};
@@ -114,7 +126,7 @@ exports.index = function (req, res, next) {
     // END 取分页数据
 
     var tabName = renderHelper.tabName(tab);
-    proxy.all('topics', 'tops', 'no_reply_topics', 'pages', 'forums',
+    proxy.all('topics', 'tops', 'no_reply_topics', 'pages', 'forums2',
         function (topics, tops, no_reply_topics, pages, forums) {
             res.render('index', {
                 topics: topics,

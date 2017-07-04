@@ -18,8 +18,12 @@
             <div class="grid-item">
                 <a class="link" href="/boards/<%= boards[i].id %>">
                     <% for(var j = 0; j < boards[i].topics.length; j++) { %>
-                        <img src="<% if (j==0) {%><%= boards[i].topics[j].image_430 %><%} else {%><%= boards[i].topics[j].image_86 %><%}%>" class="<% if (j==0) {%>large<%}%>">
-                    <% } %>
+                        <% if (j==0) {%>
+                            <div class="<% if (j==0) {%>large<%}%>" style='background-image: url("<%= boards[i].topics[j].image_430 %>")'>
+                            </div>
+                        <% } else {%>
+                            <img src="<% if (j==0) {%><%= boards[i].topics[j].image_430 %><%} else {%><%= boards[i].topics[j].image_86 %><%}%>">
+                    <% } } %>
                     <div class="shadows"><div class="large-shadow"></div><div class="shadow"></div><div class="shadow"></div><div class="shadow"></div></div>
                     <div class="over "><h3><%= boards[i].title %></h3><h4></h4><div class="pin-count"><%= boards[i].topic_count %></div></div>
                 </a>

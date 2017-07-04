@@ -2,6 +2,7 @@ var TopicProxy = require('../../proxy').Topic;
 var TopicCollect = require('../../proxy').TopicCollect;
 var TopicLike = require('../../proxy').TopicLike;
 var UserProxy = require('../../proxy').User;
+var ForumProxy = require('../../proxy').Forum;
 var config = require('../../config');
 var EventProxy = require('eventproxy');
 var _ = require('lodash');
@@ -9,6 +10,7 @@ var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
 var structureHelper = require('../../common/structure_helper');
 var tools = require('../../common/tools');
+var cache = require('../../common/cache');
 var validator = require('validator');
 
 
@@ -71,6 +73,7 @@ var index = function (req, res, next) {
     var forum = req.query.forum;
     var author = req.query.author;
     var limit = Number(req.query.limit) || config.list_topic_count;
+    var currentUser = req.session.user;
 
     var query = {};
     if (forum && forum !== 'all') {
@@ -109,15 +112,41 @@ var index = function (req, res, next) {
         res.send({success: true, data: topics});
     });
 
-    TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
-        if (!!req.session.user) {
-            let topic_t_ids = _.map(topics, 'id');
-            TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, topic_t_ids, {}, ep.done('liked_topics'));
+    ep.on('forums',
+        function (forums) {
+            if (!query.forum) {
+                var forumIds = _.map(forums, '_id');
+                query.forum = {$in: forumIds};
+            }
+            TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
+                if (!!currentUser) {
+                    let topic_t_ids = _.map(topics, 'id');
+                    TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, topic_t_ids, {}, ep.done('liked_topics'));
+                } else {
+                    ep.emit('liked_topics', []);
+                }
+                return topics;
+            }));
+        });
+
+    // 取板块数据
+    var queryForum = {};
+    queryForum.type = 'public';
+    if (!!currentUser) {
+        queryForum.type = {$ne: 'private'};
+    }
+    var forumsCacheKey = JSON.stringify(queryForum) + 'pages';
+    cache.get(forumsCacheKey, ep.done(function (forums) {
+        if (forums) {
+            ep.emit('forums', forums);
         } else {
-            ep.emit('liked_topics', []);
+            ForumProxy.getForumsByQuery(queryForum, {limit: 10}, ep.done(function (forums) {
+                cache.set(forumsCacheKey, forums, 60 * 1);
+                ep.emit('forums', forums);
+            }));
         }
-        return topics;
     }));
+
 };
 
 exports.index = index;
