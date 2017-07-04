@@ -8,6 +8,12 @@ exports.about = function (req, res, next) {
     });
 };
 
+exports.advertise = function (req, res, next) {
+    res.render('static/advertise', {
+        pageTitle: '广告投放'
+    });
+};
+
 exports.robots = function (req, res, next) {
     res.type('text/plain');
     res.send('# Robots.txt');

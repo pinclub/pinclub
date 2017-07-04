@@ -106,7 +106,7 @@ exports.index = function (req, res, next) {
                             cacheNRT.push(nrtObject);
                         }
                         cache.set('no_reply_topics', cacheNRT, 60 * 1);
-                        return no_reply_topics;
+                        return cacheNRT;
                     }));
             }
         }));

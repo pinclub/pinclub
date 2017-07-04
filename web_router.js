@@ -136,6 +136,7 @@ router.post('/imageupload', auth.userRequired, image.upload); //上传图片
 
 // static
 router.get('/about', onlineM.add, staticController.about);
+router.get('/advertise', onlineM.add, staticController.advertise);
 router.get('/robots.txt', staticController.robots);
 
 //rss

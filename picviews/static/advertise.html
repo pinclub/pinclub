@@ -1,0 +1,23 @@
+<%- partial('../sidebar') %>
+<%- include ../navbar.html %>
+<div id='content'>
+    <div class='panel'>
+        <div class='header'>
+            <ul class='breadcrumb'>
+                <li><a href='/'>主页</a></li>
+                <li class='active'>广告</li>
+            </ul>
+        </div>
+        <div class='innerTopic'>
+            <div class="topic_content">
+                <%- markdown(multiline(function () {
+/*
+广告投放
+=======
+
+*/
+                })) %>
+            </div>
+        </div>
+    </div>
+</div>
