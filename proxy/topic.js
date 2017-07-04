@@ -164,7 +164,11 @@ exports.getImagesByQuery = function (query, opt, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getTopicsByBoardId = function (id, cb) {
-    Topic.find({board: id, deleted: false}, '', {sort: 'create_at'}, function (err, topics) {
+    Topic.find({board: id, deleted: false}, '', {sort: 'create_at'})
+        .populate('board', 'id title topic_count create_at type')
+        .populate('author')
+        .populate('last_reply')
+        .exec(function (err, topics) {
         if (err) {
             return cb(err);
         }
@@ -172,23 +176,26 @@ exports.getTopicsByBoardId = function (id, cb) {
             return cb(null, []);
         }
 
-        var proxy = new EventProxy();
-        proxy.after('reply_find', topics.length, function () {
-            cb(null, topics);
-        });
-        for (var j = 0; j < topics.length; j++) {
-            (function (i) {
-                var author = topics[i].user_id;
-                topics[i] = structureHelper.image(topics[i]);
-                User.getUserById(author, function (err, author) {
-                    if (err) {
-                        return cb(err);
-                    }
-                    topics[i].creator = author || {_id: ''};
-                    return proxy.emit('reply_find');
-                });
-            })(j);
-        }
+        topics = _.compact(topics); // 删除不合规的 topic
+        return cb(null, topics);
+
+        // var proxy = new EventProxy();
+        // proxy.after('reply_find', topics.length, function () {
+        //     cb(null, topics);
+        // });
+        // for (var j = 0; j < topics.length; j++) {
+        //     (function (i) {
+        //         var author = topics[i].user_id;
+        //         topics[i] = structureHelper.image(topics[i]);
+        //         User.getUserById(author, function (err, author) {
+        //             if (err) {
+        //                 return cb(err);
+        //             }
+        //             topics[i].creator = author || {_id: ''};
+        //             return proxy.emit('reply_find');
+        //         });
+        //     })(j);
+        // }
     });
 };
 
@@ -347,13 +354,14 @@ exports.reduceCount = function (id, callback) {
     });
 };
 
-exports.newAndSave = function (title, content, forum, authorId, callback) {
+exports.newAndSave = function (title, content, forum, authorId, client_info, callback) {
     var topic = new Topic();
     topic.title = title;
     topic.content = content;
     topic.forum = forum;
     topic.author = authorId;
     topic.type = 'text';
+    topic.client_info = client_info;
     topic.save(callback);
 };
 

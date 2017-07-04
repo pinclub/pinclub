@@ -4,6 +4,7 @@ var config = require('../config');
 var User = require('../proxy').User;
 var mail = require('../common/mail');
 var tools = require('../common/tools');
+var cache = require('../common/cache');
 var utility = require('utility');
 var authMiddleWare = require('../middlewares/auth');
 var uuid = require('node-uuid');

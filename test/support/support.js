@@ -38,7 +38,7 @@ var createForum = exports.createForum = function (authorId, type, callback) {
 
 var createTopic = exports.createTopic = function (authorId, forum, callback) {
     var key = new Date().getTime() + '_' + randomInt();
-    Topic.newAndSave('topic title' + key, 'test topic content' + key, forum, authorId, callback);
+    Topic.newAndSave('topic title' + key, 'test topic content' + key, forum, authorId, 'pc', callback);
 };
 
 var createImage = exports.createImage = function (authorId, board, callback) {

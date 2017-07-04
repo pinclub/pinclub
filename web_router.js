@@ -18,9 +18,11 @@ var image = require('./controllers/image');
 var board = require('./controllers/board');
 var forum = require('./controllers/forum');
 var reply = require('./controllers/reply');
+var online = require('./controllers/online');
 var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
 var auth = require('./middlewares/auth');
+var onlineM = require('./middlewares/online');
 var limit = require('./middlewares/limit');
 var github = require('./controllers/github');
 var search = require('./controllers/search');
@@ -36,7 +38,7 @@ var router = express.Router();
 //router.get('/', site.index);
 
 // pic home page
-router.get('/', site.index);
+router.get('/', onlineM.add, site.index);
 
 // sitemap
 router.get('/sitemap.xml', site.sitemap);
@@ -45,7 +47,7 @@ router.get('/app/download', site.appDownload);
 
 // sign controller
 if (config.allow_sign_up) {
-  router.get('/signup', sign.showSignup);  // 跳转到注册页面
+  router.get('/signup', onlineM.add, sign.showSignup);  // 跳转到注册页面
   router.post('/signup', sign.signup);  // 提交注册信息
 } else {
   // 进行github验证
@@ -54,24 +56,24 @@ if (config.allow_sign_up) {
   });
 }
 router.post('/signout', sign.signout);  // 登出
-router.get('/signin', sign.showLogin);  // 进入登录页面
+router.get('/signin', onlineM.add, sign.showLogin);  // 进入登录页面
 router.post('/signin', sign.login);  // 登录校验
 router.get('/active_account', sign.activeAccount);  //帐号激活
 
-router.get('/search_pass', sign.showSearchPass);  // 找回密码页面
+router.get('/search_pass', onlineM.add, sign.showSearchPass);  // 找回密码页面
 router.post('/search_pass', sign.updateSearchPass);  // 更新密码
-router.get('/reset_pass', sign.resetPass);  // 进入重置密码页面
+router.get('/reset_pass', onlineM.add, sign.resetPass);  // 进入重置密码页面
 router.post('/reset_pass', sign.updatePass);  // 更新密码
 
 // user controller
-router.get('/user/:name', user.index); // 用户个人主页
-router.get('/setting', auth.userRequired, user.showSetting); // 用户个人设置页
+router.get('/user/:name', onlineM.add, user.index); // 用户个人主页
+router.get('/setting', onlineM.add, auth.userRequired, user.showSetting); // 用户个人设置页
 router.post('/setting', auth.userRequired, user.setting); // 提交个人信息设置
-router.get('/stars', user.listStars); // 显示所有达人列表页
-router.get('/users/top100', user.top100);  // 显示积分前一百用户页
-router.get('/user/:name/collections', user.listCollectedTopics);  // 用户收藏的所有话题页
-router.get('/user/:name/topics', user.listTopics);  // 用户发布的所有话题页
-router.get('/user/:name/replies', user.listReplies);  // 用户参与的所有回复页
+router.get('/stars', onlineM.add, user.listStars); // 显示所有达人列表页
+router.get('/users/top100', onlineM.add, user.top100);  // 显示积分前一百用户页
+router.get('/user/:name/collections', onlineM.add, user.listCollectedTopics);  // 用户收藏的所有话题页
+router.get('/user/:name/topics', onlineM.add, user.listTopics);  // 用户发布的所有话题页
+router.get('/user/:name/replies', onlineM.add, user.listReplies);  // 用户参与的所有回复页
 router.post('/user/:name/star', auth.adminRequired, user.toggleStar); // 把某用户设为达人
 router.post('/user/:name/cancel_star', auth.adminRequired, user.toggleStar);  // 取消某用户的达人身份
 router.post('/user/:name/block', auth.adminRequired, user.block);  // 禁言某用户
@@ -81,14 +83,14 @@ router.get('/user/:name/board', auth.userRequired, user.board);  // 删除某用
 router.get('/user/:name/score', auth.userRequired, user.score);  // 删除某用户所有发言
 
 // message controler
-router.get('/my/messages', auth.userRequired, message.index); // 用户个人的所有消息页
+router.get('/my/messages', onlineM.add, auth.userRequired, message.index); // 用户个人的所有消息页
 
 // topic
 
 // 新建文章界面
-router.get('/topic/create', auth.userRequired, topic.create);
+router.get('/topic/create', onlineM.add, auth.userRequired, topic.create);
 
-router.get('/topic/:tid', topic.index);  // 显示某个话题
+router.get('/topic/:tid', onlineM.add, topic.index);  // 显示某个话题
 router.post('/topic/:tid/top', auth.adminRequired, topic.top);  // 将某话题置顶
 router.post('/topic/:tid/good', auth.adminRequired, topic.good); // 将某话题加精
 router.get('/topic/:tid/edit', auth.userRequired, topic.showEdit);  // 编辑某话题
@@ -123,9 +125,9 @@ router.get('/image/create/bookmarklet', auth.userSigninRequired, image.create);
 router.post('/image/create/bookmarklet', auth.userSigninRequired, image.createFromChrome);
 
 // board 列表
-router.get('/boards', auth.userSigninRequired, board.index);
+router.get('/boards', onlineM.add, auth.userSigninRequired, board.index);
 router.post('/boards', auth.userSigninRequired, board.create);
-router.get('/boards/:board_id', board.show);
+router.get('/boards/:board_id', onlineM.add, board.show);
 router.post('/boards/:board_id/edit', auth.userSigninRequired, board.edit);
 
 // upload
@@ -133,7 +135,7 @@ router.post('/upload', auth.userRequired, topic.upload); //上传图片
 router.post('/imageupload', auth.userRequired, image.upload); //上传图片
 
 // static
-router.get('/about', staticController.about);
+router.get('/about', onlineM.add, staticController.about);
 router.get('/robots.txt', staticController.robots);
 
 //rss
@@ -154,6 +156,8 @@ router.post('/auth/github/create', limit.peripperday('create_user_per_ip', confi
 router.get('/auth/wechat', configMiddleware.wechat, passport.authenticate('wechat'));
 
 router.get('/search', search.index);
+
+router.get('/online', onlineM.add, online.index);
 
 // admin dashboard
 router.get('/admin/dashboard', auth.adminRequired, dashboard.dashboard);

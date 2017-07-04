@@ -45,7 +45,10 @@ var TopicSchema = new Schema({
 
     profile_source: {type: String, default: false},
     //标签
-    tags: [String]
+    tags: [String],
+    // 发布topic的设备信息
+    // {device:'pc', os:'Ios', brower:'chrome (v1356.34)'}
+    client_info: {type: Schema.Types.Mixed}
 });
 
 TopicSchema.plugin(BaseModel);

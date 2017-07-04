@@ -1,0 +1,31 @@
+<%- include ../navbar.html %>
+
+<div id="category_nav_bar" class="wrapper row">
+    <div class="col-md-12">
+        <div class="title" style="border-radius: 0px;">
+            在线用户列表 (<%=list.length%>)
+        </div>
+    </div>
+</div>
+
+<div id="pic_list" class="grid row">
+
+    <% for(var i = 0; i < list.length; i++) {
+    var item = list[i].split(':');
+    %>
+        <div style="background-image: url('<%=item[2]%>');"
+             data-seq="<%=item[0]%>" class="pin wfc user">
+            <div class="image"><a href="/user/<%=item[1]%>" title="<%=item[1]%>" class="avatar"><img
+                    src="<%=item[2]%>" width="120"
+                    height="120" data-baiduimageplus-ignore="1"></a></div>
+            <div class="profile">
+                <a href="/user/<%=item[1]%>" class="username"><%=item[1]%></a>
+                <div class="description"></div>
+                <div class="buttons">
+                    <a data-urlname="<%=item[0]%>" href="/user/<%=item[1]%>" class="btn">查看</a>
+                    <button data-urlname="<%=item[0]%>" class="btn">关注</button>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>

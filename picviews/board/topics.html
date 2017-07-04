@@ -1,36 +1,59 @@
 <%- Loader('/public/stylesheets/pics.min.css')
 .css('/public/stylesheets/pics.less')
 .css('/public/stylesheets/users.less')
+.css('/public/stylesheets/board_topics.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
 
 <%- include ../navbar.html %>
 
-<div class="wrapper row">
-    <div class="col-md-12">
-        <div class="panel" style="border-radius: 0px;">
-            <%= board.title %>
+<div id="board_card" class="wrapper row">
+    <div class="inner">
+        <div class="head-line"><h1 class="board-name"><%= board.title %></h1>
+            <div class="board-category">
+                <span>所属分类：</span><a href="/favorite/photography/" class="brown-link x">摄影</a>
+            </div>
         </div>
+        <div class="board-description">
+            <%= board.content || '' %>
+        </div>
+        <div class="action-buttons"><a data-id="<%= board.id %>" href="#" onclick="return false;"
+                                       class="follow-board  btn rbtn"><span class="text"> 关注此画板</span></a><a
+                data-id="<%= board.content %>" href="#" onclick="return false;" class="like-board btn-with-icon btn"><i
+                class="class"></i><span class="text">2喜欢</span></a>
+        </div>
+    </div>
+    <div class="bar"><a href="/user/<%= board.creator.loginname%>" class="user-unit x"><img
+            src="<%= board.creator.avatar_url%>"
+            data-baiduimageplus-ignore="1"><span class="name"><%= board.creator.loginname%></span></a>
+        <div class="tabs"><a onclick="return false;" class="tab pins ">被12次Get</a><a
+                onclick="return false;" class="tab ">被3489人关注</a></div>
     </div>
 </div>
 
 <div id="pic_list" class="grid row">
     <div class="grid-sizer"></div>
     <% for(var i = 0; i < topics.length; i++) {
-        var item = topics[i];
+    var item = topics[i];
     %>
 
     <div class="grid-item" id="<%= item.id %>">
         <div class="actions">
             <div class="right">
-                <a data-id="<%= item.id %>" title="喜欢" href="javascript:void(0);" class="like btn-with-icon btn btn14 like-btn<% if (item.liked) { %> unlike<% } %>"><i class="heart"></i><span class="text"> 2</span></a>
+                <a data-id="<%= item.id %>" title="喜欢" href="javascript:void(0);"
+                   class="like btn-with-icon btn btn14 like-btn<% if (item.liked) { %> unlike<% } %>"><i
+                        class="heart"></i><span class="text"> 2</span></a>
             </div>
             <div class="left">
-                <a href="#<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>" data-src="<%= item.image %>" class="btn btn14 wbtn get-pic-btn"><span class="text">Get</span></a>
+                <a href="#<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>"
+                   data-src="<%= item.image %>" class="btn btn14 wbtn get-pic-btn"><span class="text">Get</span></a>
             </div>
         </div>
-        <a href="#<%= item.id %>" id="pic_<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>" data-src="<% if (!!item.image_fixed) {%><%= item.image_fixed %><% } else { %><%= item.image %><%}%>" class="preview-image preview_image_btn">
-            <img src="<%if (!!item.image_430) {%><%= item.image_430%><% } else { %><%= item.image %> <% }%>" title="<%= item.title%>" alt="<%= item.title%>"/>
+        <a href="#<%= item.id %>" id="pic_<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>"
+           data-src="<% if (!!item.image_fixed) {%><%= item.image_fixed %><% } else { %><%= item.image %><%}%>"
+           class="preview-image preview_image_btn">
+            <img src="<%if (!!item.image_430) {%><%= item.image_430%><% } else { %><%= item.image %> <% }%>"
+                 title="<%= item.title%>" alt="<%= item.title%>"/>
             <div class="cover"></div>
         </a>
         <p class="stats less">
@@ -39,7 +62,8 @@
             <!--DONE (hhdem) 修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果-->
             <span class="color-stack">
                 <% for(var j = 0; j < item.image_colors.length; j++) { %>
-                    <span class="color-item index<%= j %>" title="<%= item.image_colors[j]%>" style="background-color: <%= item.image_colors[j]%>;">
+                    <span class="color-item index<%= j %>" title="<%= item.image_colors[j]%>"
+                          style="background-color: <%= item.image_colors[j]%>;">
                         <i style="background: none;margin: 0;"></i>
                     </span>
                 <% }%>
@@ -51,14 +75,17 @@
         </p>
         <div class="convo attribution clearfix">
             <a href="#" title="hhdem" rel="nofollow" class="img x">
-                <img src="<%= item.author.avatar_url?item.author.avatar_url:item.author.avatar%>" data-baiduimageplus-ignore="1" class="avt">
+                <img src="<%= item.author.avatar_url?item.author.avatar_url:item.author.avatar%>"
+                     data-baiduimageplus-ignore="1" class="avt">
             </a>
             <div class="text">
                 <div class="inner">
                     <div class="line">
-                        <a href="/user/<%= item.author.loginname%>" rel="" class="author x"><%= item.author.loginname%></a>&nbsp;Get到
+                        <a href="/user/<%= item.author.loginname%>" rel="" class="author x"><%=
+                            item.author.loginname%></a>&nbsp;Get到
                     </div>
-                    <div class="line"><a href="/boards/<%= item.board.id || item.board._id%>" rel="" class="x"><%= item.board.title%></a></div>
+                    <div class="line"><a href="/boards/<%= item.board.id || item.board._id%>" rel="" class="x"><%=
+                        item.board.title%></a></div>
                     <a title="评论" class="replyButton"></a>
                 </div>
             </div>
@@ -78,17 +105,17 @@
 <script>
 
     var gridMasonry = $('.grid').masonry({
-        // options...
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-sizer',
-        gutter: 10,
-        horizontalOrder: true,
+            // options...
+            itemSelector: '.grid-item',
+            columnWidth: '.grid-sizer',
+            gutter: 10,
+            horizontalOrder: true,
         <% if (topics.length > 6) { %>
         fitWidth: true
         <% } %>
     });
     $(document).ready(function () {
-        gridMasonry.imagesLoaded().progress( function() {
+        gridMasonry.imagesLoaded().progress(function () {
             gridMasonry.masonry('layout');
         });
     });

@@ -10,7 +10,8 @@ var BoardSchema = new Schema({
     type: {type: String, default: 'public', enum: ['private', 'public']},
     topic_count: {type: Number, default: 0},
     collect_count: {type: Number, default: 0},
-    cover: {type: String} // 封面
+    cover: {type: String}, // 封面
+    content: {type: String}
 });
 
 BoardSchema.plugin(BaseModel);

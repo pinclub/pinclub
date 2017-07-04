@@ -7,6 +7,7 @@
  */
 
 var validator = require('validator');
+var _ = require('lodash');
 
 var at = require('../common/at');
 var User = require('../proxy').User;
@@ -16,10 +17,9 @@ var TopicCollect = require('../proxy').TopicCollect;
 var EventProxy = require('eventproxy');
 var store = require('../common/store');
 var config = require('../config');
-var _ = require('lodash');
 var cache = require('../common/cache');
 var logger = require('../common/logger');
-var structure_helper = require('../common/structure_helper');
+var tools = require('../common/tools');
 
 /**
  * Topic page
@@ -133,7 +133,6 @@ exports.put = function (req, res, next) {
     var title = validator.trim(req.body.title);
     var forum = req.body.forum;
     var content = validator.trim(req.body.t_content);
-
     // 验证
     var editError;
     if (title === '') {
@@ -158,8 +157,8 @@ exports.put = function (req, res, next) {
             });
         });
     } else {
-
-        Topic.newAndSave(title, content, forum, req.session.user._id, function (err, topic) {
+        var client_info = tools.client_info(req);
+        Topic.newAndSave(title, content, forum, req.session.user._id, client_info, function (err, topic) {
             if (err) {
                 return next(err);
             }

@@ -8,6 +8,7 @@ var _ = require('lodash');
 var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
 var structureHelper = require('../../common/structure_helper');
+var tools = require('../../common/tools');
 var validator = require('validator');
 
 
@@ -212,8 +213,8 @@ var create = function (req, res, next) {
         res.status(400);
         return res.send({success: false, error_msg: editError});
     }
-
-    TopicProxy.newAndSave(title, content, forum, req.user.id, function (err, topic) {
+    var client_info = tools.client_info(req);
+    TopicProxy.newAndSave(title, content, forum, req.user.id, client_info, function (err, topic) {
         if (err) {
             return next(err);
         }

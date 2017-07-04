@@ -54,7 +54,7 @@ exports.show = function (req, res, next) {
                 err: result.useFirstErrorOnly().mapped()
             }).end();
         }
-        Board.getBoard(req.params.board_id, function (err, board) {
+        Board.getFullBoard(req.params.board_id, function (err, msg, board, creator, topics) {
             if (err) {
                 return next(err);
             }
@@ -64,16 +64,10 @@ exports.show = function (req, res, next) {
                     err_message: 'Board不存在'
                 }).end();
             }
-            Topic.getImagesByQuery({
-                board: req.params.board_id
-            }, {}, function (err, topics) {
-                if (err) {
-                    return next(err);
-                }
-                res.render('board/topics', {
-                    board: board,
-                    topics: topics
-                });
+            board.creator = creator;
+            res.render('board/topics', {
+                board: board,
+                topics: topics
             });
         });
     });

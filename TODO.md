@@ -29,35 +29,35 @@
 | image.js | 373 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
 | image.js | 482 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
 | image.js | 579 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
-| topic.js | 30 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
+| topic.js | 31 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
 | api/v1/message.test.js | 27 | [@hhdem](https://github.com/hhdem) ~~accessToken 的问题导致测试用例失败~~
 | api/v2/image.test.js | 104 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传两张图片后, 进行 hamming 距离计算~~
-| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
-| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
 | common/counter.test.js | 54 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 创建主题后增加用户积分和主题数~~
 | common/counter.test.js | 92 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 删除主题后减少用户积分和主题数~~
 | common/counter.test.js | 180 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 收藏主题后增加用户收藏主题数~~
 | common/counter.test.js | 212 | [@hhdem](https://github.com/hhdem) ~~添加测试用例: 取消收藏主题后减少用户收藏主题数~~
-| index.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
-| index_pic.html | 9 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
-| index_pic.html | 13 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
-| index_pic.html | 66 | [@hhdem](https://github.com/hhdem) ~~首页中板块切换修改为ajax请求~~
-| board/topics.html | 45 | [@hhdem](https://github.com/hhdem) ~~修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果~~
-| dashboard/boards.html | 103 |  ~~管理员Board列表，点击修改弹出修改模态框并可修改Board信息~~
+| controllers/image.test.js | 68 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
+| controllers/image.test.js | 108 | [@hhdem](https://github.com/hhdem) ~~增加 Image 图片上传测试用例: 上传后计数统计是否正确~~
+| index.html | 11 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
+| index.html | 15 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
+| index.html | 68 | [@hhdem](https://github.com/hhdem) ~~首页中板块切换修改为ajax请求~~
+| board/topics.html | 39 | [@hhdem](https://github.com/hhdem) ~~修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果~~
+| dashboard/boards.html | 104 |  ~~管理员Board列表，点击修改弹出修改模态框并可修改Board信息~~
 | dashboard/forums.html | 1 | [@hhdem](https://github.com/hhdem) ~~管理员面板管理页面~~
 | topic/_pic_box.html | 1 | [@hhdem](https://github.com/hhdem) ~~点击图片Box, 弹出浏览图片的modal, 查看图片详情~~
 | topic/_pic_box.html | 2 | [@hhdem](https://github.com/hhdem) ~~Get 图片功能按钮实现~~
 | topic/_pic_box.html | 3 | [@hhdem](https://github.com/hhdem) ~~喜欢图片功能按钮实现~~
 | topic/_pic_box.html | 4 | [@hhdem](https://github.com/hhdem) ~~图片发布人信息显示, 目前为写死~~
 | topic/_pic_box.html | 22 | [@hhdem](https://github.com/hhdem) ~~修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果~~
-| topic/_pic_create_modal.html | 3 | [@hhdem](https://github.com/hhdem) ~~modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口~~
-| topic/_pic_create_modal.html | 4 | [@hhdem](https://github.com/hhdem) ~~点击上传图片后弹出的模态框中确认上传按钮样式错误~~
-| topic/_pic_create_modal.html | 5 | [@hhdem](https://github.com/hhdem) ~~chrome 插件直接采集~~
-| topic/_pic_create_modal.html | 6 | [@hhdem](https://github.com/hhdem) ~~弹出层上传文件, 文件只能单选, 默认描述是文件名~~
-| topic/_templates.html | 12 | [@hhdem](https://github.com/hhdem) ~~点击图片Box, 弹出浏览图片的modal, 图片 Board 信息显示功能, Board统计信息和 Board 中的图片列表~~
+| topic/_pic_create_modal.html | 8 | [@hhdem](https://github.com/hhdem) ~~modal 层会不定时的覆盖屏幕区域,点击会弹出选择图片窗口~~
+| topic/_pic_create_modal.html | 9 | [@hhdem](https://github.com/hhdem) ~~点击上传图片后弹出的模态框中确认上传按钮样式错误~~
+| topic/_pic_create_modal.html | 10 | [@hhdem](https://github.com/hhdem) ~~chrome 插件直接采集~~
+| topic/_pic_create_modal.html | 11 | [@hhdem](https://github.com/hhdem) ~~弹出层上传文件, 文件只能单选, 默认描述是文件名~~
+| topic/_pic_preview_modal.html | 62 | [@hhdem](https://github.com/hhdem) ~~点击图片Box, 弹出浏览图片的modal, 图片 Board 信息显示功能, Board统计信息和 Board 中的图片列表~~
 | user/index.html | 1 | [@hhdem](https://github.com/hhdem) ~~用户首页中列表显示错误~~
 | user/index.html | 2 | [@hhdem](https://github.com/hhdem) ~~用户首页中样式调整~~
-| user/index.html | 84 | [@hhdem](https://github.com/hhdem) ~~用户信息页面中板块切换修改为ajax请求~~
+| user/index.html | 86 | [@hhdem](https://github.com/hhdem) ~~用户信息页面中板块切换修改为ajax请求~~
+| _pic_preview_modal.less | 2 | [@hhdem](https://github.com/hhdem) ~~目前只有点击右上角的Close才能关闭 查看 窗口, 需要点击白色遮罩层也要关闭 查看 窗口~~
 | pics.less | 787 | [@hhdem](https://github.com/hhdem) ~~目前只有点击右上角的Close才能关闭 查看 窗口, 需要点击白色遮罩层也要关闭 查看 窗口~~
 | style.less | 63 | [@hhdem](https://github.com/hhdem) ~~文章详情查看的时候底色没了~~
 
@@ -95,21 +95,21 @@
 | user.js | 437 |  点击首页Board数量，进入用户 Board 列表页面
 | user.js | 444 |  点击首页积分，进入用户 积分明细页面 的图片列表页面
 | controllers/image.test.js | 119 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
-| index_pic.html | 14 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
-| index_pic.html | 51 |  Signin with wechat and QQ account
-| board/_board_create_search.html | 1 |  Tag添加
+| index.html | 16 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
+| index.html | 53 |  Signin with wechat and QQ account
+| board/_board_create_search.html | 6 |  Tag添加
 | board/index.html | 45 |  用户修改Board信息
 | dashboard/boards.html | 1 |  管理员的Board列表页功能
-| dashboard/boards.html | 77 |  管理员Board列表，搜索功能
-| dashboard/boards.html | 88 |  管理员Board列表，点击删除Board可以删除选定Board
-| dashboard/boards.html | 112 |  用户修改Board信息
+| dashboard/boards.html | 78 |  管理员Board列表，搜索功能
+| dashboard/boards.html | 89 |  管理员Board列表，点击删除Board可以删除选定Board
+| dashboard/boards.html | 113 |  用户修改Board信息
 | dashboard/index.html | 1 |  管理员面板页面，统计数据获取，
 | dashboard/users.html | 1 |  管理员的用户列表页面中加入，禁言、修改
 | dashboard/users.html | 2 |  Tab页切换修改为ajax请求
-| dashboard/users.html | 80 |  管理员用户列表，点击添加用户弹出新增模态框，创建用户
-| dashboard/users.html | 81 |  管理员用户列表，点击删除用户可以删除选定用户
-| dashboard/users.html | 98 |  管理员用户列表，点击修改弹出修改模态框并可修改用户信息
-| topic/_templates.html | 27 |  关注board按钮实现
+| dashboard/users.html | 81 |  管理员用户列表，点击添加用户弹出新增模态框，创建用户
+| dashboard/users.html | 82 |  管理员用户列表，点击删除用户可以删除选定用户
+| dashboard/users.html | 99 |  管理员用户列表，点击修改弹出修改模态框并可修改用户信息
+| topic/_pic_preview_modal.html | 77 |  关注board按钮实现
 | user/_index_boards.html | 1 |  用户 Board 列表页面
-| user/card.html | 44 |  Signin with wechat and QQ account
+| user/card.html | 43 |  Signin with wechat and QQ account
 | user/index.html | 3 |  我的页面中增加 Board 管理

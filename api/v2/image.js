@@ -9,6 +9,7 @@ var config = require('../../config');
 var EventProxy = require('eventproxy');
 var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
+var tools = require('../../common/tools');
 var structureHelper = require('../../common/structure_helper');
 var validator = require('validator');
 
@@ -366,7 +367,9 @@ exports.getImage = function (req, res, next) {
     });
     // 生成新的topic对象
     ep.on('topic_from', function(fromTopic) {
+        var client_info = tools.client_info(req);
         var topicImage = _.pick(fromTopic, structureHelper.image_copy_fields);
+        topicImage.client_info = client_info;
         topicImage.title = desc;
         topicImage.author = currentUser;
         topicImage.get_from_topic = fromTopic._id;
