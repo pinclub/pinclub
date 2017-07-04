@@ -19,28 +19,28 @@ exports.index = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
 
-  cache.get('rss', ep.done(function (rss) {
-    if (!config.debug && rss) {
-      res.send(rss);
-    } else {
-      var opt = {
-        limit: config.rss.max_rss_items,
-        sort: '-create_at',
-      };
-      Topic.getTopicsByQuery({tab: {$nin: ['dev']}}, opt, function (err, topics) {
-        if (err) {
-          return next(err);
-        }
-        var rss_obj = {
-          _attr: { version: '2.0' },
-          channel: {
-            title: config.rss.title,
-            link: config.rss.link,
-            language: config.rss.language,
-            description: config.rss.description,
-            item: []
-          }
-        };
+    cache.get('rss', ep.done(function (rss) {
+        if (!config.debug && rss) {
+            res.send(rss);
+        } else {
+            var opt = {
+                limit: config.rss.max_rss_items,
+                sort: '-create_at',
+            };
+            Topic.getTopicsByQuery({tab: {$nin: ['dev']}}, opt, function (err, topics) {
+                if (err) {
+                    return next(err);
+                }
+                var rss_obj = {
+                    _attr: {version: '2.0'},
+                    channel: {
+                        title: config.rss.title,
+                        link: config.rss.link,
+                        language: config.rss.language,
+                        description: config.rss.description,
+                        item: []
+                    }
+                };
 
                 topics.forEach(function (topic) {
                     rss_obj.channel.item.push({
