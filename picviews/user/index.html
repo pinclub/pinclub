@@ -10,7 +10,7 @@
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                         <td width="73" valign="top" align="center" class="user_big_avatar">
-                            <img src="<%= proxy(user.avatar_url) %>" title="<%= user.loginname %>"/>
+                            <img src="<%= avatarPath(user.avatar_url, 'fixed') %>" title="<%= user.loginname %>"/>
                         </td>
                         <td width="10"></td>
                         <td width="auto" valign="top" align="left">

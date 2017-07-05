@@ -2,7 +2,7 @@
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td width="24" valign="middle" align="center">
-                <a href="/user/<%= topic.author.loginname%>"><img src="<%= topic.author.avatar_url%>" class="avatar" border="0" align="default" style="max-width: 24px; max-height: 24px;"></a>
+                <a href="/user/<%= topic.author.loginname%>"><img src="<%= avatarPath(topic.author.avatar_url, 24)%>" class="avatar" border="0" align="default" style="max-width: 24px; max-height: 24px;"></a>
             </td>
             <td width="10"></td>
             <td width="auto" valign="middle">

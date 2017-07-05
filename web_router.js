@@ -133,6 +133,7 @@ router.post('/boards/:board_id/edit', auth.userSigninRequired, board.edit);
 // upload
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
 router.post('/imageupload', auth.userRequired, image.upload); //上传图片
+router.post('/avatarupload', auth.userRequired, image.uploadAvatar); //上传头像
 
 // static
 router.get('/about', onlineM.add, staticController.about);

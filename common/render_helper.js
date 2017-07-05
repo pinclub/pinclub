@@ -16,6 +16,7 @@ var config = require('../config');
 var validator = require('validator');
 var jsxss = require('xss');
 var multiline = require('multiline');
+
 // Set default options
 var md = new MarkdownIt();
 
@@ -84,6 +85,16 @@ exports.proxy = function (url) {
     return url;
     // 当 google 和 github 封锁严重时，则需要通过服务器代理访问它们的静态资源
     // return '/agent?url=' + encodeURIComponent(url);
+};
+
+exports.avatarPath = function (avatar, size) {
+    if (!avatar || !size) {
+        return avatar;
+    }
+    let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+    let path = avatar.substring(0, avatar.lastIndexOf('.'));
+    let file_path = path + '_' + size + '.' + extname;
+    return file_path;
 };
 
 // 为了在 view 中使用

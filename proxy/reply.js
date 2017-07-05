@@ -53,7 +53,7 @@ exports.getReplyById = function (id, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getRepliesByTopicId = function (id, cb) {
-  Reply.find({topic: id, deleted: false}, '', {sort: 'create_at'}).populate('author', 'loginname avatar_url id email').exec(function (err, replies) {
+  Reply.find({topic: id, deleted: false}, '', {sort: 'create_at'}).populate('author').exec(function (err, replies) {
     if (err) {
       return cb(err);
     }

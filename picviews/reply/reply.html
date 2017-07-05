@@ -3,7 +3,7 @@
     <tr>
         <td width="48" valign="top" align="center">
             <a href="/user/<%= reply.author.loginname %>" class="user_avatar">
-                <img src="<%= proxy(reply.author.avatar_url) %>" title="<%= reply.author.loginname %>"/></a>
+                <img src="<%= avatarPath(reply.author.avatar_url, 54) %>" title="<%= reply.author.loginname %>"/></a>
         </td>
         <td width="10" valign="top"></td>
         <td width="auto" valign="top" align="left">

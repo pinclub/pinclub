@@ -340,7 +340,7 @@ function upload (req, res, next) {
             at.sendMessageToMentionUsers(topicImage.title, topicImage._id, topicImage.author);
         });
 
-        store.upload(file, {filename: filename, userId: req.session.user._id}, function (err, result) {
+        store.upload(file, {filename: filename, userId: req.session.user._id, filesize: [86, 430]}, function (err, result) {
 
             if (err) {
                 return next(err);
@@ -546,7 +546,8 @@ exports.createFromChrome = function (req, res, next) {
                 }
                 store.upload(request(req.body.media), {
                     filename: filename,
-                    userId: req.session.user._id
+                    userId: req.session.user._id,
+                    filesize: [86, 430]
                 }, function (err, result) {
                     if (err) {
                         return next(err);
@@ -604,3 +605,48 @@ exports.createFromChrome = function (req, res, next) {
         });
     });
 };
+
+function uploadAvatar (req, res, next) {
+    var isFileLimit = false;
+
+    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+        file.on('limit', function () {
+            isFileLimit = true;
+
+            res.json({
+                success: false,
+                msg: 'File size too large. Max is ' + config.file_limit
+            });
+            return;
+        });
+
+        store.upload(file, {filename: filename, userId: req.session.user._id, filesize: [54, 34, 24]}, function (err, result) {
+
+            if (err) {
+                return next(err);
+            }
+            if (isFileLimit) {
+                return;
+            }
+            User.getUserById(req.session.user._id, function (err, user) {
+                user.avatar = result.url;
+                user.save();
+                req.session.user.avatar = result.url;
+                res.json({
+                    success: true,
+                    data: [result]
+                });
+            });
+        });
+
+    });
+
+    req.busboy.on('finish', function() {
+        console.log('Done parsing form!');
+
+    });
+
+    req.pipe(req.busboy);
+}
+
+exports.uploadAvatar = uploadAvatar;

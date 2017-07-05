@@ -55,7 +55,7 @@
         <div class='header topic_header'>
             <div class="pull-right">
                 <a class="user_avatar" href="/user/<%= topic.author.loginname %>">
-                    <img src="<%= topic.author.avatar_url %>"
+                    <img src="<%= avatarPath(topic.author.avatar_url, 54) %>"
                          title="<%= topic.author.loginname %>"
                     />
                 </a>

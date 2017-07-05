@@ -4,7 +4,7 @@
 
         <div class="profile-basic">
             <a href="/user/<%= current_user.loginname %>" title="<%= current_user.loginname %>" class="img x loaded" style="text-indent: 0px;">
-                <img width="54" height="54" src="<%= current_user.avatar_url %>" data-baiduimageplus-ignore="1">
+                <img width="54" height="54" src="<%= avatarPath(current_user.avatar_url, 54) %>" data-baiduimageplus-ignore="1">
             </a>
             <a href="/user/<%= current_user.loginname %>" class="userlink"><%= current_user.loginname %></a>
             <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>

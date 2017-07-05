@@ -1,136 +1,385 @@
-<%- partial('../sidebar') %>
+<%- Loader('/public/stylesheets/_pic_create_modal.min.css')
+.css('/public/stylesheets/_pic_create_modal.less')
+.css('/public/stylesheets/_avatar_upload.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
 <%- include ../navbar.html %>
+<div id='sidebar'>
+    <div class='panel'>
+        <div class='innerTopic '>
+            <div class="form-horizontal">
+                <div id="avatar_list" class='form-group'>
+                    <img width="54" height="54" src="<%= avatarPath(avatar_url, 54) %>" data-baiduimageplus-ignore="1"
+                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                    &nbsp;
+                    <img width="34" height="34" src="<%= avatarPath(avatar_url, 34) %>" data-baiduimageplus-ignore="1"
+                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                    &nbsp;
+                    <img width="24" height="24" src="<%= avatarPath(avatar_url, 24) %>" data-baiduimageplus-ignore="1"
+                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                </div>
+                <div class='form-group '>
+                    <a id='upload_avatar_btn' data-toggle="modal" data-target="#image_upload" class="btn wbtn"><strong>
+                        上传新头像</strong><span></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='panel'>
+        <div class='innerTopic'>
+            <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
+                <div class='form-group'>
+                    <label class='control-label' for='old_pass'>当前密码</label>
+
+                    <div class='controls'>
+                        <input class='form-control' type='password' id='old_pass' name='old_pass' size='30'/>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='control-label' for='new_pass'>新密码</label>
+
+                    <div class='controls'>
+                        <input class='form-control' type='password' id='new_pass' name='new_pass' size='30'/>
+                    </div>
+                </div>
+                <input type='hidden' id='action' name='action' value='change_password'/>
+                <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+
+                <div class='form-group '>
+                    <input type='submit' class='btn' data-loading-text="更改中.." value='更改密码'/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div id='content'>
-  <div class='panel'>
-    <div class='header'>
-      <ul class='breadcrumb'>
-        <li><a href='/'>主页</a></li>
-        <li class='active'>设置</li>
-      </ul>
+    <div class='panel'>
+        <div class='header'>
+            <ul class='breadcrumb'>
+                <li><a href='/'>主页</a></li>
+                <li class='active'>设置</li>
+            </ul>
+        </div>
+        <div class='innerTopic'>
+            <% if(typeof(error) !== 'undefined' && error){ %>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <strong><%= error %></strong>
+            </div>
+            <% } %>
+            <% if (typeof(success) !== 'undefined' && success) { %>
+            <div class="alert alert-success">
+                <strong><%= success %></strong>
+            </div>
+            <% } %>
+            <form id='setting_form' class='form-horizontal' action='/setting' method='post'>
+                <fieldset readonly>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='name'>用户名</label>
+
+                        <div class='col-sm-10'>
+                            <input class='form-control ' id='name' name='name' size='30' type='text' readonly='true'
+                                   value="<%= loginname %>"/>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='email'>电子邮件</label>
+
+                        <div class='col-sm-10'>
+                            <input class='form-control ' id='email' name='email' size='30' type='text'
+                                   readonly='true' value="<%= email %>"/>
+
+                            <p>同时决定了 Gravatar 头像</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='url'>个人网站</label>
+
+                        <div class='col-sm-10'>
+                            <input class='form-control' id='url' name='url' size='30' type='text'
+                                   value="<%= typeof(url) !== 'undefined' ? url : '' %>"/>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='location'>所在地点</label>
+
+                        <div class='col-sm-10'>
+                            <input class='form-control' id='location' name='location' size='30' type='text'
+                                   value="<%= typeof(location) !== 'undefined' ? location : '' %>"/>
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='weibo'>微博</label>
+
+                        <div class='col-sm-10'>
+                            <input class='form-control' id='weibo' name='weibo' size='30' type='text'
+                                   value="<%= typeof(weibo) !== 'undefined' ? weibo : '' %>"
+                                   placeholder="e.g. http://weibo.com/cnodejs"/>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='github'>GitHub</label>
+
+                        <div class='col-sm-10'>
+                            <input class='form-control' id='github' name='github' size='30' type='text'
+                                   value="<%= typeof(githubUsername) !== 'undefined' ? '@' + githubUsername : '' %>"
+                                   placeholder="@username" readonly="readonly"/>
+                            <p>请通过 GitHub 登陆 CNode 来修改此处</p>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='signature'>个性签名</label>
+
+                        <div class='col-sm-10'>
+                            <textarea class='form-control' id='signature' name='signature' size='30'><%= typeof(signature) !== 'undefined' ? signature : "" %></textarea>
+                        </div>
+                    </div>
+                    <input type='hidden' id='action' name='action' value='change_setting'/>
+                    <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+
+                    <div class='form-group'>
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <input type='submit' class='btn' data-loading-text="保存中.." value='保存设置'/>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
-    <div class='innerTopic'>
-      <% if(typeof(error) !== 'undefined' && error){ %>
-      <div class="alert alert-error">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <strong><%= error %></strong>
-      </div>
-      <% } %>
-      <% if (typeof(success) !== 'undefined' && success) { %>
-      <div class="alert alert-success">
-        <strong><%= success %></strong>
-      </div>
-      <% } %>
-      <form id='setting_form' class='form-horizontal' action='/setting' method='post'>
-        <fieldset readonly>
-        <div class='form-group'>
-          <label class='control-label' for='name'>用户名</label>
 
-          <div class='controls'>
-            <input class='form-control ' id='name' name='name' size='30' type='text' readonly='true'
-                   value="<%= loginname %>"/>
-          </div>
-        </div>
-        <div class='form-group'>
-          <label class='control-label' for='email'>电子邮件</label>
 
-          <div class='controls'>
-            <input class='form-control ' id='email' name='email' size='30' type='text'
-                   readonly='true' value="<%= email %>"/>
-
-            <p>同时决定了 Gravatar 头像</p>
-          </div>
-        </div>
-          </fieldset>
-          <fieldset>
-        <div class='form-group'>
-          <label class='control-label' for='url'>个人网站</label>
-
-          <div class='controls'>
-            <input class='form-control' id='url' name='url' size='30' type='text' value="<%= typeof(url) !== 'undefined' ? url : '' %>"/>
-          </div>
-        </div>
-        <div class='form-group'>
-          <label class='control-label' for='location'>所在地点</label>
-
-          <div class='controls'>
-            <input class='form-control' id='location' name='location' size='30' type='text'
-                   value="<%= typeof(location) !== 'undefined' ? location : '' %>"/>
-          </div>
-        </div>
-
-        <div class='form-group'>
-          <label class='control-label' for='weibo'>微博</label>
-
-          <div class='controls'>
-            <input class='form-control' id='weibo' name='weibo' size='30' type='text' value="<%= typeof(weibo) !== 'undefined' ? weibo : '' %>"
-                   placeholder="e.g. http://weibo.com/cnodejs"/>
-          </div>
-        </div>
-        <div class='form-group'>
-          <label class='control-label' for='github'>GitHub</label>
-
-          <div class='controls'>
-            <input class='form-control' id='github' name='github' size='30' type='text'
-                   value="<%= typeof(githubUsername) !== 'undefined' ? '@' + githubUsername : '' %>" placeholder="@username" readonly="readonly" />
-            <p>请通过 GitHub 登陆 CNode 来修改此处</p>
-          </div>
-        </div>
-        <div class='form-group'>
-          <label class='control-label' for='signature'>个性签名</label>
-
-          <div class='controls'>
-            <textarea class='form-control' id='signature' name='signature' size='30'><%= typeof(signature) !== 'undefined' ? signature : "" %></textarea>
-          </div>
-        </div>
-        <input type='hidden' id='action' name='action' value='change_setting'/>
-        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
-
-        <div class='form-actions'>
-          <input type='submit' class='span-primary submit_btn' data-loading-text="保存中.." value='保存设置'/>
-        </div>
-        </fieldset>
-      </form>
-    </div>
-  </div>
-
-  <div class='panel'>
-    <div class='header'>
-      <span class='col_fade'>更改密码</span>
-    </div>
-    <div class='innerTopic'>
-      <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
-        <div class='form-group'>
-          <label class='control-label' for='old_pass'>当前密码</label>
-
-          <div class='controls'>
-            <input class='form-control' type='password' id='old_pass' name='old_pass' size='30'/>
-          </div>
-        </div>
-        <div class='form-group'>
-          <label class='control-label' for='new_pass'>新密码</label>
-
-          <div class='controls'>
-            <input class='form-control' type='password' id='new_pass' name='new_pass' size='30'/>
-          </div>
-        </div>
-        <input type='hidden' id='action' name='action' value='change_password'/>
-        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
-
-        <div class='form-actions'>
-          <input type='submit' class='span-primary submit_btn' data-loading-text="更改中.." value='更改密码'/>
-        </div>
-      </form>
-    </div>
-  </div>
 </div>
 
+<div class="modal fade" id="image_upload" role="dialog" aria-hidden="true" aria-labelledby="avatarModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">上传新头像</h5>
+            </div>
+            <div class="modal-body">
+                <div id="upload_area" class="upload-area">
+                    <div class="normal">
+                        <a href="#" onclick="return false;" class="upload-btn btn btn18" for="img_input2">
+                            <span class="text"> 选择新头像</span>
+                        </a>
+
+                        <div style="margin: 10px 0 25px" class="sub">支持单张 2M 以内图片上传</div>
+                        <div style="margin-top: 20px; font-size: 12px; margin-bottom: 10px;" class="sub">
+                            [提示]请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息
+                        </div>
+
+                    </div>
+                    <div style="display: none" class="draging">
+                        <div class="note">释放鼠标以上传</div>
+                    </div>
+                    <div style="display: none" class="uploading">
+                        <div class="animate">上传中...</div>
+                    </div>
+                    <div class="dropzone dz-clickable">
+                        <div class="dz-default dz-message"><span>拖动文件到这里上传</span></div>
+                    </div>
+                </div>
+                <div id="upload_view" style="display: none">
+                    <div id="message_alert" aria-hidden="true" class="alert alert-warning" style="display: none;" role="alert" onclick="hideSelf(this)">
+                        <strong>提示</strong>
+                        <span class="alert-content"></span>
+                    </div>
+                    <div class="pin-create">
+                        <div class="preview">
+                            <div id="preview" class="image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="upload-close" class="btn" data-dismiss="modal">Close</button>
+                <button type="button" id="select-upload-again" class="btn" onclick="selectUploadAgain();">Select Again</button>
+                <button type="button" id="upload-submit" class="btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin' style='background: none;margin: 0px;'></i> Uploading">Upload Image</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%- Loader('/public/javascripts/_pic_create_modal.min.js')
+.js('/public/libs/Q.Uploader.image.all.js')
+.js('/public/libs/load-image.all.min.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
 <script type="text/javascript">
-  // qrcode generate
-//  var accessToken = "<%- accessToken %>";
-//  new QRCode(document.getElementById("access-token-qrcode"), {
-//    text: accessToken,
-//    width: 200,
-//    height: 200,
-//  });
-  // END qrcode generate
+    // qrcode generate
+    //  var accessToken = "<%- accessToken %>";
+    //  new QRCode(document.getElementById("access-token-qrcode"), {
+    //    text: accessToken,
+    //    width: 200,
+    //    height: 200,
+    //  });
+    // END qrcode generate
+    var insertImageBoardAfterCreate = true;
+
+    var _csrf = $('meta[name=csrf-token]').attr('content');
+    var uploader = new Q.Uploader({
+        url: "/avatarupload?type=file&_csrf=" + _csrf,
+        target: document.getElementById("upload_area"),
+        view: document.getElementById("preview"),
+        allows: ".jpg,.png,.gif,.bmp,.jpeg",
+        auto: false,
+        multiple: false,
+        dataType: "json",
+        data: {title: 'test'},
+        //图片缩放
+        // DONE(hhdem) 如果服务器是在win环境下, 打开图片缩放将无法成功上传
+        // scale: {
+        //     //最大图片大小(width|height)
+        //     maxWidth: 700
+        // },
+        UI: {
+            init: function () {
+                console.info('UI init method');
+            },
+            draw: function (task) {
+                var self = this,
+                    ops = self.ops,
+                    boxView = ops.view;
+
+                if (!boxView) return;
+
+                var name = task.name;
+
+                var li = '';
+                loadImage(task.file,
+                    function (img, data) {
+                        img.style.width = '54px';
+//                        var html =
+//                            '<div class="u-img"></div><span    class="u-loaded"></span><span class="u-total"></span>';
+//                        var taskId = task.id,
+//                            box = Q.createEle("div", "u-item", html);
+//
+//                        box.taskId = taskId;
+//
+//                        var boxImage = Q.getFirst(box);
+//
+//                        task.box = box;
+//                        boxImage.appendChild(img);
+//
+//                        //添加到视图中
+//                        boxView.appendChild(box);
+                        $('#preview').append(img);
+                        var img2 = cloneCanvas(img);
+                        img2.style.width = '34px';
+                        $('#preview').append(img2);
+                        var img3 = cloneCanvas(img);
+                        img3.style.width = '24px';
+                        $('#preview').append(img3);
+                    },
+                    {orientation: true} // Options
+                );
+
+
+                //self.previewImage(boxImage, task, ops);
+            },
+            update: function (task) {
+
+            }
+        },
+        on: {
+            //添加之前触发
+            add: function (task) {
+                if (task.disabled) {return alert("允许上传的文件格式为：" + this.ops.allows)}
+                $('#upload_view').show();
+                $('#upload_area').hide();
+            },
+            //图片预览后触发
+            preview: function (data) {
+                console.log(data.task.name + " : " + data.src);
+            },
+            //图片压缩后触发,如果图片或浏览器不支持压缩,则不触发
+            scale: function (data) {
+                console.log(data.task.name + " : 已压缩！");
+            },
+            //上传之前触发
+            upload: function (task) {
+                //可针对单独的任务配置参数(POST方式)
+                var boardSelected = $('#image_upload .right-part .boardlist .item.selected');
+                uploader.data = {
+                    title: $('#preview-desc').val(),
+                    board: boardSelected.data("id")
+                };
+            },
+            //上传完成后触发
+            complete: function (task) {
+                if (task.state != Q.Uploader.COMPLETE) {return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!")}
+
+                var json = task.json;
+                if (!json.success) {
+                    $('#message_alert .alert-content').html(json.msg);
+                    $('#message_alert').fadeIn();
+                    return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
+                }
+
+                console.log(task.name + ": 服务器返回 " + (task.response || ""));
+                // 把新头像插入页面
+                    var resJson = JSON.parse(task.response);
+                    var item = resJson.data[0];
+                    $("#avatar_list").html($('#preview').children('canvas'));
+
+                //this.list  为上传任务列表
+                //this.index 为当前上传任务索引
+                if (this.index >= this.list.length - 1) {
+                    //所有任务上传完成
+                    console.log("所有任务上传完成：" + new Date());
+                    $('#image_upload').modal('hide');
+                    $('#upload-submit').button('reset');
+                }
+            }
+
+        }
+    });
+
+    // 开始上传图片
+    document.getElementById("upload-submit").onclick = function () {
+        var $this = $(this);
+        $this.button('loading');
+        uploader.start();
+    };
+
+    $('#image_upload').on('hidden.bs.modal', function (e) {
+        selectUploadAgain();
+    });
+    $('#image_upload').on('hide.bs.modal', function (e) {
+        selectUploadAgain();
+    });
+
+    function isInsertImageBoardAfterCreate (isInsert) {
+        insertImageBoardAfterCreate = isInsert;
+    }
+
+    function cloneCanvas(oldCanvas) {
+        //create a new canvas
+        var newCanvas = document.createElement('canvas');
+        var context = newCanvas.getContext('2d');
+
+        //set dimensions
+        newCanvas.width = oldCanvas.width;
+        newCanvas.height = oldCanvas.height;
+
+        //apply the old canvas to the new one
+        context.drawImage(oldCanvas, 0, 0);
+
+        //return the new canvas
+        return newCanvas;
+    }
+
+    function selectUploadAgain() {
+        $('#upload-submit').button('reset');
+        $('#upload_area').show();
+        $('#upload_view').hide();
+        $('#preview').html('');
+    }
+    function hideSelf(obj) {
+        $(obj).fadeOut();
+    }
 </script>

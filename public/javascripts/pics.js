@@ -194,13 +194,15 @@ function loadTopicList (page, forum, loginname) {
     $.ajax({
         url: "/api/v2/topics?" + params
     }).done(function (responseText) {
-        console.info(responseText);
         var itemLength = 0;
         if (!!responseText.data && _.isArray(responseText.data)) {
             itemLength = _.size(responseText.data);
         }
         var elements = [];
         responseText.data.forEach(function (item) {
+            if (!!item.author && !!item.author.avatar_url) {
+                item.author.avatar_url = avatarPath(item.author.avatar_url, 54);
+            }
             elements.push($("#topicListTmp").tmpl({topic: item, avator: true}));
         });
         $('#topic_list').append(elements);

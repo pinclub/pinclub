@@ -91,3 +91,14 @@ function signout() {
         console.error('signout error ', response);
     });
 }
+
+function avatarPath(avatar, size) {
+    if (!avatar || !size) {
+        return avatar;
+    }
+    let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+    let path = avatar.substring(0, avatar.lastIndexOf('.'));
+    let file_path = path + '_' + size + '.' + extname;
+    return file_path;
+}
+
