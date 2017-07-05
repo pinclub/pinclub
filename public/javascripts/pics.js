@@ -206,6 +206,7 @@ function loadTopicList (page, forum, loginname) {
             elements.push($("#topicListTmp").tmpl({topic: item, avator: true}));
         });
         $('#topic_list').append(elements);
+        $('#total_count').html('共 ' + responseText.total_count + ' 个话题');
         if (itemLength >= 10) {
             $(window).lazyLoadXT();
             $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});

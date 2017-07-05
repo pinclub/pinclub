@@ -345,7 +345,7 @@ a.light:hover {
 .cell .reply_count {
   width: 50px;
   display: inline-block;
-  text-align: center;
+  text-align: right;
   line-height: 15px;
   padding-top: 0px;
 }
@@ -2043,4 +2043,25 @@ textarea.editor {
   color: #333;
   line-height: 100%;
   text-align: center;
+}
+
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-caret-right:before {
+  content: "\f0da";
+}
+
+.fa-eye:before {
+  content: "\f06e";
+}
+
+.fa-send:before, .fa-paper-plane:before {
+  content: "\f1d8";
 }

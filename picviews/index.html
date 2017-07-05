@@ -18,7 +18,7 @@
             <a href="/user/<%= current_user.loginname %>" title="<%= current_user.loginname %>" class="img user_mid_avatar x loaded">
               <img width="54" height="54" src="<%= avatarPath(current_user.avatar_url, 54) %>" data-baiduimageplus-ignore="1"></a>
             <a href="/user/<%= current_user.loginname %>" class="userlink"><%= current_user.loginname %></a>
-            <a href="/user/<%= current_user.loginname %>" title="帐号设置" class="settings"></a>
+            <a href="/setting" title="帐号设置" class="settings"></a>
           </div>
           <div class="profile-stats">
             <a href="/user/<%= current_user.loginname %>/get"><strong><%= current_user.image_count + current_user.get_image_count %></strong>图片</a>
@@ -74,8 +74,12 @@
          class="topic-tab <%= value === 'all' ? 'current-tab' : '' %>" data-id="<%= value %>"><%= text %></a>
       <% }) %>
     </div>
-    <div id="sub_header" class="cell" style="background-color: #f9f9f9; padding: 10px 10px 10px 20px;font-size: 12px;color:#778087;">
-      <a href="/go/beijing">北京</a> &nbsp; &nbsp; <a href="/go/shanghai">上海</a> &nbsp; &nbsp; <a href="/go/shenzhen">深圳</a> &nbsp; &nbsp; <a href="/go/guangzhou">广州</a> &nbsp; &nbsp; <a href="/go/hangzhou">杭州</a> &nbsp; &nbsp; <a href="/go/chengdu">成都</a> &nbsp; &nbsp; <a href="/go/kunming">昆明</a> &nbsp; &nbsp; <a href="/go/nyc">纽约</a> &nbsp; &nbsp; <a href="/go/la">洛杉矶</a>
+    <div id="sub_header" class="cell" style="background-color: #f9f9f9; padding: 10px;font-size: 12px;color:#778087;">
+      <div class="pull-right">
+        <a href="/topic/create">发布新话题</a>
+        <li class="fa fa-caret-right gray"></li>
+      </div>
+      <div class="pull-left" id="total_count"></div>
     </div>
     <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
     <div class="innerTopic no-padding no-margin">

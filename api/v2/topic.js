@@ -95,7 +95,7 @@ var index = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
 
-    ep.all('topics', 'liked_topics', function (topics, liked_topics) {
+    ep.all('topics', 'liked_topics', 'topics_count', function (topics, liked_topics, topics_count) {
         let liked_t_ids = _.map(liked_topics, 'topic_id');
         topics = topics.map(function (topic) {
             let structedTopic = structureHelper.topic(topic);
@@ -109,7 +109,7 @@ var index = function (req, res, next) {
             return structedTopic;
         });
 
-        res.send({success: true, data: topics});
+        res.send({success: true, data: topics, total_count: topics_count});
     });
 
     ep.on('forums',
@@ -118,6 +118,7 @@ var index = function (req, res, next) {
                 var forumIds = _.map(forums, '_id');
                 query.forum = {$in: forumIds};
             }
+            TopicProxy.getCountByQuery(query, ep.done('topics_count'));
             TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
                 if (!!currentUser) {
                     let topic_t_ids = _.map(topics, 'id');
@@ -127,6 +128,7 @@ var index = function (req, res, next) {
                 }
                 return topics;
             }));
+
         });
 
     // 取板块数据
