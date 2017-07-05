@@ -91,9 +91,14 @@ exports.avatarPath = function (avatar, size) {
     if (!avatar || !size) {
         return avatar;
     }
-    let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
-    let path = avatar.substring(0, avatar.lastIndexOf('.'));
-    let file_path = path + '_' + size + '.' + extname;
+    let file_path = '';
+    if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
+        file_path = avatar + '_' + size;
+    } else {
+        let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+        let path = avatar.substring(0, avatar.lastIndexOf('.'));
+        file_path = path + '_' + size + '.' + extname;
+    }
     return file_path;
 };
 
