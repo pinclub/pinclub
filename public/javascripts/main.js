@@ -96,9 +96,15 @@ function avatarPath(avatar, size) {
     if (!avatar || !size) {
         return avatar;
     }
-    var extname = avatar.substring(avatar.lastIndexOf('.') + 1);
-    var path = avatar.substring(0, avatar.lastIndexOf('.'));
-    var file_path = path + '_' + size + '.' + extname;
+    var file_path = '';
+    // FIXME: can not find pic if photo uploaded to 7niu
+    if (avatar.indexOf('images.shiyix.org') > -1) {
+        file_path += '_' + size;
+    } else {
+        var extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+        var path = avatar.substring(0, avatar.lastIndexOf('.'));
+        file_path = path + '_' + size + '.' + extname;
+    }
     return file_path;
 }
 
