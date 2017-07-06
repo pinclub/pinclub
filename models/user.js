@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var BaseModel = require("./base_model");
 var Schema = mongoose.Schema;
+var ObjectId  = Schema.ObjectId;
 var utility = require('utility');
 
 var UserSchema = new Schema({
@@ -50,6 +51,8 @@ var UserSchema = new Schema({
     retrieve_key: {type: String},
 
     accessToken: {type: String},
+
+    node: {type: ObjectId, ref: 'Node'}
 });
 
 UserSchema.plugin(BaseModel);

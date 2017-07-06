@@ -6,6 +6,7 @@ var EventProxy = require('eventproxy');
 var Forum        = require('../proxy').Forum;
 var Board        = require('../proxy').Board;
 var User        = require('../proxy').User;
+var Node        = require('../proxy').Node;
 var Topic = require('../proxy').Topic;
 
 
@@ -116,9 +117,28 @@ exports.users = function (req, res, next) {
 
 };
 
-// TODO 管理员地区管理界面
-exports.areas = function (req, res, next) {
-
+// TODO 管理员节点管理界面
+exports.nodes = function (req, res, next) {
+    var page = parseInt(req.query.page, 10) || 1;
+    page = page > 0 ? page : 1;
+    var limit = 20;
+    var options = { skip: (page - 1) * limit, sort: '-create_at', limit: limit};
+    Node.getCountByQuery({}, function (err, all_nodes_count) {
+        if (err) {
+            return next(err);
+        }
+        var pages = Math.ceil(all_nodes_count / limit);
+        Node.getNodesByQuery({}, options, function (err, nodes) {
+            if (err) {
+                return next(err);
+            }
+            res.render('dashboard/nodes', {
+                current_page: page,
+                pages: pages,
+                nodes: nodes
+            });
+        });
+    });
 };
 
 // DONE (hhdem) 所有Forum列表

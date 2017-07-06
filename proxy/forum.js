@@ -118,6 +118,7 @@ exports.getFullForum = function (id, callback) {
         .populate('user')
         .populate('managers', '_id loginname')
         .populate('members', '_id loginname')
+        .populate('parent')
         .exec(proxy.done(function (forum) {
         if (!forum) {
             proxy.unbind();

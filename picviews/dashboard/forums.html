@@ -198,7 +198,7 @@
                             </div>
                         </div>
                         <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="bannerImageForum">
+                            <div class="panel-heading" role="tab" id="bannerTemplateForum">
                                 <h4 class="panel-title">
                                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
                                         模板选择
@@ -214,13 +214,32 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="parentNode">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
+                                        父板块
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseEight">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <select name="parent" class="form-control js-data-forum-ajax ">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id">
-                    <button type="button" id="create-forum-close" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" id="create-forum-submit" class="btn btn-primary ">保存
+                    <button type="button" id="create-forum-close" class="btn " data-dismiss="modal">Close</button>
+                    <button type="submit" id="create-forum-submit" class="btn btn-default ">保存
                     </button>
                 </div>
             </form>

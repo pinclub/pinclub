@@ -6,8 +6,8 @@ var ObjectId  = Schema.ObjectId;
 var NodeSchema = new Schema({
     name: {type: String},
     code: {type: String},
+    content: {type: String},
     parent: {type: ObjectId, ref: 'Node'},
-    subs: [{type: ObjectId, ref: 'Node'}],
     create_at: { type: Date, default: Date.now },
     update_at: { type: Date, default: Date.now },
     creator: {type: ObjectId, ref: 'User'},

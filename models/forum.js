@@ -17,7 +17,8 @@ var ForumSchema = new Schema({
     template: {type: String},
     bannerImage: {type: String},
     css_text: {type:String},
-    js_text: {type:String}
+    js_text: {type:String},
+    parent: {type: ObjectId, ref: 'Forum'}
 });
 
 ForumSchema.plugin(BaseModel);

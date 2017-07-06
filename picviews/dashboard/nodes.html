@@ -1,0 +1,127 @@
+<!-- DONE (hhdem) 管理员面板管理页面 -->
+<%- Loader('/public/stylesheets/dashboard.min.css')
+.css('/public/stylesheets/dashboard.less')
+.css('/public/libs/select2/css/select2.css')
+.css('/public/libs/bootstrap-select2/select2-bootstrap.css')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<%- include ../navbar.html %>
+<div id='dashboard' class="content">
+    <div class='container-fluid container-limited'>
+        <div class="admin-dashboard prepend-top-default">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>节点列表</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <th><input type="checkbox"></th>
+                                <th>节点名称</th>
+                                <th>节点编码</th>
+                                <th>创建于</th>
+                                <th>操作</th>
+                                </thead>
+                                <%- partial('_abstract_node_item', {collection:nodes, as:'node'}) %>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            <button class="btn btn-default"  data-toggle="modal" data-target="#create_node_modal">添加节点</button>
+                            <button class="btn btn-default">删除节点</button>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4>节点数据统计</h4></div>
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Node modal -->
+<div class="modal fade" id="create_node_modal" role="dialog" aria-hidden="true" aria-labelledby="createNodeModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/admin/nodes" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">板块信息</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="basicInfoNode">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        基本信息
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="name" placeholder="节点名称">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="code" placeholder="节点编码" onkeyup="changeExamplePathName(this);">
+                                            <div class="help-block">Example: /nodes/<code class="text-info" id="example_path_name">{path_name}</code></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea id="node_content" class="form-control" rows="3" name="content" placeholder="节点描述"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="parentNode">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                        父节点
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseTwo">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <select name="parent" class="form-control js-data-example-ajax ">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id">
+                    <button type="button" id="create-node-close" class="btn " data-dismiss="modal">Close</button>
+                    <button type="submit" id="create-node-submit" class="btn btn-default">保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- Loader('/public/javascripts/dashboard/nodes.min.js')
+.js('/public/libs/select2/js/select2.full.js')
+.js('/public/javascripts/dashboard/nodes.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

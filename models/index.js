@@ -46,6 +46,7 @@ require('./topic_like');
 require('./topic_board');
 require('./message');
 require('./forum');
+require('./node');
 
 exports.User = mongoose.model('User');
 exports.Topic = mongoose.model('Topic');
@@ -57,3 +58,4 @@ exports.TopicLike = mongoose.model('TopicLike');
 exports.TopicBoard = mongoose.model('TopicBoard');
 exports.Message = mongoose.model('Message');
 exports.Forum = mongoose.model('Forum');
+exports.Node = mongoose.model('Node');

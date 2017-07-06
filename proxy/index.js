@@ -8,3 +8,4 @@ exports.TopicBoard = require('./topic_board');
 exports.Board = require('./board');
 exports.BoardCollect = require('./board_collect');
 exports.Forum = require('./forum');
+exports.Node = require('./node');

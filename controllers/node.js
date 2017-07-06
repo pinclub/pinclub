@@ -1,23 +1,19 @@
-var Forum        = require('../proxy').Forum;
+var Node        = require('../proxy').Node;
 var _            = require('lodash');
 
-// DONE (hhdem) Forum信息添加和修改
+// TODO create node
 exports.create = function (req, res, next) {
     req.checkBody({
-        'title': {
+        'name': {
             notEmpty: {
                 options: [true],
-                errorMessage: '板块名称不能为空'
+                errorMessage: '节点名称不能为空'
             }
         },
-        'type': {
+        'code': {
             notEmpty: {
                 options: [true],
-                errorMessage: 'type 不能为空'
-            },
-            matches: {
-                options: ['public|private|internal'],
-                errorMessage: 'type 必须为 public,private,internal'
+                errorMessage: '节点编码不能为空'
             }
         }
     });
@@ -29,52 +25,44 @@ exports.create = function (req, res, next) {
                 err: result.useFirstErrorOnly().mapped()
             }).end();
         }
-        let data = _.pick(req.body, ['id', 'title', 'content', 'path_name', 'type', 'order', 'bannerImage', 'css_text', 'js_text', 'template', 'managers', 'members', 'parent']);
-        data.user_id = req.session.user._id;
+        let data = _.pick(req.body, ['id', 'name', 'code', 'content', 'parent']);
+        data.creator = req.session.user._id;
         if (!!data.id) {
             // 修改
-            Forum.getForum(data.id, function(err, forum) {
+            Node.getNode(data.id, function(err, forum) {
                 if (err) {
                     return next(err);
                 }
-                forum.title = data.title;
+                forum.name = data.name;
                 forum.content = data.content;
-                forum.path_name = data.path_name;
-                forum.type = data.type;
-                forum.order = data.order;
-                forum.template = data.template;
-                forum.bannerImage = data.bannerImage;
-                forum.css_text = data.css_text;
-                forum.js_text = data.js_text;
-                forum.managers = data.managers;
-                forum.members = data.members;
+                forum.code = data.code;
                 forum.parent = data.parent;
                 forum.save(function (err) {
                     if (err) {
                         return next(err);
                     }
-                    res.redirect('/admin/forums');
+                    res.redirect('/admin/nodes');
                 });
             });
         } else {
             // 新增
-            Forum.newAndSave(data, function (err, forum) {
+            Node.newAndSave(data, function (err, forum) {
                 if (err) {
                     return next(err);
                 }
-                res.redirect('/admin/forums');
+                res.redirect('/admin/nodes');
             });
         }
     });
 };
 
-// DONE (hhdem) Forum信息查看
+// TODO 查看 Node 信息
 exports.show = function (req, res, next) {
     req.checkParams({
         'id': {
             notEmpty: {
                 options: [true],
-                errorMessage: '板块名称不能为空'
+                errorMessage: '节点id不能为空'
             },
             isMongoId: {errorMessage: 'id 需为 mongoId 对象'}
         }
@@ -88,27 +76,24 @@ exports.show = function (req, res, next) {
             }).end();
         }
         var id = req.params.id;
-        Forum.getFullForum(id, function (err, msg, forum, topics) {
+        Node.getFullNode(id, function (err, msg, node) {
             if (!!err) {
                 return next (err);
             }
-            if (!forum) {
+            if (!node) {
                 res.status(404);
-                return res.send({success: false, error_msg: '板块不存在'});
+                return res.send({success: false, error_msg: '节点不存在'});
             }
             if (!!msg) {
                 res.status(404);
                 return res.send({success: false, error_msg: msg});
             }
-            forum.topics = topics;
-            res.send({success: true, data: forum});
+            res.send({success: true, data: node});
         });
     });
 };
 
-// TODO Forum信息删除
+// TODO Node 信息删除
 exports.delete = function (req, res, next) {
-    res.render('static/function_building', {
-        title: 'Forum信息删除'
-    });
+
 };

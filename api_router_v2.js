@@ -3,6 +3,8 @@ var topicController   = require('./api/v2/topic');
 var boardController   = require('./api/v2/board');
 var imageController   = require('./api/v2/image');
 var authController   = require('./api/v2/auth');
+var forumController   = require('./api/v2/forum');
+var nodeController   = require('./api/v2/node');
 var middleware        = require('./api/v2/middleware');
 var limit             = require('./middlewares/limit');
 var config            = require('./config');
@@ -29,9 +31,16 @@ router.post('/images/get', middleware.auth, imageController.getImage);
 router.get('/boards', middleware.auth, boardController.index);
 router.post('/boards', middleware.auth, limit.peruserperday('create_board', config.create_board_per_day, {showJson: true}), boardController.create);
 router.get('/boards/:id', middleware.auth, boardController.show);
+
 // Board 收藏
 router.get('/boards/collect/:loginname', boardController.collectList); // 关注列表
 router.post('/boards/collect', middleware.auth, boardController.collect); // 关注某Board
 router.post('/boards/de_collect', middleware.auth, boardController.decollect); // 取消关注某Board
+
+// Forum
+router.get('/forums', forumController.index); // Node 列表
+
+// Node
+router.get('/nodes', nodeController.index); // Node 列表
 
 module.exports = router;

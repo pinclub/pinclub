@@ -36,6 +36,9 @@ $(document).on('click', '#modify_forum', function (event) {
                 modal.find('select[name=members]').append('<option value="'+member._id+'" selected="selected">'+member.loginname+'</option>');
             });
         }
+        if (!!data.parent) {
+            modal.find('select[name=parent]').append('<option value="'+data.parent._id+'" selected="selected">'+data.parent.title+'</option>');
+        }
         modal.modal('show');
     });
 });
@@ -55,6 +58,7 @@ $('#create_forum_modal').on('hidden.bs.modal', function (e) {
     modal.find('textarea[name=js_text]').val('');
     modal.find('select[name=managers]').empty();
     modal.find('select[name=members]').empty();
+    modal.find('select[name=parent]').empty();
 });
 
 $.fn.select2.defaults.set( "theme", "bootstrap" );
@@ -124,3 +128,60 @@ $(".js-data-example-ajax").select2({
     templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
 });
 
+function formatRepo2 (repo) {
+    if (repo.loading) return repo.text;
+    var markup = "<div class='select2-result-repository clearfix'>" +
+        "<div class='select2-result-repository__meta'>" +
+        "<div class='select2-result-repository__title'>" + repo.title + "</div>";
+
+    if (repo.email) {
+        markup += "<div class='select2-result-repository__description'>" + repo.path_name + "</div>";
+    }
+
+    markup += "</div></div>";
+
+    return markup;
+}
+
+function formatRepoSelection2 (repo, container) {
+    return repo.title || repo.text;
+}
+
+$(".js-data-forum-ajax").select2({
+    ajax: {
+        url: "/api/v2/forums",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+            return {
+                q: params.term
+            };
+        },
+        processResults: function (result, params) {
+            if (!result.success) {
+                return ;
+            } else {
+                var select2Data = $.map(result.data, function (obj) {
+                    obj.id = obj._id;
+                    obj.text = obj.loginname;
+
+                    return obj;
+                });
+                return {
+                    results: select2Data,
+                    pagination: {
+                        more: (params.page * 30) < result.data.length
+                    }
+                };
+            }
+        },
+        cache: true
+    },
+    width : null,
+    escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+    minimumInputLength: 1,
+    dropdownAutoWidth: true,
+    containerCssClass: ':all:',
+    templateResult: formatRepo2, // omitted for brevity, see the source of this page
+    templateSelection: formatRepoSelection2 // omitted for brevity, see the source of this page
+});
