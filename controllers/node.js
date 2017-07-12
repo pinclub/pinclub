@@ -1,7 +1,7 @@
 var Node        = require('../proxy').Node;
 var _            = require('lodash');
 
-// TODO create node
+// DONE (hhdem) 管理员创建节点
 exports.create = function (req, res, next) {
     req.checkBody({
         'name': {
@@ -56,7 +56,7 @@ exports.create = function (req, res, next) {
     });
 };
 
-// TODO 查看 Node 信息
+// DONE (hhdem) 查看节点信息
 exports.show = function (req, res, next) {
     req.checkParams({
         'id': {
@@ -85,15 +85,10 @@ exports.show = function (req, res, next) {
                 return res.send({success: false, error_msg: '节点不存在'});
             }
             if (!!msg) {
-                res.status(404);
+                res.status(500);
                 return res.send({success: false, error_msg: msg});
             }
             res.send({success: true, data: node});
         });
     });
-};
-
-// TODO Node 信息删除
-exports.delete = function (req, res, next) {
-
 };

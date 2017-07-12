@@ -38,9 +38,9 @@ router.post('/boards/collect', middleware.auth, boardController.collect); // 关
 router.post('/boards/de_collect', middleware.auth, boardController.decollect); // 取消关注某Board
 
 // Forum
-router.get('/forums', forumController.index); // Node 列表
+router.get('/forums', middleware.tryAuth, forumController.index); // Node 列表
 
 // Node
-router.get('/nodes', nodeController.index); // Node 列表
+router.get('/nodes', middleware.tryAuth, nodeController.index); // Node 列表
 
 module.exports = router;

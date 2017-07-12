@@ -29,6 +29,7 @@ var index = function (req, res, next) {
             }
         }
     });
+    var currentUser = req.session.user;
     req.getValidationResult().then(function(result) {
         if (!result.isEmpty()) {
             return res.status(400).json({
@@ -38,13 +39,17 @@ var index = function (req, res, next) {
             }).end();
         }
         var ep = new EventProxy();
-
         ep.fail(next);
 
         let qs = req.query.q;
         var query = {
             title: {'$regex': qs}
         };
+        query.type = 'public';
+        if (!!currentUser) {
+            query.type = {$ne: 'private'};
+        }
+
         ForumProxy.getForumsByQuery(query, {}, function (err, forums) {
             if (err) {
                 return next(err);

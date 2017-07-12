@@ -85,6 +85,7 @@ var tryAuth = function (req, res, next) {
             res.status(403);
             return res.send({success: false, code: 403, error_msg: '您的账户被禁用'});
         }
+        req.session.user = user;
         req.user = user;
         next();
     }));

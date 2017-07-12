@@ -31,16 +31,12 @@
                 <ul class='unstyled'>
                     <% if (user.collect_topic_count) {%>
                     <li>
-                        <a class='dark' href="/user/<%= user.loginname %>/collections" target='_blank'>
-                            <span class='big collect-topic-count'><%= user.collect_topic_count %></span>个话题收藏
-                        </a>
+                        <span class='big collect-topic-count'><%= user.collect_topic_count %></span>个话题收藏
                     </li>
                     <%}%>
                     <% if (user.collect_image_count) {%>
                     <li>
-                        <a class='dark' href="/user/<%= user.loginname %>/collections" target='_blank'>
-                            <span class='big collect-topic-count'><%= user.collect_image_count %></span>个图片收藏
-                        </a>
+                        <span class='big collect-topic-count'><%= user.collect_image_count %></span>个图片收藏
                     </li>
                     <%}%>
                     <% if (user.url) { %>

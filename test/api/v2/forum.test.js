@@ -4,23 +4,26 @@ var should = require('should');
 var support = require('../../support/support');
 
 
-describe('test/api/v2/node.test.js', function () {
+describe('test/api/v2/forum.test.js', function () {
 
-    var mockNode, mockNodeParent;
+    var mockForumPublic, mockForumPrivate, mockForumInternal;
 
     before(function (done) {
-        support.createNode(support.adminUser._id, null, function (err, node) {
-            mockNodeParent = node;
-            support.createNode(support.adminUser._id, node._id, function (err, node2) {
-                mockNode = node2;
-                done();
+        support.createForum(support.adminUser._id, 'internal', function (err, forum) {
+            mockForumInternal = forum;
+            support.createForum(support.adminUser._id, 'private', function (err, forum1) {
+                mockForumPrivate = forum1;
+                support.createForum(support.adminUser._id, 'public', function (err, forum2) {
+                    mockForumPublic = forum2;
+                    done();
+                });
             });
         });
     });
 
-    describe('get /api/v2/nodes', function () {
-        it('should return nodes', function (done) {
-            request.get('/api/v2/nodes')
+    describe('get /api/v2/forums', function () {
+        it('should return forums', function (done) {
+            request.get('/api/v2/forums')
                 .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
                 .end(function (err, res) {
                     should.not.exists(err);
@@ -30,36 +33,36 @@ describe('test/api/v2/node.test.js', function () {
                 });
         });
 
-        it('should find nodes with param q="node name" and not login', function (done) {
-            request.get('/api/v2/nodes')
+        it('should find forums with param q="forum title" and not login', function (done) {
+            request.get('/api/v2/forums')
                 .query({
-                    q: 'node name'
+                    q: 'forum title'
                 })
                 .end(function (err, res) {
                     should.not.exists(err);
                     res.body.success.should.true();
                     res.body.data.length.should.equal(2);
-                    res.text.should.not.containEql(mockNodeParent.title);
+                    res.text.should.not.containEql(mockForumPrivate.title);
                     done();
                 });
         });
 
-        it('should find nodes with param q="node name" and login', function (done) {
-            request.get('/api/v2/nodes')
+        it('should find forums with param q="forum title" and login', function (done) {
+            request.get('/api/v2/forums')
                 .query({
-                    q: 'node name'
+                    q: 'forum title',
+                    accesstoken: support.normalUser.accessToken
                 })
-                .set('Authorization', 'Bearer ' + support.normalUser.accessToken)
                 .end(function (err, res) {
                     should.not.exists(err);
                     res.body.success.should.true();
-                    res.body.data.length.should.equal(2);
+                    res.body.data.length.should.equal(3);
                     done();
                 });
         });
 
-        it('should find none of nodes with param q="nothing can find" ', function (done) {
-            request.get('/api/v2/nodes')
+        it('should find none of forums with param q="nothing can find" ', function (done) {
+            request.get('/api/v2/forums')
                 .query({
                     q: 'nothing can find'
                 })

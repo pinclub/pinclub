@@ -1,6 +1,7 @@
 var User = require('../../proxy/user');
 var Topic = require('../../proxy/topic');
 var Forum = require('../../proxy/forum');
+var Node = require('../../proxy/node');
 var Board = require('../../proxy/board');
 var Reply = require('../../proxy/reply');
 var ready = require('ready');
@@ -34,6 +35,20 @@ var createForum = exports.createForum = function (authorId, type, callback) {
         user: authorId
     };
     Forum.newAndSave(forum, callback);
+};
+
+var createNode = exports.createNode = function (authorId, parent, callback) {
+    var key = new Date().getTime() + '_' + randomInt();
+    var node = {
+        name: 'node name' + key,
+        code: 'node code' + key,
+        content: 'node content' + key,
+        creator: authorId
+    };
+    if (!!parent) {
+        node.parent = parent;
+    }
+    Node.newAndSave(node, callback);
 };
 
 var createTopic = exports.createTopic = function (authorId, forum, callback) {
