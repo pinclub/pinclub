@@ -24,6 +24,7 @@ $(document).on('click', '#modify_forum', function (event) {
         modal.find('textarea[name=content]').val(data.content);
         modal.find('input[name=order]').val(data.order);
         modal.find('input[name=type][value="'+data.type+'"]').prop("checked", true);
+        modal.find('input[name=show_type][value="'+data.show_type+'"]').prop("checked", true);
         modal.find('textarea[name=css_text]').val(data.css_text);
         modal.find('textarea[name=js_text]').val(data.js_text);
         if (!!data.managers && data.managers.length > 0) {
@@ -54,6 +55,8 @@ $('#create_forum_modal').on('hidden.bs.modal', function (e) {
     modal.find('input[name=type][value="internal"]').attr("checked", false);
     modal.find('input[name=type][value="private"]').attr("checked", false);
     modal.find('input[name=type][value="public"]').attr("checked",true);
+    modal.find('input[name=show_type][value="index"]').attr("checked", false);
+    modal.find('input[name=show_type][value="default"]').attr("checked",true);
     modal.find('textarea[name=css_text]').val('');
     modal.find('textarea[name=js_text]').val('');
     modal.find('select[name=managers]').empty();

@@ -38,7 +38,7 @@ exports.dashboard = function (req, res, next) {
             node_version: process.versions.node,
             mongodb_version: results.mongodb
         };
-        var render = function (users, active_users, forums, boards, topics, images) {
+        var render = function (users, active_users, forums, boards, topics, images, nodes) {
             res.render('dashboard/index', {
                 reply_count: 0,
                 active_user_count: active_users.length,
@@ -48,15 +48,17 @@ exports.dashboard = function (req, res, next) {
                 boards: boards,
                 teams: [],
                 forums: forums,
-                system: system
+                system: system,
+                nodes: nodes
             });
         };
         var ep = EventProxy.create();
         ep.fail(next);
-        ep.assign('users', 'active_users', 'forums', 'boards', 'topics', 'images', render);
+        ep.assign('users', 'active_users', 'forums', 'boards', 'topics', 'images', 'nodes', render);
         User.getUsersByQuery({}, {}, ep.done('users'));
         User.getUsersByQuery({active: true}, {}, ep.done('active_users'));
         Forum.getForumsByQuery({}, {}, ep.done('forums'));
+        Node.getNodesByQuery({}, {}, ep.done('nodes'));
         Board.getBoardsByQuery({}, {}, ep.done('boards'));
         Topic.getTopicsByQuery({type: 'text'}, {}, ep.done('topics'));
         Topic.getTopicsByQuery({type: 'image'}, {}, ep.done('images'));
@@ -123,19 +125,28 @@ exports.nodes = function (req, res, next) {
     page = page > 0 ? page : 1;
     var limit = 20;
     var options = { skip: (page - 1) * limit, sort: '-create_at', limit: limit};
-    Node.getCountByQuery({}, function (err, all_nodes_count) {
+    var query = {parent: null};
+    if (!!req.query.pid) {
+        query.parent = req.query.pid;
+    }
+    Node.getCountByQuery(query, function (err, all_nodes_count) {
         if (err) {
             return next(err);
         }
         var pages = Math.ceil(all_nodes_count / limit);
-        Node.getNodesByQuery({}, options, function (err, nodes) {
+        Node.getNodesByQuery(query, options, function (err, nodes) {
             if (err) {
                 return next(err);
+            }
+            let parent = null;
+            if (!!query.parent && nodes.length > 0) {
+                parent = nodes[0].parent;
             }
             res.render('dashboard/nodes', {
                 current_page: page,
                 pages: pages,
-                nodes: nodes
+                nodes: nodes,
+                parent: parent
             });
         });
     });
@@ -144,12 +155,21 @@ exports.nodes = function (req, res, next) {
 // DONE (hhdem) 所有Forum列表
 exports.forums = function (req, res, next) {
     var options = { sort: '-order', limit: 10};
-    Forum.getForumsByQuery({}, options, function (err, forums) {
+    var query = {parent: null};
+    if (!!req.query.pid) {
+        query.parent = req.query.pid;
+    }
+    Forum.getForumsByQuery(query, options, function (err, forums) {
         if (err) {
             return next(err);
         }
+        let parent = null;
+        if (!!query.parent && forums.length > 0) {
+            parent = forums[0].parent;
+        }
         res.render('dashboard/forums', {
-            forums: forums
+            forums: forums,
+            parent: parent
         });
     });
 };

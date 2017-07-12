@@ -73,6 +73,7 @@ var index = function (req, res, next) {
     var forum = req.query.forum;
     var author = req.query.author;
     var limit = Number(req.query.limit) || config.list_topic_count;
+    var show_type = req.query.show_type || 'default';
     var currentUser = req.session.user;
 
     var query = {};
@@ -137,6 +138,7 @@ var index = function (req, res, next) {
     if (!!currentUser) {
         queryForum.type = {$ne: 'private'};
     }
+    queryForum.show_type = show_type;
     var forumsCacheKey = JSON.stringify(queryForum) + 'pages';
     cache.get(forumsCacheKey, ep.done(function (forums) {
         if (forums) {

@@ -29,7 +29,7 @@ exports.create = function (req, res, next) {
                 err: result.useFirstErrorOnly().mapped()
             }).end();
         }
-        let data = _.pick(req.body, ['id', 'title', 'content', 'path_name', 'type', 'order', 'bannerImage', 'css_text', 'js_text', 'template', 'managers', 'members', 'parent']);
+        let data = _.pick(req.body, ['id', 'title', 'content', 'path_name', 'type', 'order', 'bannerImage', 'css_text', 'js_text', 'template', 'managers', 'members', 'parent', 'show_type']);
         data.user_id = req.session.user._id;
         if (!!data.id) {
             // 修改
@@ -41,6 +41,7 @@ exports.create = function (req, res, next) {
                 forum.content = data.content;
                 forum.path_name = data.path_name;
                 forum.type = data.type;
+                forum.show_type = data.show_type;
                 forum.order = data.order;
                 forum.template = data.template;
                 forum.bannerImage = data.bannerImage;

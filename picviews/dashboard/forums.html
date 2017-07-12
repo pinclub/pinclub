@@ -13,7 +13,7 @@
                 <div class="col-md-10">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4>板块列表</h4>
+                            <h4><%if (parent) {%><%= parent.title%> / <%}%><a href="/admin/forums">板块列表</a></h4>
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped">
@@ -228,6 +228,29 @@
                                         <div class="col-sm-12">
                                             <select name="parent" class="form-control js-data-forum-ajax ">
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="showTypeNode">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseNight" aria-expanded="true" aria-controls="collapseNight">
+                                        显示方式
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseNight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseNight">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="show_type" value="index"> 首页显示
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="show_type" value="default" checked="checked"> 默认显示
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

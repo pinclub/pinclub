@@ -109,6 +109,7 @@ exports.index = function (req, res, next) {
     // 取板块数据
     var queryForum = {};
     queryForum.type = 'public';
+    queryForum.show_type = 'index';
     if (!!currentUser) {
         queryForum.type = {$ne: 'private'};
     }

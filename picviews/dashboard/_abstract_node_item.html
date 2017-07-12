@@ -1,9 +1,10 @@
 <tr>
-    <td><input type="checkbox"></td>
+    <td width="15"><input type="checkbox"></td>
     <td><%= node.name %></td>
     <td><%= node.code %></td>
-    <td><%= node.create_at_ago %></td>
-    <td>
-        <button id="modify_node" data-id="<%= node._id %>" class="btn btn-link">修改</button>
+    <td width="15%"><%= node.create_at_ago %></td>
+    <td width="15%">
+        <button id="modify_node" data-id="<%= node._id %>" class="btn btn-default">修改</button>
+        <a href="/admin/nodes?pid=<%= node._id %>" class="btn btn-default">子节点</a>
     </td>
 </tr>

@@ -76,6 +76,7 @@ exports.getForumsByQuery = function (query, opt, callback) {
         .populate('user')
         .populate('managers', '_id loginname')
         .populate('members', '_id loginname')
+        .populate('parent')
         .exec(function (err, forums) {
         if (err) {
             return callback(err);

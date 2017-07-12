@@ -18,7 +18,8 @@ var ForumSchema = new Schema({
     bannerImage: {type: String},
     css_text: {type:String},
     js_text: {type:String},
-    parent: {type: ObjectId, ref: 'Forum'}
+    parent: {type: ObjectId, ref: 'Forum'},
+    show_type: {type: String, default: 'default', enum: ['index', 'default']} // index: 首页显示/ default: 默认
 });
 
 ForumSchema.plugin(BaseModel);

@@ -179,11 +179,11 @@ function similarPics(picid) {
 }
 
 function loadTopicList (page, forum, loginname) {
-    var params = '';
+    var params = 'show_type=index';
     if (!page) {
         page = 1;
     }
-    params += 'page=' + page;
+    params += '&page=' + page;
     if (!!forum) {
         params += '&forum=' + forum;
         topic_forum = forum;
