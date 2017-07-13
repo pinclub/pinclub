@@ -79,7 +79,11 @@
         <a href="/topic/create">发布新话题</a>
         <li class="fa fa-caret-right gray"></li>
       </div>
-      <div class="pull-left" id="total_count"></div>
+      <div class="pull-left">
+
+        <div id="total_count" class="pull-left"></div>
+        <div id="child_forums" class="pull-left"></div>
+      </div>
     </div>
     <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
     <div class="innerTopic no-padding no-margin">

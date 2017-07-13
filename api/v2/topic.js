@@ -96,7 +96,7 @@ var index = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
 
-    ep.all('topics', 'liked_topics', 'topics_count', function (topics, liked_topics, topics_count) {
+    ep.all('topics', 'liked_topics', 'topics_count', 'child_forums', function (topics, liked_topics, topics_count, child_forums) {
         let liked_t_ids = _.map(liked_topics, 'topic_id');
         topics = topics.map(function (topic) {
             let structedTopic = structureHelper.topic(topic);
@@ -110,14 +110,19 @@ var index = function (req, res, next) {
             return structedTopic;
         });
 
-        res.send({success: true, data: topics, total_count: topics_count});
+        res.send({success: true, data: topics, total_count: topics_count, child_forums:child_forums});
     });
 
     ep.on('forums',
         function (forums) {
+            let childQuery = {};
             if (!query.forum) {
                 var forumIds = _.map(forums, '_id');
                 query.forum = {$in: forumIds};
+                ep.emit('child_forums', []);
+            } else {
+                childQuery.parent = query.forum;
+                ForumProxy.getForumsByQuery(childQuery, {}, ep.done('child_forums'));
             }
             TopicProxy.getCountByQuery(query, ep.done('topics_count'));
             TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
@@ -129,6 +134,7 @@ var index = function (req, res, next) {
                 }
                 return topics;
             }));
+
 
         });
 

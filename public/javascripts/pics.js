@@ -207,6 +207,12 @@ function loadTopicList (page, forum, loginname) {
         });
         $('#topic_list').append(elements);
         $('#total_count').html('共 ' + responseText.total_count + ' 个话题');
+        $('#child_forums').html('');
+        if (!!responseText.child_forums && responseText.child_forums.length > 0) {
+            _.forEach(responseText.child_forums, function(child){
+                $('#child_forums').append('&nbsp;&nbsp;•&nbsp;<a href="/forums/'+child._id+'" style="color: #778087;">' + child.title + '</a>');
+            });
+        }
         if (itemLength >= 10) {
             $(window).lazyLoadXT();
             $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});

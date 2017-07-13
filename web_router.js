@@ -131,6 +131,9 @@ router.post('/boards', auth.userSigninRequired, board.create);
 router.get('/boards/:board_id', onlineM.add, board.show);
 router.post('/boards/:board_id/edit', auth.userSigninRequired, board.edit);
 
+// forum 列表
+router.get('/forums/:id', forum.show);
+
 // upload
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
 router.post('/imageupload', auth.userRequired, image.upload); //上传图片
@@ -174,7 +177,7 @@ router.post('/admin/nodes', auth.adminRequired, node.create);
 router.get('/admin/nodes/:id', auth.adminRequired, node.show);
 router.get('/admin/forums', auth.adminRequired, dashboard.forums);
 router.post('/admin/forums', auth.adminRequired, forum.create);
-router.get('/admin/forums/:id', auth.adminRequired, forum.show);
+router.get('/admin/forums/:id', auth.adminRequired, dashboard.forumShow);
 
 if (!config.debug) { // 这个兼容破坏了不少测试
 	router.get('/:name', function (req, res) {

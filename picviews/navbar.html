@@ -1,7 +1,7 @@
 <!-- navbar -->
 <div class='navbar'>
 
-    <div class='navbar-inner'>
+    <div class='navbar-inner' <% if(typeof style != 'undefined') {%>style="<%=style%>"<%}%>>
         <div class='container'>
             <a class='navbar-brand' href='/'>
                 <% if (config.site_logo) {%>

@@ -173,3 +173,40 @@ exports.forums = function (req, res, next) {
         });
     });
 };
+
+exports.forumShow = function (req, res, next) {
+    req.checkParams({
+        'id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: '板块名称不能为空'
+            },
+            isMongoId: {errorMessage: 'id 需为 mongoId 对象'}
+        }
+    });
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+        var id = req.params.id;
+        Forum.getFullForum(id, function (err, msg, forum, topics) {
+            if (!!err) {
+                return next (err);
+            }
+            if (!forum) {
+                res.status(404);
+                return res.send({success: false, error_msg: '板块不存在'});
+            }
+            if (!!msg) {
+                res.status(404);
+                return res.send({success: false, error_msg: msg});
+            }
+            forum.topics = topics;
+            res.send({success: true, data: forum});
+        });
+    });
+};

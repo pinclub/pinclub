@@ -74,6 +74,10 @@ describe('test/api/v2/forum.test.js', function () {
                     done();
                 });
         });
+
+        it('should find forums list of show_type is index when request from index', function (done) {
+            done();
+        });
     });
 
 });

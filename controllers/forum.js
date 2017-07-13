@@ -102,7 +102,9 @@ exports.show = function (req, res, next) {
                 return res.send({success: false, error_msg: msg});
             }
             forum.topics = topics;
-            res.send({success: true, data: forum});
+            res.render('forum/topics', {
+                forum: forum
+            });
         });
     });
 };
