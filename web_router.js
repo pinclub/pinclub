@@ -60,6 +60,7 @@ router.post('/signout', sign.signout);  // 登出
 router.get('/signin', onlineM.add, sign.showLogin);  // 进入登录页面
 router.post('/signin', sign.login);  // 登录校验
 router.get('/active_account', sign.activeAccount);  //帐号激活
+router.post('/signin/two_factor', sign.two_factor);  //帐号激活
 
 router.get('/search_pass', onlineM.add, sign.showSearchPass);  // 找回密码页面
 router.post('/search_pass', sign.updateSearchPass);  // 更新密码
@@ -82,6 +83,7 @@ router.post('/user/:name/delete_all', auth.adminRequired, user.deleteAll);  // �
 router.get('/user/:name/get', auth.userRequired, user.get);  // 删除某用户所有发言
 router.get('/user/:name/board', auth.userRequired, user.board);  // 删除某用户所有发言
 router.get('/user/:name/score', auth.userRequired, user.score);  // 删除某用户所有发言
+router.post('/user/:name/two_factor', auth.userRequired, user.toggleTwoFactor); // 开启和关闭用户双因子认证
 
 // message controler
 router.get('/my/messages', onlineM.add, auth.userRequired, message.index); // 用户个人的所有消息页

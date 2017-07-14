@@ -8,6 +8,7 @@ var cache = require('../common/cache');
 var utility = require('utility');
 var authMiddleWare = require('../middlewares/auth');
 var uuid = require('node-uuid');
+var speakeasy = require('speakeasy');
 
 //sign up
 exports.showSignup = function (req, res) {
@@ -168,6 +169,9 @@ exports.login = function (req, res, next) {
                 res.status(403);
                 return res.render('sign/signin', {error: '此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。', page: 'signin'});
             }
+            if (!!user.is_two_factor) {
+                return res.render('sign/two_factor', user);
+            }
             // store session cookie
             authMiddleWare.gen_session(user, res);
             //check at some page just jump to home page
@@ -180,6 +184,54 @@ exports.login = function (req, res, next) {
             }
             res.redirect(refer);
         }));
+    });
+};
+
+// 双因子验证
+exports.two_factor = function (req, res, next) {
+    req.checkBody({
+        'name': {
+            notEmpty: {
+                options: [true],
+                errorMessage: '登录名不能为空'
+            }
+        },
+        'tfv': {
+            notEmpty: {
+                options: [true],
+                errorMessage: '验证码不能为空'
+            }
+        }
+    });
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.render('sign/two_factor', {error: '双因子验证码[参数]验证失败'});
+        }
+        var loginname = req.body.name;
+        var code = req.body.tfv;
+        User.getUserByLoginName(loginname, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return next(new Error('user is not exists'));
+            }
+            if (!user.is_two_factor || !user.two_factor_base32) {
+                return next(new Error('user two factor has some error'));
+            }
+            var verified = speakeasy.totp.verify({
+                secret: user.two_factor_base32,
+                encoding: 'base32',
+                token: code
+            });
+            if (verified) {
+                // store session cookie
+                authMiddleWare.gen_session(user, res);
+                res.redirect('/');
+            } else {
+                return res.render('sign/two_factor', {error: '双因子[验证码]验证失败'});
+            }
+        });
     });
 };
 

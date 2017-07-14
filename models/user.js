@@ -52,7 +52,9 @@ var UserSchema = new Schema({
 
     accessToken: {type: String},
 
-    node: {type: ObjectId, ref: 'Node'}
+    node: {type: ObjectId, ref: 'Node'},
+    is_two_factor: {type: Boolean, default: false},
+    two_factor_base32: {type: String}
 });
 
 UserSchema.plugin(BaseModel);

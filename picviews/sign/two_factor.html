@@ -1,0 +1,60 @@
+<%- Loader('/public/stylesheets/signin.min.css')
+.css('/public/stylesheets/signin.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<%- include ../static/particles.html %>
+<div id='content' class="col-md-3 col-md-offset-5">
+    <div class="row">
+        <div class="logo col-md-12 text-center">
+            <a href='/'>
+                <% if (config.site_logo) {%>
+                <img src="<%- staticFile(config.site_logo) %>"/>
+                <%} else {%>
+                <%- config.name %>
+                <%}%>
+            </a>
+        </div>
+        <div class="col-md-12 index-tab-navs" role="tablist">
+            <div class="nav nav-tabs" role="tablist">
+                <a class="fade in active" >
+                    双因子验证
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class='panel'>
+
+        <div class='innerTopic'>
+            <% if(typeof(error) !== 'undefined' && error){ %>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <strong><%= error %></strong>
+            </div>
+            <% } %>
+            <form id='two_factor_form' class='form-horizontal' action='/signin/two_factor' method='post'>
+                <div class="form-group text-center">
+                    <small>您的账号开启了双因子验证, 请输入验证码.</small>
+                </div>
+                <div class='form-group'>
+                    <label class='control-label col-md-3' for='tfv'>验证码</label>
+
+                    <div class='controls  col-md-9'>
+                        <input class='form-control' id='tfv' name='tfv' size='30' type='text'/>
+
+                    </div>
+                </div>
+
+                <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+                <input type="hidden" id='name' name='name' value="<%= loginname%>"/>
+                <div class='form-actions'>
+                    <div class="form-group row">
+                        <div class='col-md-9 col-md-offset-3'>
+                            <button type='submit' class='btn' value='确定'>确定</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <%- include _footer.html %>
+</div>

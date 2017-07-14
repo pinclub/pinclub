@@ -13,7 +13,11 @@ var cache = require('../common/cache');
 var config = require('../config');
 var EventProxy = require('eventproxy');
 var validator = require('validator');
+var speakeasy = require('speakeasy');
+var QRCode = require('qrcode');
 var _ = require('lodash');
+
+var secret;
 
 exports.index = function (req, res, next) {
     var user_name = req.params.name;
@@ -138,7 +142,18 @@ exports.showSetting = function (req, res, next) {
             user.success = '保存成功。';
         }
         user.error = null;
-        return res.render('user/setting', user);
+        if (!!user.is_two_factor && !!user.two_factor_base32) {
+            secret = user.two_factor_base32;
+            return res.render('user/setting', user);
+        } else {
+            var secretO = speakeasy.generateSecret({length: 20});
+            var url = speakeasy.otpauthURL({ secret: secretO.ascii, label: user.loginname+'@Jiuyanlou', algorithm: 'sha1'});
+            secret = secretO.base32;
+            QRCode.toDataURL(url, function(err, data_url) {
+                user.two_factor_qr = data_url;
+                return res.render('user/setting', user);
+            });
+        }
     });
 };
 
@@ -215,6 +230,43 @@ exports.setting = function (req, res, next) {
             }));
         }));
     }
+};
+
+exports.toggleTwoFactor = function (req, res, next) {
+    var loginname = req.params.name;
+    var code = req.body.tfv;
+
+    User.getUserByLoginName(loginname, function (err, user) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return next(new Error('user is not exists'));
+        }
+        let base32 = secret;
+        if (!!user.is_two_factor && !!user.two_factor_base32) {
+            base32 = user.two_factor_base32;
+        } else {
+            user.two_factor_base32 = base32;
+        }
+        var verified = speakeasy.totp.verify({
+            secret: base32,
+            encoding: 'base32',
+            token: code
+        });
+        if (verified) {
+            user.is_two_factor = !user.is_two_factor;
+            user.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.json({success: true, is_two_factor: user.is_two_factor});
+            });
+        } else {
+            res.json({success: false});
+        }
+
+    });
 };
 
 exports.toggleStar = function (req, res, next) {

@@ -51,6 +51,16 @@
             </form>
         </div>
     </div>
+    <div class='panel pd10'>
+        <div class='innerTopic'>
+            <div class="form-horizontal">
+            <div class='form-group '>
+                <a id='two_factor_btn' data-toggle="modal" data-target="#two_factor" class="btn wbtn"><strong class="toggle_two_factor_name">
+                    <%if (!is_two_factor) {%>开启<% } else {%>关闭<%}%>双因子验证</strong><span></span></a>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div id='content'>
     <div class='panel'>
@@ -200,6 +210,49 @@
                 <button type="button" id="upload-close" class="btn" data-dismiss="modal">Close</button>
                 <button type="button" id="select-upload-again" class="btn" onclick="selectUploadAgain();">Select Again</button>
                 <button type="button" id="upload-submit" class="btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin' style='background: none;margin: 0px;'></i> Uploading">Upload Image</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="two_factor" role="dialog" aria-hidden="true" aria-labelledby="twoFactorModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">双因子验证</h5>
+            </div>
+            <div class="modal-body">
+                <div id='two_factor_form' class='form-horizontal'>
+                    <% if(!is_two_factor) {%>
+                        <div class='form-group'>
+                            <div class='col-sm-12 text-center'>
+                                <% if(typeof(two_factor_qr) !== 'undefined') {%><img src="<%= two_factor_qr %>"/><%}%>
+                            </div>
+                        </div>
+                        <div class="text-center form-group small">
+                            开启两步验证可以为你的帐号增加一层额外的保护<br>
+                            请通过手机已安装的验证APP扫描二维码<br>
+                            <strong>Google Authenticator</strong>: <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" target="_blank">Google Play</a> / <a target="_blank" href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8">App Store</a><br>
+                            <strong>Authy</strong>: <a href="https://play.google.com/store/apps/details?id=com.authy.authy&hl=en" target="_blank">Google Play</a> / <a href="https://itunes.apple.com/app/authy/id494168017?mt=8" target="_blank">App Store</a><br>
+                            由于每次开启都会生成唯一的二维码, 所以每次开启双因子验证都需要重新扫描
+                        </div>
+                    <%} else {%>
+                        <div class="text-center form-group small">
+                            关闭双因子验证请输入对应的验证码<br>
+                            请通过手机已安装的验证APP查看验证码, APP中默认验证名为: <code class="text-info"><%=loginname%>@Jiuyanlou</code>
+                        </div>
+                    <%}%>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='github'>验证码</label>
+                        <div class='col-sm-10'>
+                            <input class='form-control' id='two-factor-value' name='tfv' size='20' type='text'/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="two-factor-close" class="btn" data-dismiss="modal">Close</button>
+                    <button type="button" id="toggle-two-factor" class="btn toggle-two-factor toggle_two_factor_name"><%if (!is_two_factor) {%>开启<% } else {%>关闭<% } %>双因子验证</button>
             </div>
         </div>
     </div>
@@ -382,4 +435,28 @@
     function hideSelf(obj) {
         $(obj).fadeOut();
     }
+
+    $(document).on('click', '.toggle-two-factor', function (event) {
+        var tfv = $('#two-factor-value').val();
+        if (!tfv) {
+            return;
+        }
+        var toggleTF = {tfv: tfv};
+        $.ajax({
+            type: "POST",
+            url: "/user/<%= loginname%>/two_factor",
+            data: toggleTF
+        }).done(function (response) {
+            if (response.success) {
+                $('#two_factor').modal('hide');
+                if (response.is_two_factor) {
+                    $('.toggle_two_factor_name').html('关闭双因子验证');
+                } else {
+                    $('.toggle_two_factor_name').html('开启双因子验证');
+                }
+            }
+        }).error(function(res){
+            console.error(res);
+        });
+    });
 </script>
