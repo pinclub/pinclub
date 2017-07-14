@@ -112,4 +112,9 @@ base: '/',
 config: picConfig
 }) %>
 <% } %>
-
+<!-- scripts -->
+<%- Loader('/public/javascripts/layout.min.js')
+.js('/public/libs/jquery.sticky-kit.min.js')
+.js('/public/javascripts/sticky.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

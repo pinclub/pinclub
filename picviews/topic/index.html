@@ -15,7 +15,7 @@
     <%- partial('../_ads') %>
     <% } %>
 
-    <div class='panel'>
+    <div class='panel pd10'>
         <div class='header'>
             <span class='col_fade'>作者其它话题</span>
         </div>
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div class='panel'>
+    <div class='panel pd10'>
         <div class='header'>
             <span class='col_fade'>无人回复的话题</span>
         </div>
@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div class='panel'>
+    <div class='panel pd10'>
         <%- partial('../static/image_ad_fix.html') %>
     </div>
 </div>
@@ -140,21 +140,21 @@
     </div>
 
     <% if (topic.replies && topic.replies.length > 0) { %>
-    <div class='panel'>
+    <div class='panel pd10'>
         <div class='cell'>
             <span class='col_fade'><%= topic.replies.length %> 回复&nbsp;·&nbsp;直到 <%= topic.last_reply_at_age() %></span>
         </div>
         <%- partial('../reply/reply', topic.replies) %>
     </div>
     <% } else { %>
-    <div class="box transparent">
+    <div class="box transparent pd10">
         <div class="cell" style="text-align: center">
             <span style="color: rgba(0, 0, 0, 0.25);">目前尚无回复</span>
         </div>
     </div>
     <% } %>
     <% if (current_user && typeof(topic) !== 'undefined') { %>
-    <div class='panel'>
+    <div class='panel pd10'>
         <div class='header'>
             <span class='col_fade'>添加回复</span>
         </div>

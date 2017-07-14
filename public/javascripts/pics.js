@@ -51,6 +51,7 @@ $('#pic-page-marker').on('lazyshow', function () {
             gridMasonry.masonry('layout');
             $("#pic-page-marker").remove();
         }
+        $("#content_text").trigger("sticky_kit:recalc");
         pic_page++;
     });
 }).lazyLoadXT({visibleOnly: false});
@@ -216,8 +217,8 @@ function loadTopicList (page, forum, loginname) {
         if (itemLength >= 10) {
             $(window).lazyLoadXT();
             $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
-        // } else {
-        //     $("#page-marker").remove();
+        } else {
+            $('#topic_list').append('<div class="cell text-center" style="color:#999;">已经没有更多主题</div>');
         }
         topic_page++;
 

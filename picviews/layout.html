@@ -38,7 +38,7 @@
     %>
 
     <!-- scripts -->
-    <%- Loader('/public/javascripts/index.min.js')
+    <%- Loader('/public/javascripts/layout.min.js')
     .js('/public/libs/jquery-2.1.0.js')
     .js('/public/libs/lodash.min.js')
     .js('/public/libs/jquery-ujs.js')
@@ -48,6 +48,7 @@
     .js('/public/libs/jquery.lazyloadxt.js')
     .js('/public/libs/jquery.nicescroll.js')
     .js('/public/libs/jquery.tmpl.min.js')
+    .js('/public/libs/jquery.sticky-kit.min.js')
     .js('/public/libs/markdownit.js')
     .js('/public/libs/code-prettify/prettify.js')
     .js('/public/libs/qrcode.js')
@@ -67,7 +68,7 @@
     <meta content="<%= csrf %>" name="csrf-token">
 </head>
 <body>
-<div id='main'>
+<div id='main' class="clearfix">
     <%- body %>
 </div>
 <div id='backtotop'>回到顶部</div>

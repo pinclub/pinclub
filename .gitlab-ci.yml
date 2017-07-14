@@ -8,15 +8,6 @@ stages:
   - test
   - deploy
 
-#test:
-#  stage: test
-#  only:
-#      - master
-#  script:
-#    - deploy 47.52.20.174/jinwan/laibijia.git laibijia
-#    - ./node_modules/.bin/istanbul cover _mocha
-#  tags:
-#    - jinwan-ci
 build:
   stage: build
   script:

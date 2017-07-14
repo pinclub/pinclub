@@ -17,7 +17,7 @@ body {
   max-width: 1496px;
   min-width: 960px;
   margin: 50px auto 15px;
-  min-height: 400px;
+  height: 100%;
   position: relative;
 }
 
@@ -39,7 +39,7 @@ body {
 }
 
 #content_text {
-  padding: 0;
+  //padding: 0;
   margin-right: 50%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -50,7 +50,6 @@ body {
 #content_pic {
   float: right;
   width: 50%;
-  height: 100px;
 }
 
 #sidebar {
@@ -254,7 +253,11 @@ a.light:hover {
 }
 
 .panel {
-  margin-bottom: 13px;
+  margin-bottom: 0px;
+}
+
+.pd10 {
+  margin: 10px 0;
 }
 
 #content_pic .panel {
@@ -2065,4 +2068,8 @@ textarea.editor {
 
 .fa-send:before, .fa-paper-plane:before {
   content: "\f1d8";
+}
+
+.is_stuck {
+  margin-bottom: 20px;
 }
