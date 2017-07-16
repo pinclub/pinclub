@@ -80,7 +80,7 @@ exports.upload = function (file, options, callback) {
                 _.forEach(options.filesize, function (fileResize) {
                     let resizeFilename = mdfilename + '_' + fileResize + fileext;
                     resizeImg(fs.readFileSync(filePath), {width: fileResize}).then(buf => {
-                        fs.writeFileSync(resizeFilename, buf);
+                        fs.writeFileSync(path.join(upload_path, resizeFilename), buf);
                     });
                 });
                 callback(null, {

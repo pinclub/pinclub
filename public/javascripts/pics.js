@@ -26,35 +26,37 @@ var topic_forum = '';
 $('#page-marker').on('lazyshow', function () {
     loadTopicList(topic_page, topic_forum);
 
-}).lazyLoadXT({visibleOnly: false});
+}).lazyLoadXT({visibleOnly: false, checkDuplicates: false});
 
 $('#pic-page-marker').on('lazyshow', function () {
-    $.ajax({
-        url: "/api/v2/images?type=image&limit=5&page=" + pic_page
-    }).done(function (responseText) {
-        var itemLength = responseText.data.length;
-        responseText.data.forEach(function (item) {
-            var itemHtml = $("#picBoxTmp").tmpl({item: item});
-            lastItemId['all'] = item.id;
-            var jpicelements = $(itemHtml);
-            gridMasonry.append(jpicelements)
-                .masonry('appended', jpicelements);
-        });
-        gridMasonry.imagesLoaded().progress(function () {
-            gridMasonry.masonry('layout');
-        });
-        if (itemLength >= 5) {
-            gridMasonry.masonry('layout');
-            $(window).lazyLoadXT();
-            $('#pic-page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
-        } else {
-            gridMasonry.masonry('layout');
-            $("#pic-page-marker").remove();
-        }
-        $("#content_text").trigger("sticky_kit:recalc");
-        pic_page++;
-    });
-}).lazyLoadXT({visibleOnly: false});
+    // $.ajax({
+    //     url: "/api/v2/images?type=image&limit=5&page=" + pic_page
+    // }).done(function (responseText) {
+    //     var itemLength = responseText.data.length;
+    //     responseText.data.forEach(function (item) {
+    //         var itemHtml = $("#picBoxTmp").tmpl({item: item});
+    //         lastItemId['all'] = item.id;
+    //         var jpicelements = $(itemHtml);
+    //         gridMasonry.append(jpicelements)
+    //             .masonry('appended', jpicelements);
+    //     });
+    //     gridMasonry.imagesLoaded().progress(function () {
+    //         gridMasonry.masonry('layout');
+    //     });
+    //     if (itemLength >= 5) {
+    //         gridMasonry.masonry('layout');
+    //         $(window).lazyLoadXT();
+    //         $('#pic-page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
+    //     } else {
+    //         gridMasonry.masonry('layout');
+    //         $("#pic-page-marker").remove();
+    //     }
+    //     // $("#content_text").trigger("sticky_kit:recalc");
+    //     $("#content_pic").parent().getNiceScroll().resize();
+    //     pic_page++;
+    // });
+    loadPicList(pic_page++);
+}).lazyLoadXT({visibleOnly: true, checkDuplicates: false});
 
 // TODO 考虑是否使用 http://www.dropzonejs.com/ 上传插件修改上传代码, 支持拖拽上传
 
@@ -222,5 +224,32 @@ function loadTopicList (page, forum, loginname) {
         }
         topic_page++;
 
+    });
+}
+
+function loadPicList(page) {
+    $.ajax({
+        url: "/api/v2/images?type=image&limit=5&page=" + page
+    }).done(function (responseText) {
+        var itemLength = responseText.data.length;
+        responseText.data.forEach(function (item) {
+            var itemHtml = $("#picBoxTmp").tmpl({item: item});
+            lastItemId['all'] = item.id;
+            var jpicelements = $(itemHtml);
+            gridMasonry.append(jpicelements)
+                .masonry('appended', jpicelements);
+        });
+        gridMasonry.imagesLoaded().progress(function () {
+            gridMasonry.masonry('layout');
+        });
+        if (itemLength >= 5) {
+            gridMasonry.masonry('layout');
+            $('#pic-page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
+        } else {
+            gridMasonry.masonry('layout');
+            $("#pic-page-marker").remove();
+        }
+        $("#content_text").trigger("sticky_kit:recalc");
+        // $("#content_pic").parent().getNiceScroll().resize();
     });
 }

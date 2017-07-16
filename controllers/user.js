@@ -172,7 +172,8 @@ exports.setting = function (req, res, next) {
             signature: data.signature,
             weibo: data.weibo,
             accessToken: data.accessToken,
-            avatar_url: data.avatar_url
+            avatar_url: data.avatar_url,
+            is_two_factor: data.is_two_factor
         };
         if (isSuccess) {
             data2.success = msg;

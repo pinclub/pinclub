@@ -4,7 +4,50 @@
 %>
 
 <%- partial('navbar') %>
-<div id="content_pic">
+
+<div id="content_text" class="col-md-6">
+  <div class="panel">
+    <div class="header">
+      <!-- DONE (hhdem) 首页中板块切换修改为ajax请求-->
+      <% [{_id:'all', title:'全部'}, {_id:'good', title:'精华'}].concat(forums).forEach(function (forum) {
+      var value = forum._id;
+      var text = forum.title;
+      %>
+      <a href="#" onclick="return false;"
+         class="topic-tab <%= value === 'all' ? 'current-tab' : '' %>" data-id="<%= value %>"><%= text %></a>
+      <% }) %>
+    </div>
+    <div id="sub_header" class="cell" style="background-color: #f9f9f9; padding: 10px;font-size: 12px;color:#778087;">
+      <div class="pull-right">
+        <a href="/topic/create">发布新话题</a>
+        <li class="fa fa-caret-right gray"></li>
+      </div>
+      <div class="pull-left">
+
+        <div id="total_count" class="pull-left"></div>
+        <div id="child_forums" class="pull-left"></div>
+      </div>
+    </div>
+    <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
+    <div class="innerTopic no-padding no-margin">
+      <%- partial('topic/list', {
+      topics: topics,
+      pages: pages,
+      current_page: current_page,
+      base: '/',
+      config: picConfig
+      }) %>
+    </div>
+    <% } else { %>
+    <div class="innerTopic">
+      <p>无话题</p>
+    </div>
+    <% } %>
+  </div>
+  <div id="page-marker"></div>
+</div>
+
+<div id="content_pic" class="col-md-6">
   <div class="panel" style="-webkit-box-shadow: none;box-shadow: none;">
     <div id="pic_list" class="grid">
       <div class="grid-sizer"></div>
@@ -59,49 +102,8 @@
         </div>
       </div>
     </div>
-    <div id="pic-page-marker"></div>
+    <div id="pic-page-marker" style="height: 32px;"></div>
   </div>
-</div>
-<div id="content_text">
-  <div class="panel">
-    <div class="header">
-      <!-- DONE (hhdem) 首页中板块切换修改为ajax请求-->
-      <% [{_id:'all', title:'全部'}, {_id:'good', title:'精华'}].concat(forums).forEach(function (forum) {
-      var value = forum._id;
-      var text = forum.title;
-      %>
-      <a href="#" onclick="return false;"
-         class="topic-tab <%= value === 'all' ? 'current-tab' : '' %>" data-id="<%= value %>"><%= text %></a>
-      <% }) %>
-    </div>
-    <div id="sub_header" class="cell" style="background-color: #f9f9f9; padding: 10px;font-size: 12px;color:#778087;">
-      <div class="pull-right">
-        <a href="/topic/create">发布新话题</a>
-        <li class="fa fa-caret-right gray"></li>
-      </div>
-      <div class="pull-left">
-
-        <div id="total_count" class="pull-left"></div>
-        <div id="child_forums" class="pull-left"></div>
-      </div>
-    </div>
-    <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
-    <div class="innerTopic no-padding no-margin">
-      <%- partial('topic/list', {
-      topics: topics,
-      pages: pages,
-      current_page: current_page,
-      base: '/',
-      config: picConfig
-      }) %>
-    </div>
-    <% } else { %>
-    <div class="innerTopic">
-      <p>无话题</p>
-    </div>
-    <% } %>
-  </div>
-  <div id="page-marker"></div>
 </div>
 <% if (picConfig.lazyload) { %>
 <%- partial('topic/_pic_list', {
