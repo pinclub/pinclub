@@ -85,6 +85,7 @@ exports.index = function (req, res, next) {
         // 获取板块信息
         var queryForum = {};
         queryForum.type = 'public';
+        queryForum.parent = {$exists: false };
         if (!!currentUser) {
             queryForum.type = {$ne: 'private'};
         }

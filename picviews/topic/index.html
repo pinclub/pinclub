@@ -165,8 +165,11 @@
                     <div class='markdown_in_editor'>
                         <textarea class='editor' name='r_content' rows='8'></textarea>
 
-                        <div class='editor_buttons'>
-                            <input class='span-primary submit_btn' type="submit" data-loading-text="回复中.." value="回复<%= topic.lock ? '(此主题已锁定)' : ''%>" <%= topic.lock ? 'disabled="disabled"' :'' %> />
+                        <div class='editor_buttons '>
+                            <button type="button" class='btn' id="preview_topic_content">
+                                <li class="fa fa-eye"></li>&nbsp;预览</button>
+                            <button type="submit" class='btn' data-loading-text="回复中.." <%= topic.lock ? 'disabled="disabled"' :'' %>>
+                                <li class="fa fa-paper-plane"></li>&nbsp;回复<%= topic.lock ? '(此主题已锁定)' : ''%></button>
                         </div>
                     </div>
 
@@ -210,7 +213,9 @@
                 status: []
             });
             var $el = $(this);
-
+            $('#preview_topic_content').on('click', function (e) {
+                editor.togglePreview();
+            });
             editor.render(this);
             //绑定editor
             $(this).data('editor', editor);

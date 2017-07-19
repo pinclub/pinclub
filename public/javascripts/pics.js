@@ -23,10 +23,10 @@ $(".grid-item .actions .right a").click(function (e) {
 var topic_page = 1;
 var pic_page = 1;
 var topic_forum = '';
+var forum_title = '全部';
 $('#page-marker').on('lazyshow', function () {
-    loadTopicList(topic_page, topic_forum);
-
-}).lazyLoadXT({visibleOnly: false, checkDuplicates: false});
+    loadTopicList(topic_page, topic_forum, forum_title);
+}).lazyLoadXT({visibleOnly: false, checkDuplicates: true});
 
 $('#pic-page-marker').on('lazyshow', function () {
     // $.ajax({
@@ -64,17 +64,18 @@ $('#pic-page-marker').on('lazyshow', function () {
 // 绑定首页板块连接的点击事件
 $(document).on('click', '.topic-tab', function (event) {
     topic_page = 1;
-    var loginname;
+    var title;
     if (!!event.currentTarget.dataset.id) {
         topic_forum = event.currentTarget.dataset.id;
     }
-    if (!!event.currentTarget.dataset.loginname) {
-        loginname = event.currentTarget.dataset.loginname;
+    if (!!event.currentTarget.dataset.title) {
+        title = event.currentTarget.dataset.title;
     }
     $('#topic_list').html('');
     $('#content_text .topic-tab').removeClass('current-tab');
     $(this).addClass('current-tab');
-    loadTopicList(topic_page, topic_forum, loginname);
+    forum_title = title;
+    loadTopicList(topic_page, topic_forum, title);
 });
 
 // 绑定更多相似图片按钮点击事件
@@ -181,7 +182,7 @@ function similarPics(picid) {
     });
 }
 
-function loadTopicList (page, forum, loginname) {
+function loadTopicList (page, forum, title) {
     var params = 'show_type=index';
     if (!page) {
         page = 1;
@@ -191,9 +192,7 @@ function loadTopicList (page, forum, loginname) {
         params += '&forum=' + forum;
         topic_forum = forum;
     }
-    if (!!loginname) {
-        params += '&loginname=' + loginname;
-    }
+    title = title || '';
     $.ajax({
         url: "/api/v2/topics?" + params
     }).done(function (responseText) {
@@ -209,18 +208,18 @@ function loadTopicList (page, forum, loginname) {
             elements.push($("#topicListTmp").tmpl({topic: item, avator: true}));
         });
         $('#topic_list').append(elements);
-        $('#total_count').html('共 ' + responseText.total_count + ' 个话题');
+        $('#total_count').html('<span style="color: #333;">' + title + '</span> 共 ' + responseText.total_count + ' 个话题');
         $('#child_forums').html('');
         if (!!responseText.child_forums && responseText.child_forums.length > 0) {
             _.forEach(responseText.child_forums, function(child){
-                $('#child_forums').append('&nbsp;&nbsp;•&nbsp;<a href="/forums/'+child._id+'" style="color: #778087;">' + child.title + '</a>');
+                $('#child_forums').append('&nbsp;&nbsp;•&nbsp;<a href="#" onclick="return false;" class="topic-tab" style="color: #778087;" data-id="' + child._id+ '" data-title="'+child.title+'">' + child.title + '</a>');
             });
         }
         if (itemLength >= 10) {
             $(window).lazyLoadXT();
             $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
         } else {
-            $('#topic_list').append('<div class="cell text-center" style="color:#999;">已经没有更多主题</div>');
+            $('#no_more_topic').show();
         }
         topic_page++;
 

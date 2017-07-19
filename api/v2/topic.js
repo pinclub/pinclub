@@ -22,6 +22,7 @@ var validator = require('validator');
  * @apiGroup topic
  *
  * @apiParam {String} type 类型, image 图片 text 文字(默认)
+ * @apiParam [{String}] author 用户Id
  * @apiParam {Number} page 页数
  * @apiParam {String} tab 主题分类。目前有 ask share job good
  * @apiParam {Number} limit 每一页的主题数量
@@ -73,7 +74,6 @@ var index = function (req, res, next) {
     var forum = req.query.forum;
     var author = req.query.author;
     var limit = Number(req.query.limit) || config.list_topic_count;
-    var show_type = req.query.show_type || 'default';
     var currentUser = req.session.user;
 
     var query = {};
@@ -113,19 +113,21 @@ var index = function (req, res, next) {
         res.send({success: true, data: topics, total_count: topics_count, child_forums:child_forums});
     });
 
+    // 获得对应 forum 的 topics
     ep.on('forums',
         function (forums) {
-            let childQuery = {};
-            if (!query.forum) {
-                var forumIds = _.map(forums, '_id');
-                query.forum = {$in: forumIds};
-                ep.emit('child_forums', []);
-            } else {
-                childQuery.parent = query.forum;
-                ForumProxy.getForumsByQuery(childQuery, {}, ep.done('child_forums'));
-            }
-            TopicProxy.getCountByQuery(query, ep.done('topics_count'));
-            TopicProxy.getTopicsByQuery(query, options, ep.done('topics', function (topics) {
+            var queryForm = {};
+            query.good? queryForm.good = true:null;
+            var forumIds = _.map(forums, '_id');
+            queryForm.forum = {$in: forumIds};
+            let selectForum = query.forum;
+            forums = _.dropWhile(forums, function(obj) {
+                return obj._id == selectForum;
+            });
+            ep.emit('child_forums', !query.forum? []:forums);
+
+            TopicProxy.getCountByQuery(queryForm, ep.done('topics_count'));
+            TopicProxy.getTopicsByQuery(queryForm, options, ep.done('topics', function (topics) {
                 if (!!currentUser) {
                     let topic_t_ids = _.map(topics, 'id');
                     TopicLike.getTopicLikesByUserIdAndTopicIds(req.session.user._id, topic_t_ids, {}, ep.done('liked_topics'));
@@ -138,22 +140,43 @@ var index = function (req, res, next) {
 
         });
 
-    // 取板块数据
+    // 取可以展示的 forums 列表
     var queryForum = {};
+    let queryStr = "";
     queryForum.type = 'public';
     if (!!currentUser) {
         queryForum.type = {$ne: 'private'};
     }
-    queryForum.show_type = show_type;
-    var forumsCacheKey = JSON.stringify(queryForum) + 'pages';
+    if (!!query.forum) {
+        // queryForum.code = eval('/' + query.forum + '/');
+        queryStr = query.forum;
+    }
+    if (!!query.show_type) {
+        queryForum.show_type = query.show_type;
+    }
+    var forumsCacheKey = JSON.stringify(queryForum) + queryStr + 'pages';
     cache.get(forumsCacheKey, ep.done(function (forums) {
         if (forums) {
             ep.emit('forums', forums);
         } else {
-            ForumProxy.getForumsByQuery(queryForum, {limit: 10}, ep.done(function (forums) {
-                cache.set(forumsCacheKey, forums, 60 * 1);
-                ep.emit('forums', forums);
-            }));
+            if (!!query.forum) {
+                ForumProxy.getForum(query.forum, function (err, forum) {
+                    if (!!forum.code) {
+                        queryForum.code = eval('/' + forum.code + '/');
+                        ForumProxy.getForumsByQuery(queryForum, {}, ep.done(function (forums) {
+                            cache.set(forumsCacheKey, forums, 60 * 1);
+                            ep.emit('forums', forums);
+                        }));
+                    } else {
+                        ep.emit('forums', [forum]);
+                    }
+                });
+            } else {
+                ForumProxy.getForumsByQuery(queryForum, {limit: 10}, ep.done(function (forums) {
+                    cache.set(forumsCacheKey, forums, 60 * 1);
+                    ep.emit('forums', forums);
+                }));
+            }
         }
     }));
 

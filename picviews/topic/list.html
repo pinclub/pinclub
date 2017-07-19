@@ -2,7 +2,9 @@
     <% if (!config.lazyload) { %>
         <%- partial('../topic/abstract', {collection:topics, as:'topic'}) %>
     <% } %>
+
 </div>
+<div id="no_more_topic" class="cell text-center" style="color:#999;display: none;">已经没有更多主题</div>
 <% if (!config.lazyload) { %>
 <% var base_url = base + (base.indexOf('?') < 0 ? '?' : '&')
 + 'tab=' + (typeof tab !== 'undefined' ? tab : '') + '&page='; %>

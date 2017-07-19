@@ -2,26 +2,31 @@
 <!-- DONE(hhdem) 用户首页中样式调整 -->
 <!-- TODO 我的页面中增加 Board 管理 -->
 <%- partial('navbar') %>
+<%- Loader('/public/stylesheets/users.min.css')
+.css('/public/stylesheets/users.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
 <div id="user_content">
-<div class="row">
-    <div class="col-md-8">
+    <div class="right">
+        <%- partial('_index_boards') %>
+    </div>
+    <div class="left">
         <div class="panel">
             <div class="cell">
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
-                        <td width="73" valign="top" align="center" class="user_big_avatar">
-                            <img src="<%= avatarPath(user.avatar_url, 'fixed') %>" title="<%= user.loginname %>"/>
+                        <td width="54" valign="top" align="center" class="user_mid_avatar">
+                            <img src="<%= avatarPath(user.avatar_url, '54') %>" title="<%= user.loginname %>"/>
                         </td>
                         <td width="10"></td>
                         <td width="auto" valign="top" align="left">
                             <div class="pull-right">
 
-
                             </div>
-                            <h1 class="topic_full_title"><%= user.loginname %></h1>
+                            <h1 class="topic_full_title" style="line-height: 100%;"><%= user.loginname %></h1>
                             <span class="col_fade">
-                                    <span class='big'><%= user.score %></span> 积分，于 <%= user.create_at_ago() %> 加入本站</span>
-
+                                <span ><%= user.score %></span> 积分，于 <%= user.create_at_ago() %> 加入本站
+                            </span>
                         </td>
                     </tr>
                 </table>
@@ -85,8 +90,19 @@
                 var text = forum.title;
                 %>
                 <a href="#" onclick="return false;"
-                   class="topic-tab <%= value === 'all' ? 'current-tab' : '' %>" data-id="<%= value %>" data-author="<%= user.id %>"><%= text %></a>
+                   class="topic-tab <%= value === 'all' ? 'current-tab' : '' %>" data-id="<%= value %>" data-author="<%= user.id %>" data-title="<%= text %>"><%= text %></a>
                 <% }) %>
+            </div>
+            <div id="sub_header" class="cell" style="background-color: #f9f9f9; padding: 10px;font-size: 12px;color:#778087;">
+                <div class="pull-right">
+                    <a href="/topic/create">发布新话题</a>
+                    <li class="fa fa-caret-right gray"></li>
+                </div>
+                <div class="pull-left">
+
+                    <div id="total_count" class="pull-left"></div>
+                    <div id="child_forums" class="pull-left"></div>
+                </div>
             </div>
             <div id="topic_list" >
             </div>
@@ -108,12 +124,7 @@
             <% } %>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="row">
-            <%- partial('_index_boards') %>
-        </div>
-    </div>
-</div>
+
 </div>
 
 
@@ -122,19 +133,22 @@
     $(document).ready(function () {
         // 绑定板块连接的点击事件
         $(document).on('click', '.topic-tab', function (event) {
-            var author;
+            var author, title;
             if (!!event.currentTarget.dataset.id) {
                 topic_forum = event.currentTarget.dataset.id;
             }
             if (!!event.currentTarget.dataset.author) {
                 author = event.currentTarget.dataset.author;
             }
+            if (!!event.currentTarget.dataset.title) {
+                title = event.currentTarget.dataset.title;
+            }
             $('#topic_list').html('');
             $('#user_content .topic-tab').removeClass('current-tab');
             $(this).addClass('current-tab');
-            loadUserTopicList(topic_forum, author);
+            loadUserTopicList(topic_forum, author, title);
         });
-        loadUserTopicList('all', '<%= user.id %>');
+        loadUserTopicList('all', '<%= user.id %>', '全部');
         <% if (current_user) { %>
             $('#set_star_btn').click(function () {
                 var $me = $(this);

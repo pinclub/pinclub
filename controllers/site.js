@@ -110,6 +110,7 @@ exports.index = function (req, res, next) {
     var queryForum = {};
     queryForum.type = 'public';
     queryForum.show_type = 'index';
+    queryForum.parent = {$exists: false };
     if (!!currentUser) {
         queryForum.type = {$ne: 'private'};
     }

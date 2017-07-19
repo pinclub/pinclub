@@ -1,6 +1,6 @@
 var Forum        = require('../proxy').Forum;
 var _            = require('lodash');
-
+var EventProxy = require('eventproxy');
 // DONE (hhdem) Forum信息添加和修改
 exports.create = function (req, res, next) {
     req.checkBody({
@@ -29,42 +29,62 @@ exports.create = function (req, res, next) {
                 err: result.useFirstErrorOnly().mapped()
             }).end();
         }
+
+        var ep = new EventProxy();
+        ep.fail(next);
+
         let data = _.pick(req.body, ['id', 'title', 'content', 'path_name', 'type', 'order', 'bannerImage', 'css_text', 'js_text', 'template', 'managers', 'members', 'parent', 'show_type']);
-        data.user_id = req.session.user._id;
-        if (!!data.id) {
-            // 修改
-            Forum.getForum(data.id, function(err, forum) {
-                if (err) {
-                    return next(err);
+
+        ep.on('parent',
+            function (parent) {
+                data.user_id = req.session.user._id;
+                if (!!parent) {
+                    data.code = parent.code + '_' + data.path_name;
+                } else {
+                    data.code = data.path_name;
                 }
-                forum.title = data.title;
-                forum.content = data.content;
-                forum.path_name = data.path_name;
-                forum.type = data.type;
-                forum.show_type = data.show_type;
-                forum.order = data.order;
-                forum.template = data.template;
-                forum.bannerImage = data.bannerImage;
-                forum.css_text = data.css_text;
-                forum.js_text = data.js_text;
-                forum.managers = data.managers;
-                forum.members = data.members;
-                forum.parent = data.parent;
-                forum.save(function (err) {
-                    if (err) {
-                        return next(err);
-                    }
-                    res.redirect('/admin/forums');
-                });
+                if (!!data.id) {
+                    // 修改
+                    Forum.getForum(data.id, function (err, forum) {
+                        if (err) {
+                            return next(err);
+                        }
+                        forum.title = data.title;
+                        forum.content = data.content;
+                        forum.path_name = data.path_name;
+                        forum.code = data.code;
+                        forum.type = data.type;
+                        forum.show_type = data.show_type;
+                        forum.order = data.order;
+                        forum.template = data.template;
+                        forum.bannerImage = data.bannerImage;
+                        forum.css_text = data.css_text;
+                        forum.js_text = data.js_text;
+                        forum.managers = data.managers;
+                        forum.members = data.members;
+                        forum.parent = data.parent;
+                        forum.save(function (err) {
+                            if (err) {
+                                return next(err);
+                            }
+                            res.redirect('/admin/forums');
+                        });
+                    });
+                } else {
+                    // 新增
+                    Forum.newAndSave(data, function (err, forum) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.redirect('/admin/forums');
+                    });
+                }
             });
+
+        if (!!data.parent) {
+            Forum.getForum(data.parent, ep.done('parent'));
         } else {
-            // 新增
-            Forum.newAndSave(data, function (err, forum) {
-                if (err) {
-                    return next(err);
-                }
-                res.redirect('/admin/forums');
-            });
+            ep.emit('parent', null);
         }
     });
 };
