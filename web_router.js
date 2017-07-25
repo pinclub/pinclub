@@ -132,6 +132,8 @@ router.get('/boards', onlineM.add, auth.userSigninRequired, board.index);
 router.post('/boards', auth.userSigninRequired, board.create);
 router.get('/boards/:board_id', onlineM.add, board.show);
 router.post('/boards/:board_id/edit', auth.userSigninRequired, board.edit);
+router.post('/board/collect', auth.userRequired, board.collect); // 关注某Board
+router.post('/board/de_collect', auth.userRequired, board.collect); // 取消关注Board
 
 // forum 列表
 router.get('/forums/:id', forum.show);

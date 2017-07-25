@@ -3,6 +3,7 @@ var TopicProxy = require('../../proxy').Topic;
 var TopicLike = require('../../proxy').TopicLike;
 var TopicBoard = require('../../proxy').TopicBoard;
 var BoardProxy = require('../../proxy').Board;
+var BoardCollect = require('../../proxy').BoardCollect;
 var UserProxy = require('../../proxy').User;
 var counter = require('../../common/counter');
 var config = require('../../config');
@@ -475,7 +476,15 @@ exports.show = function (req, res, next) {
         if (!!full_topic.image && full_topic.image.lastIndexOf('.') < 0) {
             full_topic.image_fixed = full_topic.image + config.qn_access.style[2];
         }
-        res.send({success: true, data: full_topic});
+        BoardCollect.getBoardCollect(req.session.user._id, full_topic.board.id, function (err, bc) {
+            if (bc) {
+                full_topic.board.is_collect = true;
+            } else {
+                full_topic.board.is_collect = false;
+            }
+            res.send({success: true, data: full_topic});
+        });
+
     });
 
     TopicProxy.getFullImage(topicId, ep.done(function (msg, topic, replies) {

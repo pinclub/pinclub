@@ -17,10 +17,13 @@
         <div class="board-description">
             <%= board.content || '' %>
         </div>
-        <div class="action-buttons"><a data-id="<%= board.id %>" href="#" onclick="return false;"
-                                       class="follow-board  btn rbtn"><span class="text"> 关注此画板</span></a><a
-                data-id="<%= board.content %>" href="#" onclick="return false;" class="like-board btn-with-icon btn"><i
-                class="class"></i><span class="text">2喜欢</span></a>
+        <div class="action-buttons">
+            <button data-id="<%= board.id %>" href="#<%= board.id %>" class="follow-board btn-with-icon btn <%if (is_collect) {%>rbtn<%}%>">
+                <i class="fa fa-plus"></i>关注
+            </button>
+            <button data-id="<%= board.id %>" href="#" onclick="return false;" class="like-board btn-with-icon btn">
+                <i class="fa fa-heart"></i>2喜欢
+            </button>
         </div>
     </div>
     <div class="bar"><a href="/user/<%= board.creator.loginname%>" class="user-unit x"><img

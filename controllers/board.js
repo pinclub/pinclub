@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var Board = require('../proxy').Board;
+var BoardCollect = require('../proxy').BoardCollect;
 var Topic = require('../proxy').Topic;
 var User = require('../proxy').User;
 var EventProxy = require('eventproxy');
@@ -54,22 +55,44 @@ exports.show = function (req, res, next) {
                 err: result.useFirstErrorOnly().mapped()
             }).end();
         }
-        Board.getFullBoard(req.params.board_id, function (err, msg, board, creator, topics) {
-            if (err) {
-                return next(err);
-            }
-            if (!board) {
-                return res.status(404).json({
-                    success: false,
-                    err_message: 'Board不存在'
-                }).end();
-            }
-            board.creator = creator;
-            res.render('board/topics', {
-                board: board,
-                topics: topics
+        var ep = new EventProxy();
+        ep.fail(next);
+        if (req.session.user) {
+            BoardCollect.getBoardCollect(req.session.user._id, req.params.board_id, function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                if (doc) {
+                    ep.emit('is_collect', true);
+                } else {
+                    ep.emit('is_collect', false);
+                }
+            });
+        } else {
+            ep.emit('is_collect', false);
+        }
+
+
+        ep.on('is_collect', function(is_collect) {
+            Board.getFullBoard(req.params.board_id, function (err, msg, board, creator, topics) {
+                if (err) {
+                    return next(err);
+                }
+                if (!board) {
+                    return res.status(404).json({
+                        success: false,
+                        err_message: 'Board不存在'
+                    }).end();
+                }
+                board.creator = creator;
+                res.render('board/topics', {
+                    board: board,
+                    is_collect: is_collect,
+                    topics: topics
+                });
             });
         });
+
     });
 };
 
@@ -206,5 +229,74 @@ exports.adminEdit = function (req, res, next) {
             }).end();
         }
         return res.redirect('/admin/boards');
+    });
+};
+
+// 关注Board
+exports.collect = function (req, res, next) {
+    var board_id = req.body.id;
+
+    Board.getBoard(board_id, function (err, board) {
+        if (err) {
+            return next(err);
+        }
+
+        BoardCollect.getBoardCollect(req.session.user._id, board._id, function (err, doc) {
+            if (err) {
+                return next(err);
+            }
+            if (doc) {
+                BoardCollect.remove(req.session.user._id, board._id, function (err, removeResult) {
+                    if (err) {
+                        return next(err);
+                    }
+                    if (removeResult.result.n === 0) {
+                        return res.json({
+                            success: false,
+                            err_message: '关注Board信息失败'
+                        });
+                    }
+
+                    User.getUserById(req.session.user._id, function (err, user) {
+                        if (err) {
+                            return next(err);
+                        }
+                        user.collect_board_count -= 1;
+                        req.session.user = user;
+                        user.save();
+                    });
+
+                    board.collect_count -= 1;
+                    board.save();
+
+                    res.json({
+                        success: true,
+                        err_message: '关注Board信息成功'
+                    });
+                });
+            } else {
+
+                BoardCollect.newAndSave(req.session.user._id, board._id, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.json({
+                        success: true,
+                        err_message: '关注Board信息成功'
+                    });
+                });
+                User.getUserById(req.session.user._id, function (err, user) {
+                    if (err) {
+                        return next(err);
+                    }
+                    user.collect_board_count += 1;
+                    user.save();
+                });
+
+                req.session.user.collect_topic_count += 1;
+                board.collect_count += 1;
+                board.save();
+            }
+        });
     });
 };
