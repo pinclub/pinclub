@@ -57,22 +57,6 @@ exports.show = function (req, res, next) {
         }
         var ep = new EventProxy();
         ep.fail(next);
-        if (req.session.user) {
-            BoardCollect.getBoardCollect(req.session.user._id, req.params.board_id, function (err, doc) {
-                if (err) {
-                    return next(err);
-                }
-                if (doc) {
-                    ep.emit('is_collect', true);
-                } else {
-                    ep.emit('is_collect', false);
-                }
-            });
-        } else {
-            ep.emit('is_collect', false);
-        }
-
-
         ep.on('is_collect', function(is_collect) {
             Board.getFullBoard(req.params.board_id, function (err, msg, board, creator, topics) {
                 if (err) {
@@ -92,6 +76,20 @@ exports.show = function (req, res, next) {
                 });
             });
         });
+        if (!!req.session.user) {
+            BoardCollect.getBoardCollect(req.session.user._id, req.params.board_id, function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                if (doc) {
+                    ep.emit('is_collect', true);
+                } else {
+                    ep.emit('is_collect', false);
+                }
+            });
+        } else {
+            ep.emit('is_collect', false);
+        }
 
     });
 };

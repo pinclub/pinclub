@@ -271,41 +271,42 @@
     //    height: 200,
     //  });
     // END qrcode generate
-    var insertImageBoardAfterCreate = true;
+    $(document).ready(function () {
+        var insertImageBoardAfterCreate = true;
 
-    var _csrf = $('meta[name=csrf-token]').attr('content');
-    var uploader = new Q.Uploader({
-        url: "/avatarupload?type=file&_csrf=" + _csrf,
-        target: document.getElementById("upload_area"),
-        view: document.getElementById("preview"),
-        allows: ".jpg,.png,.gif,.bmp,.jpeg",
-        auto: false,
-        multiple: false,
-        dataType: "json",
-        data: {title: 'test'},
-        //图片缩放
-        // DONE(hhdem) 如果服务器是在win环境下, 打开图片缩放将无法成功上传
-        // scale: {
-        //     //最大图片大小(width|height)
-        //     maxWidth: 700
-        // },
-        UI: {
-            init: function () {
-                console.info('UI init method');
-            },
-            draw: function (task) {
-                var self = this,
-                    ops = self.ops,
-                    boxView = ops.view;
+        var _csrf = $('meta[name=csrf-token]').attr('content');
+        var uploader = new Q.Uploader({
+            url: "/avatarupload?type=file&_csrf=" + _csrf,
+            target: document.getElementById("upload_area"),
+            view: document.getElementById("preview"),
+            allows: ".jpg,.png,.gif,.bmp,.jpeg",
+            auto: false,
+            multiple: false,
+            dataType: "json",
+            data: {title: 'test'},
+            //图片缩放
+            // DONE(hhdem) 如果服务器是在win环境下, 打开图片缩放将无法成功上传
+            // scale: {
+            //     //最大图片大小(width|height)
+            //     maxWidth: 700
+            // },
+            UI: {
+                init: function () {
+                    console.info('UI init method');
+                },
+                draw: function (task) {
+                    var self = this,
+                        ops = self.ops,
+                        boxView = ops.view;
 
-                if (!boxView) return;
+                    if (!boxView) return;
 
-                var name = task.name;
+                    var name = task.name;
 
-                var li = '';
-                loadImage(task.file,
-                    function (img, data) {
-                        img.style.width = '54px';
+                    var li = '';
+                    loadImage(task.file,
+                        function (img, data) {
+                            img.style.width = '54px';
 //                        var html =
 //                            '<div class="u-img"></div><span    class="u-loaded"></span><span class="u-total"></span>';
 //                        var taskId = task.id,
@@ -320,143 +321,149 @@
 //
 //                        //添加到视图中
 //                        boxView.appendChild(box);
-                        $('#preview').append(img);
-                        var img2 = cloneCanvas(img);
-                        img2.style.width = '34px';
-                        $('#preview').append(img2);
-                        var img3 = cloneCanvas(img);
-                        img3.style.width = '24px';
-                        $('#preview').append(img3);
-                    },
-                    {orientation: true} // Options
-                );
+                            $('#preview').append(img);
+                            var img2 = cloneCanvas(img);
+                            img2.style.width = '34px';
+                            $('#preview').append(img2);
+                            var img3 = cloneCanvas(img);
+                            img3.style.width = '24px';
+                            $('#preview').append(img3);
+                        },
+                        {orientation: true} // Options
+                    );
 
 
-                //self.previewImage(boxImage, task, ops);
-            },
-            update: function (task) {
+                    //self.previewImage(boxImage, task, ops);
+                },
+                update: function (task) {
 
-            }
-        },
-        on: {
-            //添加之前触发
-            add: function (task) {
-                if (task.disabled) {return alert("允许上传的文件格式为：" + this.ops.allows)}
-                $('#upload_view').show();
-                $('#upload_area').hide();
-            },
-            //图片预览后触发
-            preview: function (data) {
-                console.log(data.task.name + " : " + data.src);
-            },
-            //图片压缩后触发,如果图片或浏览器不支持压缩,则不触发
-            scale: function (data) {
-                console.log(data.task.name + " : 已压缩！");
-            },
-            //上传之前触发
-            upload: function (task) {
-                //可针对单独的任务配置参数(POST方式)
-                var boardSelected = $('#image_upload .right-part .boardlist .item.selected');
-                uploader.data = {
-                    title: $('#preview-desc').val(),
-                    board: boardSelected.data("id")
-                };
-            },
-            //上传完成后触发
-            complete: function (task) {
-                if (task.state != Q.Uploader.COMPLETE) {return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!")}
-
-                var json = task.json;
-                if (!json.success) {
-                    $('#message_alert .alert-content').html(json.msg);
-                    $('#message_alert').fadeIn();
-                    return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
                 }
+            },
+            on: {
+                //添加之前触发
+                add: function (task) {
+                    if (task.disabled) {
+                        return alert("允许上传的文件格式为：" + this.ops.allows)
+                    }
+                    $('#upload_view').show();
+                    $('#upload_area').hide();
+                },
+                //图片预览后触发
+                preview: function (data) {
+                    console.log(data.task.name + " : " + data.src);
+                },
+                //图片压缩后触发,如果图片或浏览器不支持压缩,则不触发
+                scale: function (data) {
+                    console.log(data.task.name + " : 已压缩！");
+                },
+                //上传之前触发
+                upload: function (task) {
+                    //可针对单独的任务配置参数(POST方式)
+                    var boardSelected = $('#image_upload .right-part .boardlist .item.selected');
+                    uploader.data = {
+                        title: $('#preview-desc').val(),
+                        board: boardSelected.data("id")
+                    };
+                },
+                //上传完成后触发
+                complete: function (task) {
+                    if (task.state != Q.Uploader.COMPLETE) {
+                        return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!")
+                    }
 
-                console.log(task.name + ": 服务器返回 " + (task.response || ""));
-                // 把新头像插入页面
+                    var json = task.json;
+                    if (!json.success) {
+                        $('#message_alert .alert-content').html(json.msg);
+                        $('#message_alert').fadeIn();
+                        return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
+                    }
+
+                    console.log(task.name + ": 服务器返回 " + (task.response || ""));
+                    // 把新头像插入页面
                     var resJson = JSON.parse(task.response);
                     var item = resJson.data[0];
                     $("#avatar_list").html($('#preview').children('canvas'));
 
-                //this.list  为上传任务列表
-                //this.index 为当前上传任务索引
-                if (this.index >= this.list.length - 1) {
-                    //所有任务上传完成
-                    console.log("所有任务上传完成：" + new Date());
-                    $('#image_upload').modal('hide');
-                    $('#upload-submit').button('reset');
+                    //this.list  为上传任务列表
+                    //this.index 为当前上传任务索引
+                    if (this.index >= this.list.length - 1) {
+                        //所有任务上传完成
+                        console.log("所有任务上传完成：" + new Date());
+                        $('#image_upload').modal('hide');
+                        $('#upload-submit').button('reset');
+                    }
                 }
+
             }
-
-        }
-    });
-
-    // 开始上传图片
-    document.getElementById("upload-submit").onclick = function () {
-        var $this = $(this);
-        $this.button('loading');
-        uploader.start();
-    };
-
-    $('#image_upload').on('hidden.bs.modal', function (e) {
-        selectUploadAgain();
-    });
-    $('#image_upload').on('hide.bs.modal', function (e) {
-        selectUploadAgain();
-    });
-
-    function isInsertImageBoardAfterCreate (isInsert) {
-        insertImageBoardAfterCreate = isInsert;
-    }
-
-    function cloneCanvas(oldCanvas) {
-        //create a new canvas
-        var newCanvas = document.createElement('canvas');
-        var context = newCanvas.getContext('2d');
-
-        //set dimensions
-        newCanvas.width = oldCanvas.width;
-        newCanvas.height = oldCanvas.height;
-
-        //apply the old canvas to the new one
-        context.drawImage(oldCanvas, 0, 0);
-
-        //return the new canvas
-        return newCanvas;
-    }
-
-    function selectUploadAgain() {
-        $('#upload-submit').button('reset');
-        $('#upload_area').show();
-        $('#upload_view').hide();
-        $('#preview').html('');
-    }
-    function hideSelf(obj) {
-        $(obj).fadeOut();
-    }
-
-    $(document).on('click', '.toggle-two-factor', function (event) {
-        var tfv = $('#two-factor-value').val();
-        if (!tfv) {
-            return;
-        }
-        var toggleTF = {tfv: tfv};
-        $.ajax({
-            type: "POST",
-            url: "/user/<%= loginname%>/two_factor",
-            data: toggleTF
-        }).done(function (response) {
-            if (response.success) {
-                $('#two_factor').modal('hide');
-                if (response.is_two_factor) {
-                    $('.toggle_two_factor_name').html('关闭双因子验证');
-                } else {
-                    $('.toggle_two_factor_name').html('开启双因子验证');
-                }
-            }
-        }).error(function(res){
-            console.error(res);
         });
+
+        // 开始上传图片
+        document.getElementById("upload-submit").onclick = function () {
+            var $this = $(this);
+            $this.button('loading');
+            uploader.start();
+        };
+
+        $('#image_upload').on('hidden.bs.modal', function (e) {
+            selectUploadAgain();
+        });
+        $('#image_upload').on('hide.bs.modal', function (e) {
+            selectUploadAgain();
+        });
+
+        function isInsertImageBoardAfterCreate(isInsert) {
+            insertImageBoardAfterCreate = isInsert;
+        }
+
+        function cloneCanvas(oldCanvas) {
+            //create a new canvas
+            var newCanvas = document.createElement('canvas');
+            var context = newCanvas.getContext('2d');
+
+            //set dimensions
+            newCanvas.width = oldCanvas.width;
+            newCanvas.height = oldCanvas.height;
+
+            //apply the old canvas to the new one
+            context.drawImage(oldCanvas, 0, 0);
+
+            //return the new canvas
+            return newCanvas;
+        }
+
+        function selectUploadAgain() {
+            $('#upload-submit').button('reset');
+            $('#upload_area').show();
+            $('#upload_view').hide();
+            $('#preview').html('');
+        }
+
+        function hideSelf(obj) {
+            $(obj).fadeOut();
+        }
+
+        document.getElementById("toggle-two-factor").onclick = function (event) {
+            var tfv = $('#two-factor-value').val();
+            if (!tfv) {
+                return;
+            }
+            var toggleTF = {tfv: tfv};
+            $.ajax({
+                type: "POST",
+                url: "/user/<%= loginname%>/two_factor",
+                data: toggleTF
+            }).done(function (response) {
+                if (response.success) {
+                    $('#two_factor').modal('hide');
+                    if (response.is_two_factor) {
+                        $('.toggle_two_factor_name').html('关闭双因子验证');
+                    } else {
+                        $('.toggle_two_factor_name').html('开启双因子验证');
+                    }
+                }
+            }).error(function (res) {
+                console.error(res);
+            });
+        };
     });
 </script>

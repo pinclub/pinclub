@@ -22,7 +22,7 @@ var validator = require('validator');
  * @apiGroup topic
  *
  * @apiParam {String} type 类型, image 图片 text 文字(默认)
- * @apiParam [{String}] author 用户Id
+ * @apiParam {String} author 用户Id
  * @apiParam {Number} page 页数
  * @apiParam {String} tab 主题分类。目前有 ask share job good
  * @apiParam {Number} limit 每一页的主题数量
