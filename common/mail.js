@@ -12,10 +12,6 @@ var async = require('async');
  * @param {Object} data 邮件对象
  */
 var sendMail = function (data) {
-  if (config.debug) {
-    return;
-  }
-
   // 重试5次
   async.retry({times: 5}, function (done) {
     transporter.sendMail(data, function (err) {
