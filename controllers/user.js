@@ -17,8 +17,6 @@ var speakeasy = require('speakeasy');
 var QRCode = require('qrcode');
 var _ = require('lodash');
 
-var secret;
-
 exports.index = function (req, res, next) {
     var user_name = req.params.name;
     var currentUser = req.session.user;
@@ -144,12 +142,30 @@ exports.showSetting = function (req, res, next) {
         }
         user.error = null;
         if (!!user.is_two_factor && !!user.two_factor_base32) {
-            secret = user.two_factor_base32;
+            // secret = user.two_factor_base32;
+            cache.set(req.session.user._id + '_tf_secret', user.two_factor_base32, 60 * 2);
             return res.render('user/setting', user);
         } else {
-            var secretO = speakeasy.generateSecret({length: 20});
-            var url = speakeasy.otpauthURL({ secret: secretO.ascii, label: user.loginname+'@Jiuyanlou', algorithm: 'sha1'});
-            secret = secretO.base32;
+            // secret = speakeasy.generateSecret({
+            //     length: 32,
+            //     name: user.loginname+'@Jiuyanlou',
+            //     otpauth_url: true,
+            //     symbols: false
+            // });
+
+            var secret = speakeasy.generateSecret({name: user.loginname+'@Jiuyanlou'});
+
+            var url = speakeasy.otpauthURL({
+                secret: secret.base32 ,
+                label: user.loginname+'@Jiuyanlou',
+                encoding: 'base32'
+            });
+            // secret = secretO.base32;
+            cache.set(req.session.user._id + '_tf_secret', secret.base32, 60 * 2);
+            var token =  speakeasy.totp({
+                secret: secret.base32,
+                encoding: 'base32'
+            });
             QRCode.toDataURL(url, function(err, data_url) {
                 user.two_factor_qr = data_url;
                 return res.render('user/setting', user);
@@ -245,28 +261,43 @@ exports.toggleTwoFactor = function (req, res, next) {
         if (!user) {
             return next(new Error('user is not exists'));
         }
-        let base32 = secret;
-        if (!!user.is_two_factor && !!user.two_factor_base32) {
-            base32 = user.two_factor_base32;
-        } else {
-            user.two_factor_base32 = base32;
-        }
-        var verified = speakeasy.totp.verify({
-            secret: base32,
-            encoding: 'base32',
-            token: code
-        });
-        if (verified) {
-            user.is_two_factor = !user.is_two_factor;
-            user.save(function (err) {
-                if (err) {
-                    return next(err);
+        cache.get(user._id + '_tf_secret', function (err, secret) {
+            if (!err && secret) {
+                let base32 = secret;
+                if (!!user.is_two_factor && !!user.two_factor_base32) {
+                    base32 = user.two_factor_base32;
+                } else {
+                    user.two_factor_base32 = base32;
                 }
-                res.json({success: true, is_two_factor: user.is_two_factor});
-            });
-        } else {
-            res.json({success: false});
-        }
+                var token = speakeasy.totp({
+                    secret: base32,
+                    encoding: 'base32'
+                });
+                var verified = speakeasy.totp.verify({
+                    secret: base32,
+                    token: code,
+                    encoding: 'base32'
+                });
+                // var verified = speakeasy.totp.verify({
+                //     secret: base32,
+                //     encoding: 'base32',
+                //     token: code
+                // });
+                if (verified) {
+                    user.is_two_factor = !user.is_two_factor;
+                    user.save(function (err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.json({success: true, is_two_factor: user.is_two_factor});
+                    });
+                } else {
+                    res.json({success: false});
+                }
+            } else {
+                res.json({success: false});
+            }
+        });
 
     });
 };
