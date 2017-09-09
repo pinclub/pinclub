@@ -5,7 +5,7 @@ node_modules
 .naeindex
 coverage.html
 .monitor
-testcov
+
 .nyc_output
 
 *.hashed.*
@@ -24,6 +24,7 @@ desktop.ini
 .idea
 public/upload/*
 public/apidoc/*
+public/testcov/*
 
 *.sublime-project
 *.sublime-workspace
