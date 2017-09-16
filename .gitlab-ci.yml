@@ -11,7 +11,7 @@ stages:
 job_build:
   stage: build
   script:
-    - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
+    - deploy git.jinwanzhilin.com/liubing/nodeclub.git jiuyanlou
     - makeproject jiuyanlou build
   tags:
     - jinwan-ci
