@@ -8,7 +8,7 @@ stages:
   - test
   - deploy
 
-build:
+job_build:
   stage: build
   script:
     - deploy 47.52.20.174/liubing/nodeclub.git jiuyanlou
@@ -16,14 +16,14 @@ build:
   tags:
     - jinwan-ci
 
-test:
+job_test:
   stage: test
   script:
     - makeproject jiuyanlou test-cov
   tags:
     - jinwan-ci
 
-deploy_staging:
+job_deploy_staging:
   stage: deploy
   script:
     - restart jiuyanlou app.js
