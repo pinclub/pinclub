@@ -111,6 +111,38 @@
         </div>
     </div>
 </div>
+<!-- 用户登录如果开启双因子验证，需要显示modal层-->
+<div class="modal fade" id="two_factor_modal" role="dialog" aria-hidden="true" aria-labelledby="twoFactorModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!--<form id='signin_form' action='/signin' method='post'>-->
+            <div class="modal-header">
+                <h5 class="modal-title">双因子验证</h5>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group text-center">
+                    <small>您的账号开启了双因子验证, 请输入验证码.</small>
+                </div>
+
+                <div class='form-group'>
+                    <label class='control-label' for='signin_modal_name'>验证码</label>
+
+                    <div class='controls'>
+                        <input class='form-control' id='two_factor_code' name='name' size='30' type='text'/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id='two_factor_name' name='name'/>
+                <button type="button" id="two-factor-modal-close" class="btn " data-dismiss="modal">Close</button>
+                <button id="signin_two_factor_button" class='btn'>确定</button>
+            </div>
+            <!--</form>-->
+        </div>
+    </div>
+</div>
 <%- partial('./_tongji') %>
 </body>
 </html>

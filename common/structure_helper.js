@@ -13,7 +13,7 @@ var image_copy_fields = ['author', 'content', 'title',
 
 var user_show_fields = ['loginname', 'avatar_url', 'githubUsername',
     'create_at', 'score', 'topic_count', 'image_count', 'board_count', 'reply_count', 'follower_count', 'following_count', 'collect_tag_count',
-    'collect_topic_count', 'like_image_count', 'get_image_count', 'topic_collect_count'];
+    'collect_topic_count', 'like_image_count', 'get_image_count', 'topic_collect_count', 'is_two_factor'];
 
 var topic_user_fields = ['_id', 'id', 'author', 'author', 'tab', 'content', 'title', 'last_reply_at',
     'good', 'top', 'reply_count', 'visit_count', 'create_at', 'create_at_ago', 'author', 'last_reply', 'image', 'forum'];

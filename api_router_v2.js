@@ -13,6 +13,7 @@ var router            = express.Router();
 
 // Auth
 router.post('/auth/signin', authController.signIn);
+router.post('/auth/signin/two_factor', authController.verifyTwoFactor);
 
 // 主题
 router.get('/topics', topicController.index);
@@ -24,6 +25,7 @@ router.post('/topics/update', middleware.auth, topicController.update);
 router.get('/images', imageController.index);
 router.get('/images/sim', imageController.sim);
 router.get('/images/:id', imageController.show);
+router.delete('/images/:id', middleware.auth, imageController.delete);
 router.post('/images/like', middleware.auth, imageController.like);
 router.post('/images/get', middleware.auth, imageController.getImage);
 

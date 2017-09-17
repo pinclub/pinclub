@@ -534,3 +534,27 @@ exports.show = function (req, res, next) {
     });
 
 };
+
+/**
+ *
+ * TODO (hhdem) 删除图片
+ * @api {delete} /v2/images/:id Get图片
+ * @apiDescription
+ * Get某图片
+ * @apiName deleteImage
+ * @apiGroup images
+ *
+ * @apiUse ApiHeaderType
+ * @apiParam {String} id 要获取的图片 id
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/images/delete
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
+exports.delete = function(req, res, next) {
+    res.send({success: true, data: ''});
+};

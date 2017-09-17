@@ -41,17 +41,26 @@
     %>
 
     <div class="grid-item" id="<%= item.id %>">
-        <div class="actions">
-            <div class="right">
-                <a data-id="<%= item.id %>" title="喜欢" href="javascript:void(0);"
-                   class="like btn-with-icon btn btn14 like-btn<% if (item.liked) { %> unlike<% } %>"><i
-                        class="heart"></i><span class="text"> 2</span></a>
+        <% if (is_creator) { %>
+            <div class="actions">
+                <div class="right">
+                    <a data-id="<%= item.id %>" title="删除" href="javascript:void(0);"
+                       class="delete btn-with-icon btn btn14 delete-btn "><i class="fa fa-trash"></i><span class="text">Del</span></a>
+                </div>
             </div>
-            <div class="left">
-                <a href="#<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>"
-                   data-src="<%= item.image %>" class="btn btn14 wbtn get-pic-btn"><span class="text">Get</span></a>
+        <% } else { %>
+            <div class="actions">
+                <div class="right">
+                    <a data-id="<%= item.id %>" title="喜欢" href="javascript:void(0);"
+                       class="like btn-with-icon btn btn14 like-btn<% if (item.liked) { %> unlike<% } %>"><i
+                            class="heart"></i><span class="text"> 2</span></a>
+                </div>
+                <div class="left">
+                    <a href="#<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>"
+                       data-src="<%= item.image %>" class="btn btn14 wbtn get-pic-btn<% if (is_creator) { %> hide<% } %>"><span class="text">Get</span></a>
+                </div>
             </div>
-        </div>
+        <% }%>
         <a href="#<%= item.id %>" id="pic_<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>"
            data-src="<% if (!!item.image_fixed) {%><%= item.image_fixed %><% } else { %><%= item.image %><%}%>"
            class="preview-image preview_image_btn">
@@ -102,6 +111,7 @@
 .js('/public/libs/masonry.pkgd.js')
 .js('/public/libs/imagesloaded.pkgd.min.js')
 .js('/public/javascripts/pics_like.js')
+.js('/public/javascripts/pics_delete.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
 

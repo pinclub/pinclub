@@ -63,10 +63,42 @@ $(document).ready(function () {
                 password: password
             }
         }).done(function (response) {
-            localStorage.jiuyanlouUser = response.user;
-            location.reload();
+            if (!response.success) {
+                console.error('signin error ', response);
+            }
+            if (response.two_factor) {
+                $('.modal').modal('hide');
+                $('#two_factor_modal').modal('show');
+                $('#two_factor_name').val(loginname);
+            } else {
+                localStorage.jiuyanlouUser = response.user;
+                location.reload();
+            }
         }).error(function(response){
             console.error('signin error ', response);
+        });
+    });
+
+    $('#signin_two_factor_button').click(function (e) {
+        var tfv = $('#two_factor_code').val();
+        var loginname = $('#two_factor_name').val();
+        $.ajax({
+            type: "POST",
+            url: "/api/v2/auth/signin/two_factor",
+            data: {
+                tfv: tfv,
+                name: loginname
+            }
+        }).done(function (response) {
+            if (!response.success) {
+                console.error('signin error ', response);
+            } else {
+                // FIXME not save this localStorage if user singin from /signin page
+                localStorage.jiuyanlouUser = response.user;
+                location.reload();
+            }
+        }).error(function(response){
+            console.error('two factor error ', response);
         });
     });
 });

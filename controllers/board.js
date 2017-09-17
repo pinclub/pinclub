@@ -56,6 +56,7 @@ exports.show = function (req, res, next) {
             }).end();
         }
         var ep = new EventProxy();
+        let isCreator = false;
         ep.fail(next);
         ep.on('is_collect', function(is_collect) {
             Board.getFullBoard(req.params.board_id, function (err, msg, board, creator, topics) {
@@ -69,10 +70,14 @@ exports.show = function (req, res, next) {
                     }).end();
                 }
                 board.creator = creator;
+                if (!!req.session.user){
+                    isCreator = (req.session.user.id == creator.id);
+                }
                 res.render('board/topics', {
                     board: board,
                     is_collect: is_collect,
-                    topics: topics
+                    topics: topics,
+                    is_creator: isCreator
                 });
             });
         });
