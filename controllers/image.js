@@ -20,7 +20,7 @@ var tools = require('../common/tools');
 var store = require('../common/store');
 var config = require('../config');
 var structureHelper = require('../common/structure_helper');
-
+var fs = require('fs');
 var counter = require('../common/counter');
 var ghash = require('ghash');
 var imageinfo = require('imageinfo');
@@ -410,18 +410,32 @@ exports.upload = upload;
 // 点击chrome 插件的 Get this Picture! 按钮后弹出页面
 exports.create = function (req, res, next) {
     // 获得文件类型
+    if (!req.query.media) {
+        res.render('image/_not_image', {
+            tabs: config.tabs
+        });
+    }
+
+    // 去掉 ? 后面的参数 可解决微信公众号里图片抓取的问题
+    let mediaUrl = req.query.media;
+    if (!!mediaUrl.indexOf('?')) {
+        let ms = _.split(mediaUrl, '?', 2);
+        mediaUrl = ms[0];
+    }
+
     request({
-        url: req.query.media,
+        url: mediaUrl,
         encoding: null
     }, function(error, response, buffer) {
         if (error) {
             return next(error);
         }
+
         var type = imageinfo(buffer);
         // 判断是否为图片类型文件，如果不是则跳转到提示页面
         if (type && type.type == 'image') {
             res.render('image/create_chrome', {
-                src: req.query.media,
+                src: mediaUrl,
                 desc: unescape(req.query.title),
                 profile_source: req.query.url
             });
