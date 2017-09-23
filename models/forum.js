@@ -21,10 +21,17 @@ var ForumSchema = new Schema({
     parent: {type: ObjectId, ref: 'Forum'},
     show_type: {type: String, default: 'default', enum: ['index', 'default']}, // index: 首页显示/ default: 默认
     code: {type:String},
+    avatar: {type: String}
 });
 
 ForumSchema.plugin(BaseModel);
 ForumSchema.index({create_at: -1});
 ForumSchema.index({user: 1, create_at: -1});
+
+ForumSchema.pre('save', function (next) {
+    var now = new Date();
+    this.update_at = now;
+    next();
+});
 
 mongoose.model('Forum', ForumSchema);

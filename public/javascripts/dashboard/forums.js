@@ -20,6 +20,10 @@ $(document).on('click', '#modify_forum', function (event) {
         modal.find('input[name=id]').val(data._id);
         modal.find('input[name=title]').val(data.title);
         modal.find('input[name=path_name]').val(data.path_name);
+        modal.find('#avatar_url_54').attr('src', avatarPath(data.avatar, 54));
+        modal.find('#avatar_url_34').attr('src', avatarPath(data.avatar, 34));
+        modal.find('#avatar_url_24').attr('src', avatarPath(data.avatar, 24));
+        modal.find('input[name=forumavatar]').val(data.avatar);
         modal.find('#example_path_name').html(data.path_name);
         modal.find('textarea[name=content]').val(data.content);
         modal.find('input[name=order]').val(data.order);
@@ -50,6 +54,10 @@ $('#create_forum_modal').on('hidden.bs.modal', function (e) {
     modal.find('input[name=title]').val('');
     modal.find('input[name=path_name]').val('');
     modal.find('#example_path_name').html('{path_name}');
+    modal.find('#avatar_url_54').attr('src', '');
+    modal.find('#avatar_url_34').attr('src', '');
+    modal.find('#avatar_url_24').attr('src', '');
+    modal.find('input[name=forumavatar]').val('');
     modal.find('textarea[name=content]').val('');
     modal.find('input[name=order]').val(0);
     modal.find('input[name=type][value="internal"]').attr("checked", false);

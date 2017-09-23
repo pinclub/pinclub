@@ -24,6 +24,7 @@ var fs = require('fs');
 var counter = require('../common/counter');
 var ghash = require('ghash');
 var imageinfo = require('imageinfo');
+var local = require('../common/store_local');
 
 /**
  *
@@ -661,6 +662,46 @@ function uploadAvatar (req, res, next) {
     });
 
     req.pipe(req.busboy);
-}
+};
+
+function uploadForumAvatar (req, res, next) {
+    var store = local;
+    var isFileLimit = false;
+
+    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+        file.on('limit', function () {
+            isFileLimit = true;
+
+            res.json({
+                success: false,
+                msg: 'File size too large. Max is ' + config.file_limit
+            });
+            return;
+        });
+
+        store.upload(file, {filename: filename, userId: req.session.user._id, filesize: [54, 34, 24]}, function (err, result) {
+
+            if (err) {
+                return next(err);
+            }
+            if (isFileLimit) {
+                return;
+            }
+            res.json({
+                success: true,
+                data: [result]
+            });
+        });
+
+    });
+
+    req.busboy.on('finish', function() {
+        console.log('Done parsing form!');
+
+    });
+
+    req.pipe(req.busboy);
+};
 
 exports.uploadAvatar = uploadAvatar;
+exports.uploadForumAvatar = uploadForumAvatar;

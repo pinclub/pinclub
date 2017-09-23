@@ -3,6 +3,7 @@
 .css('/public/stylesheets/dashboard.less')
 .css('/public/libs/select2/css/select2.css')
 .css('/public/libs/bootstrap-select2/select2-bootstrap.css')
+.css('/public/stylesheets/_avatar_upload.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
 <%- include ../navbar.html %>
@@ -84,6 +85,26 @@
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <textarea id="forum_content" class="form-control" rows="3" name="content" placeholder="板块描述"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="form-horizontal">
+                                                <div id="avatar_list">
+                                                    <img width="54" height="54" id="avatar_url_54" data-baiduimageplus-ignore="1"
+                                                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                                                    &nbsp;
+                                                    <img width="34" height="34" id="avatar_url_34" data-baiduimageplus-ignore="1"
+                                                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                                                    &nbsp;
+                                                    <img width="24" height="24" id="avatar_url_24" data-baiduimageplus-ignore="1"
+                                                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                                                </div>
+                                                <div class='help-block'>
+                                                    <a id='upload_avatar_btn' data-toggle="modal" data-target="#image_upload" class="btn wbtn"><strong>
+                                                        上传图标</strong><span></span></a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -261,6 +282,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id">
+                    <input type="hidden" name="avatar">
                     <button type="button" id="create-forum-close" class="btn " data-dismiss="modal">Close</button>
                     <button type="submit" id="create-forum-submit" class="btn btn-default ">保存
                     </button>
@@ -270,8 +292,222 @@
     </div>
 </div>
 
+<div class="modal fade" id="image_upload" role="dialog" aria-hidden="true" aria-labelledby="avatarModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">上传新图标</h5>
+            </div>
+            <div class="modal-body">
+                <div id="upload_area" class="upload-area">
+                    <div class="normal">
+                        <a href="#" onclick="return false;" class="upload-btn btn btn18" for="img_input2">
+                            <span class="text"> 选择新图标</span>
+                        </a>
+
+                        <div style="margin: 10px 0 25px" class="sub">支持单张 2M 以内图片上传</div>
+                        <div style="margin-top: 20px; font-size: 12px; margin-bottom: 10px;" class="sub">
+                            [提示]请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息
+                        </div>
+
+                    </div>
+                    <div style="display: none" class="draging">
+                        <div class="note">释放鼠标以上传</div>
+                    </div>
+                    <div style="display: none" class="uploading">
+                        <div class="animate">上传中...</div>
+                    </div>
+                    <div class="dropzone dz-clickable">
+                        <div class="dz-default dz-message"><span>拖动文件到这里上传</span></div>
+                    </div>
+                </div>
+                <div id="upload_view" style="display: none">
+                    <div id="message_alert" aria-hidden="true" class="alert alert-warning" style="display: none;" role="alert" onclick="hideSelf(this)">
+                        <strong>提示</strong>
+                        <span class="alert-content"></span>
+                    </div>
+                    <div class="pin-create">
+                        <div class="preview">
+                            <div id="preview" class="image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="upload-close" class="btn" data-dismiss="modal">Close</button>
+                <button type="button" id="select-upload-again" class="btn" onclick="selectUploadAgain();">Select Again</button>
+                <button type="button" id="upload-submit" class="btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin' style='background: none;margin: 0px;'></i> Uploading">Upload Image</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <%- Loader('/public/javascripts/dashboard/forums.min.js')
 .js('/public/libs/select2/js/select2.full.js')
+.js('/public/libs/Q.Uploader.image.all.js')
+.js('/public/libs/load-image.all.min.js')
 .js('/public/javascripts/dashboard/forums.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var insertImageBoardAfterCreate = true;
+
+        var _csrf = $('meta[name=csrf-token]').attr('content');
+        var uploader = new Q.Uploader({
+            url: "/forumupload?type=file&_csrf=" + _csrf,
+            target: document.getElementById("upload_area"),
+            view: document.getElementById("preview"),
+            allows: ".jpg,.png,.gif,.bmp,.jpeg",
+            auto: false,
+            multiple: false,
+            dataType: "json",
+            data: {title: 'test'},
+            //图片缩放
+            // DONE(hhdem) 如果服务器是在win环境下, 打开图片缩放将无法成功上传
+            // scale: {
+            //     //最大图片大小(width|height)
+            //     maxWidth: 700
+            // },
+            UI: {
+                init: function () {
+                    console.info('UI init method');
+                },
+                draw: function (task) {
+                    var self = this,
+                        ops = self.ops,
+                        boxView = ops.view;
+
+                    if (!boxView) return;
+
+                    var name = task.name;
+
+                    var li = '';
+                    loadImage(task.file,
+                        function (img, data) {
+                            img.style.width = '54px';
+                            $('#preview').append(img);
+                            var img2 = cloneCanvas(img);
+                            img2.style.width = '34px';
+                            $('#preview').append(img2);
+                            var img3 = cloneCanvas(img);
+                            img3.style.width = '24px';
+                            $('#preview').append(img3);
+                        },
+                        {orientation: true} // Options
+                    );
+
+
+                    //self.previewImage(boxImage, task, ops);
+                },
+                update: function (task) {
+
+                }
+            },
+            on: {
+                //添加之前触发
+                add: function (task) {
+                    if (task.disabled) {
+                        return alert("允许上传的文件格式为：" + this.ops.allows)
+                    }
+                    $('#upload_view').show();
+                    $('#upload_area').hide();
+                },
+                //图片预览后触发
+                preview: function (data) {
+                    console.log(data.task.name + " : " + data.src);
+                },
+                //图片压缩后触发,如果图片或浏览器不支持压缩,则不触发
+                scale: function (data) {
+                    console.log(data.task.name + " : 已压缩！");
+                },
+                //上传之前触发
+                upload: function (task) {
+                    //可针对单独的任务配置参数(POST方式)
+                    var boardSelected = $('#image_upload .right-part .boardlist .item.selected');
+                    uploader.data = {
+                        title: $('#preview-desc').val(),
+                        board: boardSelected.data("id")
+                    };
+                },
+                //上传完成后触发
+                complete: function (task) {
+                    if (task.state != Q.Uploader.COMPLETE) {
+                        return console.log(task.name + ": " + Q.Uploader.getStatusText(task.state) + "!")
+                    }
+
+                    var json = task.json;
+                    if (!json.success) {
+                        $('#message_alert .alert-content').html(json.msg);
+                        $('#message_alert').fadeIn();
+                        return console.error(task.name + ": 服务器未返回正确的数据！", json.msg);
+                    }
+
+                    console.log(task.name + ": 服务器返回 " + (task.response || ""));
+                    // 把新头像插入页面
+                    var resJson = JSON.parse(task.response);
+                    var item = resJson.data[0];
+                    $("#avatar_list").html($('#preview').children('canvas'));
+                    $("input[name=avatar]").val(item.url);
+                    //this.list  为上传任务列表
+                    //this.index 为当前上传任务索引
+                    if (this.index >= this.list.length - 1) {
+                        //所有任务上传完成
+                        console.log("所有任务上传完成：" + new Date());
+                        $('#image_upload').modal('hide');
+                        $('#upload-submit').button('reset');
+                    }
+                }
+
+            }
+        });
+
+        // 开始上传图片
+        document.getElementById("upload-submit").onclick = function () {
+            var $this = $(this);
+            $this.button('loading');
+            uploader.start();
+        };
+
+        $('#image_upload').on('hidden.bs.modal', function (e) {
+            selectUploadAgain();
+        });
+        $('#image_upload').on('hide.bs.modal', function (e) {
+            selectUploadAgain();
+        });
+
+    });
+    function isInsertImageBoardAfterCreate(isInsert) {
+        insertImageBoardAfterCreate = isInsert;
+    }
+
+    function cloneCanvas(oldCanvas) {
+        //create a new canvas
+        var newCanvas = document.createElement('canvas');
+        var context = newCanvas.getContext('2d');
+
+        //set dimensions
+        newCanvas.width = oldCanvas.width;
+        newCanvas.height = oldCanvas.height;
+
+        //apply the old canvas to the new one
+        context.drawImage(oldCanvas, 0, 0);
+
+        //return the new canvas
+        return newCanvas;
+    }
+    function selectUploadAgain() {
+        $('#upload-submit').button('reset');
+        $('#upload_area').show();
+        $('#upload_view').hide();
+        $('#preview').html('');
+    }
+
+    function hideSelf(obj) {
+        $(obj).fadeOut();
+    }
+</script>

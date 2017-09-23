@@ -20,7 +20,11 @@
         <div class="panel">
             <div class="header">
                 <div style="float: left; display: inline-block; margin-right: 10px; margin-bottom: initial!important;">
-                    <img src="//v2ex.assets.uxengine.net/navatar/8613/985e/90_xxlarge.png?m=1506074995" border="0" align="default" width="72">
+                    <% if (!!forum.avatar) {%>
+                    <img src="<%= avatarPath(forum.avatar, 54)%>" border="0" align="default" width="54">
+                    <% } else {%>
+                    <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="54">
+                    <% }%>
                 </div>
                 <div class="pull-right f12"><span class="snow">主题总数</span> <strong class="gray"><%= forum.topic_count%></strong></div>
                 <a href="/">Jiuyanlou</a>
@@ -59,7 +63,11 @@
                 <span class='col_fade'>父节点</span>
             </div>
             <div class="inner">
-                <img src="//v2ex.assets.uxengine.net/navatar/6636/8270/431_normal.png?m=1491951880" border="0" align="absmiddle" width="24">
+                <% if (!!forum.parent.avatar) {%>
+                <img src="<%= avatarPath(forum.parent.avatar, 24)%>" border="0" align="default" width="24">
+                <% } else {%>
+                <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
+                <% }%>
                 &nbsp;
                 <%= forum.parent.title%>
             </div>
@@ -70,7 +78,11 @@
                 </div>
                 <div class="inner">
                     <% for (var i = 0; i < forum.others.length; i++) {%>
-                        <img src="//v2ex.assets.uxengine.net/navatar/6636/8270/431_normal.png?m=1491951880" border="0" align="absmiddle" width="24">
+                        <% if (!!forum.others[i].avatar) {%>
+                        <img src="<%= avatarPath(forum.others[i].avatar, 24)%>" border="0" align="default" width="24">
+                        <% } else {%>
+                        <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
+                        <% }%>
                         &nbsp;
                         <a href="/forums/<%= forum.others[i]._id %>"><%= forum.others[i].title%></a>
                         <div class="sep10"></div>
@@ -83,7 +95,11 @@
                 </div>
                 <div class="inner">
                     <% for (var i = 0; i < forum.childrens.length; i++) {%>
-                    <img src="//v2ex.assets.uxengine.net/navatar/6636/8270/431_normal.png?m=1491951880" border="0" align="absmiddle" width="24">
+                    <% if (!!forum.childrens[i].avatar) {%>
+                    <img src="<%= avatarPath(forum.childrens[i].avatar, 24)%>" border="0" align="default" width="24">
+                    <% } else {%>
+                    <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
+                    <% }%>
                     &nbsp;
                     <a href="/forums/<%= forum.childrens[i]._id %>"><%= forum.childrens[i].title%></a>
                     <div class="sep10"></div>

@@ -115,16 +115,17 @@ exports.getFullForum = function (id, callback) {
         })
         .fail(callback);
 
-    Forum.findOne({_id: id}).lean()
+    Forum.findOne({_id: id})
         .populate('user')
         .populate('managers', '_id loginname')
         .populate('members', '_id loginname')
         .populate('parent')
-        .exec(proxy.done(function (forum) {
-        if (!forum) {
+        .exec(proxy.done(function (forumModal) {
+        if (!forumModal) {
             proxy.unbind();
             return callback(null, '此板块不存在或已被删除。');
         }
+        let forum = forumModal.toObject();
         forum.create_at_ago = tools.formatDate(forum.create_at, true);
         forum.update_at_ago = tools.formatDate(forum.update_at, true);
         proxy.emit('forum', forum);

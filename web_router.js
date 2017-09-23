@@ -142,6 +142,7 @@ router.get('/forums/:id', forum.show);
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
 router.post('/imageupload', auth.userRequired, image.upload); //上传图片
 router.post('/avatarupload', auth.userRequired, image.uploadAvatar); //上传头像
+router.post('/forumupload', auth.userRequired, image.uploadForumAvatar); //上传头像
 
 // static
 router.get('/about', onlineM.add, staticController.about);
