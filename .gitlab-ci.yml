@@ -11,24 +11,24 @@ stages:
 job_build:
   stage: build
   script:
-    - deploy git.jinwanzhilin.com/liubing/nodeclub.git jiuyanlou
-    - makeproject jiuyanlou build
+    - bash deploy git.jinwanzhilin.com/liubing/nodeclub.git jiuyanlou
+    - bash makeproject jiuyanlou build
   tags:
     - jinwan-ci
 
 job_test:
   stage: test
   script:
-    - makeproject jiuyanlou test-cov
+    - bash makeproject jiuyanlou test-cov
   tags:
     - jinwan-ci
 
 job_deploy_staging:
   stage: deploy
   script:
-    - restart jiuyanlou app.js
-    - npmrun apidoc jiuyanlou
-    - npmrun todo jiuyanlou
+    - bash restart jiuyanlou app.js
+    - bash npmrun apidoc jiuyanlou
+    - bash npmrun todo jiuyanlou
   environment:
       name: staging
       url: http://www.jiuyanlou.com
