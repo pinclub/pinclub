@@ -23,7 +23,7 @@ $(document).on('click', '#modify_forum', function (event) {
         modal.find('#avatar_url_54').attr('src', avatarPath(data.avatar, 54));
         modal.find('#avatar_url_34').attr('src', avatarPath(data.avatar, 34));
         modal.find('#avatar_url_24').attr('src', avatarPath(data.avatar, 24));
-        modal.find('input[name=forumavatar]').val(data.avatar);
+        modal.find('input[name=avatar]').val(data.avatar);
         modal.find('#example_path_name').html(data.path_name);
         modal.find('textarea[name=content]').val(data.content);
         modal.find('input[name=order]').val(data.order);
@@ -31,6 +31,7 @@ $(document).on('click', '#modify_forum', function (event) {
         modal.find('input[name=show_type][value="'+data.show_type+'"]').prop("checked", true);
         modal.find('textarea[name=css_text]').val(data.css_text);
         modal.find('textarea[name=js_text]').val(data.js_text);
+        modal.find('textarea[name=sidebar_text]').val(data.sidebar_text);
         if (!!data.managers && data.managers.length > 0) {
             _.forEach(data.managers, function(manager){
                 modal.find('select[name=managers]').append('<option value="'+manager._id+'" selected="selected">'+manager.loginname+'</option>');

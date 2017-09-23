@@ -25,7 +25,7 @@
                                 <th>类型</th>
                                 <th>排序</th>
                                 <th>创建于</th>
-                                <th>操作</th>
+                                <th width="250" style="text-align: center">操作</th>
                                 </thead>
                                 <%- partial('_abstract_forum_item', {collection:forums, as:'forum'}) %>
                             </table>
@@ -121,6 +121,25 @@
                                             <label class="radio-inline">
                                                 <input type="radio" name="type" value="private"> 私有
                                             </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="sidebarForum">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSidebar" aria-expanded="true" aria-controls="collapseSidebar">
+                                        侧栏推荐(Markdown)
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseSidebar" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseSidebar">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea class="form-control" rows="5" name="sidebar_text" placeholder="本版块侧栏推荐内容"></textarea>
                                         </div>
                                     </div>
                                 </div>

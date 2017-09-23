@@ -57,19 +57,29 @@
             </div>
         </div>
 
+        <% if (!!forum && !!forum.sidebar_text) { %>
+        <div class='panel pd10'>
+            <div class="header">
+                <%- markdown(forum.sidebar_text) %>
+            </div>
+        </div>
+        <% } %>
+
         <div class='panel pd10'>
             <% if (!!forum && !!forum.parent) { %>
             <div class='header'>
                 <span class='col_fade'>父节点</span>
             </div>
             <div class="inner">
-                <% if (!!forum.parent.avatar) {%>
-                <img src="<%= avatarPath(forum.parent.avatar, 24)%>" border="0" align="default" width="24">
-                <% } else {%>
-                <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
-                <% }%>
-                &nbsp;
-                <%= forum.parent.title%>
+                <a href="/forums/<%= forum.parent.title %>">
+                    <% if (!!forum.parent.avatar) {%>
+                        <img src="<%= avatarPath(forum.parent.avatar, 24)%>" border="0" align="default" width="24">
+                    <% } else {%>
+                        <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
+                    <% }%>
+                    &nbsp;
+                    <%= forum.parent.title%>
+                </a>
             </div>
             <% } %>
             <% if (!!forum && !!forum.others && forum.others.length > 0) { %>
@@ -78,13 +88,15 @@
                 </div>
                 <div class="inner">
                     <% for (var i = 0; i < forum.others.length; i++) {%>
-                        <% if (!!forum.others[i].avatar) {%>
-                        <img src="<%= avatarPath(forum.others[i].avatar, 24)%>" border="0" align="default" width="24">
-                        <% } else {%>
-                        <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
-                        <% }%>
-                        &nbsp;
-                        <a href="/forums/<%= forum.others[i]._id %>"><%= forum.others[i].title%></a>
+                        <a href="/forums/<%= forum.others[i]._id %>">
+                            <% if (!!forum.others[i].avatar) {%>
+                                <img src="<%= avatarPath(forum.others[i].avatar, 24)%>" border="0" align="default" width="24">
+                            <% } else {%>
+                                <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
+                            <% }%>
+                            &nbsp;
+                            <%= forum.others[i].title%>
+                        </a>
                         <div class="sep10"></div>
                     <% } %>
                 </div>
@@ -95,14 +107,16 @@
                 </div>
                 <div class="inner">
                     <% for (var i = 0; i < forum.childrens.length; i++) {%>
-                    <% if (!!forum.childrens[i].avatar) {%>
-                    <img src="<%= avatarPath(forum.childrens[i].avatar, 24)%>" border="0" align="default" width="24">
-                    <% } else {%>
-                    <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
-                    <% }%>
-                    &nbsp;
-                    <a href="/forums/<%= forum.childrens[i]._id %>"><%= forum.childrens[i].title%></a>
-                    <div class="sep10"></div>
+                        <a href="/forums/<%= forum.childrens[i]._id %>">
+                            <% if (!!forum.childrens[i].avatar) {%>
+                                <img src="<%= avatarPath(forum.childrens[i].avatar, 24)%>" border="0" align="default" width="24">
+                            <% } else {%>
+                                <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
+                            <% }%>
+                            &nbsp;
+                            <%= forum.childrens[i].title%>
+                        </a>
+                        <div class="sep10"></div>
                     <% } %>
                 </div>
             <% } %>

@@ -33,7 +33,7 @@ exports.create = function (req, res, next) {
         var ep = new EventProxy();
         ep.fail(next);
 
-        let data = _.pick(req.body, ['id', 'title', 'content', 'path_name', 'type', 'order', 'bannerImage', 'css_text', 'js_text', 'template', 'managers', 'members', 'parent', 'show_type', 'avatar']);
+        let data = _.pick(req.body, ['id', 'title', 'content', 'path_name', 'type', 'order', 'bannerImage', 'css_text', 'js_text', 'template', 'managers', 'members', 'parent', 'show_type', 'avatar', 'sidebar_text']);
 
         ep.on('parent',
             function (parent) {
@@ -64,6 +64,7 @@ exports.create = function (req, res, next) {
                         forum.members = data.members;
                         forum.parent = data.parent;
                         forum.avatar = data.avatar;
+                        forum.sidebar_text = data.sidebar_text;
                         forum.save(function (err) {
                             if (err) {
                                 return next(err);
