@@ -149,19 +149,70 @@
                     '<div class="modal-content">',
                         '<div class="modal-header">',
                             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>',
-                            '<h3 id="editorToolImageTitle">图片</h3>',
+
+                            '<div class="index-tab-navs" role="tablist">',
+                            '<div class="nav" role="tablist">',
+                            '<a class="tabButton fade in active" role="presentation" href="#collapseUpload" aria-controls="collapseUpload" id="headingUpload" type="button" role="tab" data-toggle="tab">',
+                            '插入图片',
+                            '</a>',
+                            '<a class="tabButton fade in" role="presentation" href="#collapseSelect" aria-controls="collapseSelect" id="headingSelect" type="button" role="tab" data-toggle="tab">',
+                            '选择图片',
+                            '</a>',
+                            '</div>',
+                            '</div>',
                         '</div>',
-                        '<div class="modal-body">',
-                            '<div class="upload-img">',
-                                '<div class="button">上传图片</div>',
-                                '<span class="tip"></span>',
-                                '<div class="alert alert-error hide"></div>',
+                        '<div class="modal-body tab-content">',
+                            '<div class="tab-pane fade in active" role="tabpanel" id="collapseUpload">',
+                                '<div class="upload-img">',
+                                    '<div class="button">上传图片</div>',
+
+                                    '<span class="tip"></span>',
+                                    '<div class="alert alert-error hide"></div>',
+                                '</div>',
+                            '</div>',
+                            '<div class="tab-pane fade in" role="tabpanel" id="collapseSelect">',
+                                '<div id="selectList" class="board_grid"></div>',
+                                    '<div class="grid-sizer"></div>',
+                                '</div>',
+                                '<div class="clearfix"></div>',
                             '</div>',
                         '</div>',
                     '</div>',
                 '</div>',
             '</div>'
         ].join('')).appendTo($body);
+
+        this.$win.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $('a[data-toggle="tab"]').removeClass('active');
+            $(e.target).addClass('active');
+            var selectId = $(e.target).attr('id');
+        });
+
+        $.ajax({
+            url: "/api/v2/images?type=image&limit=5&page=0"
+        }).done(function (response) {
+            var gridBoardImagesMasonry = $('.board_grid').masonry({
+                // options...
+                itemSelector: '.item',
+                columnWidth: 86,
+                gutter: 2
+            });
+            response.data.forEach(function (item) {
+                var itemHtml =
+                    '<a>' +
+                    '<img src="'+ item.image_86 +'" title="'+ item.title +'" width="86"/>' +
+                    '<div class="cover"></div>' +
+                    '</a>';
+                var jpicelements = $(itemHtml);
+                gridBoardImagesMasonry.append(jpicelements)
+                    .masonry('appended', jpicelements);
+            });
+            gridBoardImagesMasonry.imagesLoaded().progress(function () {
+                gridBoardImagesMasonry.masonry('layout');
+            });
+        });
+
+
 
         this.$upload = this.$win.find('.upload-img').css({
             padding: '60px 0',

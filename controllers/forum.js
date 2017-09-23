@@ -109,7 +109,7 @@ exports.show = function (req, res, next) {
             }).end();
         }
         var id = req.params.id;
-        Forum.getFullForum(id, function (err, msg, forum, topics) {
+        Forum.getFullForum(id, function (err, msg, forum, topics, childrens, others) {
             if (!!err) {
                 return next (err);
             }
@@ -122,6 +122,8 @@ exports.show = function (req, res, next) {
                 return res.send({success: false, error_msg: msg});
             }
             forum.topics = topics;
+            forum.childrens = childrens ? childrens : [];
+            forum.others = others ? others : [];
             res.render('forum/topics', {
                 forum: forum
             });

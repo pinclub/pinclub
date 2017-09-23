@@ -165,16 +165,24 @@ exports.put = function (req, res, next) {
 
             var proxy = new EventProxy();
 
-            proxy.all('score_saved', function () {
+            proxy.all('score_saved', 'forum_topic_count_added', function () {
                 res.redirect('/topic/' + topic._id);
             });
+
             proxy.fail(next);
+
             User.getUserById(req.session.user._id, proxy.done(function (user) {
                 user.score += 5;
                 user.topic_count += 1;
                 user.save();
                 req.session.user = user;
                 proxy.emit('score_saved');
+            }));
+
+            Forum.getForum(forum, proxy.done(function (forumObj) {
+                forumObj.topic_count += 1;
+                forumObj.save();
+                proxy.emit('forum_topic_count_added');
             }));
 
             //发送at消息
@@ -199,7 +207,7 @@ exports.showEdit = function (req, res, next) {
                     topic_id: topic._id,
                     title: topic.title,
                     content: topic.content,
-                    tab: topic.tab,
+                    tab: topic.forum.toString(),
                     tabs: config.tabs,
                     forums: forums
                 });
@@ -296,6 +304,9 @@ exports.delete = function (req, res, next) {
         author.score -= 5;
         author.topic_count -= 1;
         author.save();
+
+        topic.forum.topic_count -= 1;
+        topic.forum.save();
 
         topic.deleted = true;
         topic.save(function (err) {

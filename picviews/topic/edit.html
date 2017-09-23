@@ -1,5 +1,5 @@
 <%- partial('../editor_sidebar') %>
-<%- include ../navbar.html %>
+<%- partial('navbar',  {style:'min-width: 600px;max-width: 1100px;'} ) %>
 <div id='content'>
     <div class='panel'>
         <div class='header'>
@@ -44,7 +44,7 @@
                                     var text = forum.title;
                                     %>
                                     <option value="<%=value%>"
-                                    <%= tabValue === value ? 'selected': '' %>><%=text%></option>
+                                    <%= tabValue == value ? 'selected': '' %>><%=text%></option>
 
                                     <%});%>
                                 </select>

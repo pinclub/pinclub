@@ -11,8 +11,12 @@
         </div>
 
         <div class="profile-stats">
+            <% if (typeof(showPicCount) == 'undefined' || (typeof(showPicCount) !== 'undefined' && !!showPicCount)) { %>
             <a href="/user/<%= current_user.loginname %>/get" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.image_count + current_user.get_image_count %></strong>图片</a>
+            <% } %>
+            <% if (typeof(showTopicCount) == 'undefined' || (typeof(showTopicCount) !== 'undefined' && !!showTopicCount)) { %>
             <a href="/topics" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.topic_count %></strong>主题</a>
+            <% } %>
             <a href="/boards" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.board_count %></strong>画板</a>
             <a href="/user/<%= current_user.loginname %>/score" style="border-right: #F5F2F2 solid 1px;width:72px;"><strong><%= current_user.score %></strong>积分</a>
         </div>

@@ -25,7 +25,7 @@ var pic_page = 1;
 var topic_forum = '';
 var forum_title = '全部';
 $('#page-marker').on('lazyshow', function () {
-    loadTopicList(topic_page, topic_forum, forum_title);
+    loadTopicList(topic_page, topic_forum, forum_title, true);
 }).lazyLoadXT({visibleOnly: false, checkDuplicates: true});
 
 $('#pic-page-marker').on('lazyshow', function () {
@@ -75,7 +75,7 @@ $(document).on('click', '.topic-tab', function (event) {
     $('#content_text .topic-tab').removeClass('current-tab');
     $(this).addClass('current-tab');
     forum_title = title;
-    loadTopicList(topic_page, topic_forum, title);
+    loadTopicList(topic_page, topic_forum, title, true);
 });
 
 // 绑定更多相似图片按钮点击事件
@@ -179,50 +179,6 @@ function similarPics(picid) {
         gridMasonry.imagesLoaded().progress(function () {
             gridMasonry.masonry('layout');
         });
-    });
-}
-
-function loadTopicList (page, forum, title) {
-    var params = 'show_type=index';
-    if (!page) {
-        page = 1;
-    }
-    params += '&page=' + page;
-    if (!!forum) {
-        params += '&forum=' + forum;
-        topic_forum = forum;
-    }
-    title = title || '';
-    $.ajax({
-        url: "/api/v2/topics?" + params
-    }).done(function (responseText) {
-        var itemLength = 0;
-        if (!!responseText.data && _.isArray(responseText.data)) {
-            itemLength = _.size(responseText.data);
-        }
-        var elements = [];
-        responseText.data.forEach(function (item) {
-            if (!!item.author && !!item.author.avatar_url) {
-                item.author.avatar_url = avatarPath(item.author.avatar_url, 54);
-            }
-            elements.push($("#topicListTmp").tmpl({topic: item, avator: true}));
-        });
-        $('#topic_list').append(elements);
-        $('#total_count').html('<span style="color: #333;">' + title + '</span> 共 ' + responseText.total_count + ' 个话题');
-        $('#child_forums').html('');
-        if (!!responseText.child_forums && responseText.child_forums.length > 0) {
-            _.forEach(responseText.child_forums, function(child){
-                $('#child_forums').append('&nbsp;&nbsp;•&nbsp;<a href="#" onclick="return false;" class="topic-tab" style="color: #778087;" data-id="' + child._id+ '" data-title="'+child.title+'">' + child.title + '</a>');
-            });
-        }
-        if (itemLength >= 10) {
-            $(window).lazyLoadXT();
-            $('#page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false});
-        } else {
-            $('#no_more_topic').show();
-        }
-        topic_page++;
-
     });
 }
 

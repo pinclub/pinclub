@@ -108,10 +108,10 @@ exports.getForumsByQuery = function (query, opt, callback) {
  */
 exports.getFullForum = function (id, callback) {
     var proxy = new EventProxy();
-    var events = ['forum', 'topics'];
+    var events = ['forum', 'topics', 'childrens', 'others'];
     proxy
-        .assign(events, function (forum, topics) {
-            callback(null, '', forum, topics);
+        .assign(events, function (forum, topics, childrens, others) {
+            callback(null, '', forum, topics, childrens, others);
         })
         .fail(callback);
 
@@ -134,6 +134,24 @@ exports.getFullForum = function (id, callback) {
         };
         let options = {sort: 'create_at'};
         Topic.getTopicsByQuery(query, options, proxy.done('topics'));
+
+        Forum.find({parent: id}, {}, {}).lean()
+            .populate('user')
+            .populate('managers', '_id loginname')
+            .populate('members', '_id loginname')
+            .populate('parent')
+            .exec(function (err, forums) {
+                proxy.emit('childrens', forums);
+            });
+
+        Forum.find({parent: forum.parent, _id: {'$nin': [id]}}, {}, {}).lean()
+            .populate('user')
+            .populate('managers', '_id loginname')
+            .populate('members', '_id loginname')
+            .populate('parent')
+            .exec(function (err, forums) {
+                proxy.emit('others', forums);
+            });
     }));
 };
 

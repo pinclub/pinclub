@@ -26,3 +26,10 @@
 	pointer-events:none;
 }
 
+.tabButton {
+	padding: 10px 10px 10px 0;
+}
+
+.tabButton.active {
+	color: #00a2d4;
+}

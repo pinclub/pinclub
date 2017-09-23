@@ -1,23 +1,120 @@
 <%- Loader('/public/stylesheets/pics.min.css')
-.css('/public/stylesheets/pics.less')
 .css('/public/stylesheets/forum.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
 
-<%- partial('navbar',  {style:'min-width: 600px;max-width: 1100px;'} ) %>
+<script id="topicListTmp" type="text/x-jquery-tmpl">
+    <%- partial('../topic/_abstract', {avator: true}) %>
+</script>
+
+<%- partial('navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
 <% if (forum && forum.css_text) { %>
 <style>
     <%= forum.css_text %>
 </style>
 <% } %>
 <div id="forum_topics" class="wrapper row">
-    <div class="panel col-md-8">
-        <%= forum.title%>
+
+
+    <div class="box col-md-9">
+        <div class="panel">
+            <div class="header">
+                <div style="float: left; display: inline-block; margin-right: 10px; margin-bottom: initial!important;">
+                    <img src="//v2ex.assets.uxengine.net/navatar/8613/985e/90_xxlarge.png?m=1506074995" border="0" align="default" width="72">
+                </div>
+                <div class="pull-right f12"><span class="snow">主题总数</span> <strong class="gray"><%= forum.topic_count%></strong></div>
+                <a href="/">Jiuyanlou</a>
+                <span class="chevron">&nbsp;›&nbsp;</span> <%= forum.title%>
+
+                <div class="sep10"></div>
+                <span class="f12 gray"><%= forum.content%></span>
+
+            </div>
+            <div id="sub_header" class="cell" style="background-color: #f9f9f9; padding: 10px;font-size: 12px;color:#778087;">
+                <div class="pull-right">
+                    <a href="/topic/create">发布新话题</a>
+                    <li class="fa fa-caret-right gray"></li>
+                </div>
+                <div class="pull-left">
+                    <div id="child_forums" class="pull-left"></div>
+                </div>
+            </div>
+            <div class="topics" id="topic_list">
+            </div>
+            <div id="no_more_topic" class="cell text-center" style="color:#999;display: none;">已经没有更多主题</div>
+        </div>
+        <div id="page-marker"></div>
     </div>
-    <div class="col-md-4"></div>
+
+    <div id="sidebar" class="col-md-3">
+        <div class='panel'>
+            <div id="loginDiv" class="grid-item grid-item-nb">
+                <%- partial('../user/card', { object: current_user, as: 'user' , showPicCount: false}) %>
+            </div>
+        </div>
+
+        <div class='panel pd10'>
+            <% if (!!forum && !!forum.parent) { %>
+            <div class='header'>
+                <span class='col_fade'>父节点</span>
+            </div>
+            <div class="inner">
+                <img src="//v2ex.assets.uxengine.net/navatar/6636/8270/431_normal.png?m=1491951880" border="0" align="absmiddle" width="24">
+                &nbsp;
+                <%= forum.parent.title%>
+            </div>
+            <% } %>
+            <% if (!!forum && !!forum.others && forum.others.length > 0) { %>
+                <div class='header'>
+                    <span class='col_fade'>相关节点</span>
+                </div>
+                <div class="inner">
+                    <% for (var i = 0; i < forum.others.length; i++) {%>
+                        <img src="//v2ex.assets.uxengine.net/navatar/6636/8270/431_normal.png?m=1491951880" border="0" align="absmiddle" width="24">
+                        &nbsp;
+                        <a href="/forums/<%= forum.others[i]._id %>"><%= forum.others[i].title%></a>
+                        <div class="sep10"></div>
+                    <% } %>
+                </div>
+            <% } %>
+            <% if (!!forum && !!forum.childrens && forum.childrens.length > 0) { %>
+                <div class='header'>
+                    <span class='col_fade'>子节点</span>
+                </div>
+                <div class="inner">
+                    <% for (var i = 0; i < forum.childrens.length; i++) {%>
+                    <img src="//v2ex.assets.uxengine.net/navatar/6636/8270/431_normal.png?m=1491951880" border="0" align="absmiddle" width="24">
+                    &nbsp;
+                    <a href="/forums/<%= forum.childrens[i]._id %>"><%= forum.childrens[i].title%></a>
+                    <div class="sep10"></div>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+
+        <div class='panel pd10'>
+            <%- partial('../static/image_ad_fix.html') %>
+        </div>
+
+    </div>
 </div>
 <% if (forum && forum.js_text) { %>
 <script type="text/javascript">
     <%- forum.js_text %>
 </script>
 <% } %>
+
+<script type="text/javascript">
+    if (typeof (topic_page) == 'undefined') {
+        var topic_page = 1;
+    }
+
+    $('#page-marker').on('lazyshow', function () {
+        loadTopicList(topic_page, '<%= forum._id%>', '<%= forum.title%>');
+    }).lazyLoadXT({visibleOnly: false, checkDuplicates: true});
+
+</script>
+<%- Loader('/public/javascripts/forum.topics.min.js')
+.js('/public/javascripts/forum.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

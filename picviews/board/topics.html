@@ -19,18 +19,22 @@
         </div>
         <div class="action-buttons">
             <button data-id="<%= board.id %>" href="#<%= board.id %>" class="follow-board btn-with-icon btn <%if (is_collect) {%>rbtn<%}%>">
-                <i class="fa fa-plus"></i>关注
+                <%if (!is_collect) {%>
+                    <i class="fa fa-plus"></i>关注
+                <%} else {%>
+                    取消关注
+                <%}%>
             </button>
-            <button data-id="<%= board.id %>" href="#" onclick="return false;" class="like-board btn-with-icon btn">
-                <i class="fa fa-heart"></i>2喜欢
-            </button>
+            <!--<button data-id="<%= board.id %>" href="#" onclick="return false;" class="like-board btn-with-icon btn">-->
+                <!--<i class="fa fa-heart"></i>2喜欢-->
+            <!--</button>-->
         </div>
     </div>
     <div class="bar"><a href="/user/<%= board.creator.loginname%>" class="user-unit x"><img
             src="<%= board.creator.avatar_url%>"
             data-baiduimageplus-ignore="1"><span class="name"><%= board.creator.loginname%></span></a>
-        <div class="tabs"><a onclick="return false;" class="tab pins ">被12次Get</a><a
-                onclick="return false;" class="tab ">被3489人关注</a></div>
+        <div class="tabs"><a onclick="return false;" class="tab pins ">共 <%= board.topic_count%> 张图片</a><a
+                onclick="return false;" class="tab ">被 <%= board.collect_count%> 人关注</a></div>
     </div>
 </div>
 
