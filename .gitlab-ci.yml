@@ -11,24 +11,27 @@ stages:
 job_build:
   stage: build
   script:
-    - bash deploy git.jinwanzhilin.com/liubing/nodeclub.git jiuyanlou
-    - bash makeproject jiuyanlou build
+    - cd /home/jiuyanlou && git fetch && git reset --hard origin/master && npm install
+    - make build
   tags:
     - jinwan-ci
 
 job_test:
   stage: test
   script:
-    - bash makeproject jiuyanlou test-cov
+    - cd /home/jiuyanlou
+    - make test-cov
   tags:
     - jinwan-ci
 
 job_deploy_staging:
   stage: deploy
   script:
-    - bash restart jiuyanlou app.js
-    - bash npmrun apidoc jiuyanlou
-    - bash npmrun todo jiuyanlou
+    - cd /home/jiuyanlou
+    - forever stop app.js
+    - forever start app.js
+    - npm run apidoc
+    - npm run todo
   environment:
       name: staging
       url: http://www.jiuyanlou.com
