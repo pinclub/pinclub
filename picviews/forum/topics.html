@@ -21,7 +21,7 @@
             <div class="header">
                 <div style="float: left; display: inline-block; margin-right: 10px; margin-bottom: initial!important;">
                     <% if (!!forum.avatar) {%>
-                    <img src="<%= avatarPath(forum.avatar, 54)%>" border="0" align="default" width="54">
+                    <img src="<%= avatarPath(forum.avatar, 54, 'local')%>" border="0" align="default" width="54">
                     <% } else {%>
                     <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="54">
                     <% }%>
@@ -73,7 +73,7 @@
             <div class="inner">
                 <a href="/forums/<%= forum.parent._id %>">
                     <% if (!!forum.parent.avatar) {%>
-                        <img src="<%= avatarPath(forum.parent.avatar, 24)%>" border="0" align="default" width="24">
+                        <img src="<%= avatarPath(forum.parent.avatar, 24, 'local')%>" border="0" align="default" width="24">
                     <% } else {%>
                         <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
                     <% }%>
@@ -90,7 +90,7 @@
                     <% for (var i = 0; i < forum.others.length; i++) {%>
                         <a href="/forums/<%= forum.others[i]._id %>">
                             <% if (!!forum.others[i].avatar) {%>
-                                <img src="<%= avatarPath(forum.others[i].avatar, 24)%>" border="0" align="default" width="24">
+                                <img src="<%= avatarPath(forum.others[i].avatar, 24, 'local')%>" border="0" align="default" width="24">
                             <% } else {%>
                                 <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
                             <% }%>
@@ -109,7 +109,7 @@
                     <% for (var i = 0; i < forum.childrens.length; i++) {%>
                         <a href="/forums/<%= forum.childrens[i]._id %>">
                             <% if (!!forum.childrens[i].avatar) {%>
-                                <img src="<%= avatarPath(forum.childrens[i].avatar, 24)%>" border="0" align="default" width="24">
+                                <img src="<%= avatarPath(forum.childrens[i].avatar, 24, 'local')%>" border="0" align="default" width="24">
                             <% } else {%>
                                 <img src="<%- staticFile(config.site_icon) %>" border="0" align="default" width="24">
                             <% }%>

@@ -87,18 +87,25 @@ exports.proxy = function (url) {
     // return '/agent?url=' + encodeURIComponent(url);
 };
 
-exports.avatarPath = function (avatar, size) {
+exports.avatarPath = function (avatar, size, type) {
     if (!avatar || !size) {
         return avatar;
     }
     let file_path = '';
-    if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
-        file_path = avatar + '_' + size;
-    } else {
+    if (type == 'local') {
         let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
         let path = avatar.substring(0, avatar.lastIndexOf('.'));
         file_path = path + '_' + size + '.' + extname;
+    } else {
+        if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
+            file_path = avatar + '_' + size;
+        } else {
+            let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+            let path = avatar.substring(0, avatar.lastIndexOf('.'));
+            file_path = path + '_' + size + '.' + extname;
+        }
     }
+
     return file_path;
 };
 
