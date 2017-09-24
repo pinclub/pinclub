@@ -71,7 +71,7 @@
                 <span class='col_fade'>父节点</span>
             </div>
             <div class="inner">
-                <a href="/forums/<%= forum.parent.title %>">
+                <a href="/forums/<%= forum.parent._id %>">
                     <% if (!!forum.parent.avatar) {%>
                         <img src="<%= avatarPath(forum.parent.avatar, 24)%>" border="0" align="default" width="24">
                     <% } else {%>

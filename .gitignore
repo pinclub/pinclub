@@ -31,3 +31,5 @@ public/testcov/*
 *.swp
 
 todo.json
+
+.gitlab-ci.yml
