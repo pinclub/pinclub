@@ -27,7 +27,7 @@ job_test:
 job_deploy_staging:
   stage: deploy
   script:
-    - cd /home/jiuyanlou &&
+    - cd /home/jiuyanlou
     - forever stop app.js
     - forever start app.js
     - npm run apidoc
