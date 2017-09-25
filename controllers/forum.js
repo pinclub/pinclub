@@ -1,4 +1,5 @@
 var Forum        = require('../proxy').Forum;
+var Topic        = require('../proxy').Topic;
 var _            = require('lodash');
 var EventProxy = require('eventproxy');
 // DONE (hhdem) Forum信息添加和修改
@@ -137,5 +138,48 @@ exports.show = function (req, res, next) {
 exports.delete = function (req, res, next) {
     res.render('static/function_building', {
         title: 'Forum信息删除'
+    });
+};
+
+/**
+ * 刷新板块主题数量
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.refreshCount = function (req, res, next) {
+    req.checkParams({
+        'id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: '板块名称不能为空'
+            },
+            isMongoId: {errorMessage: 'id 需为 mongoId 对象'}
+        }
+    });
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+        var id = req.params.id;
+        Topic.getCountByQuery({forum: id, type:'text', deleted: false}, function (err, count) {
+            if (!!err) {
+                return next (err);
+            }
+            Forum.getForum(id, function (err, forum) {
+                if (!!err) {
+                    return next (err);
+                }
+                if (forum.topic_count != count) {
+                    forum.topic_count = count;
+                    forum.save();
+                }
+                res.send({success: true, topic_count: count});
+            });
+        });
     });
 };

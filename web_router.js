@@ -183,6 +183,7 @@ router.get('/admin/nodes/:id', auth.adminRequired, node.show);
 router.get('/admin/forums', auth.adminRequired, dashboard.forums);
 router.post('/admin/forums', auth.adminRequired, forum.create);
 router.get('/admin/forums/:id', auth.adminRequired, dashboard.forumShow);
+router.post('/admin/forums/refresh/count/:id', auth.adminRequired, forum.refreshCount);
 
 if (!config.debug) { // 这个兼容破坏了不少测试
 	router.get('/:name', function (req, res) {

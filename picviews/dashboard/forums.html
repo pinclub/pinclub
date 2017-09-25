@@ -88,7 +88,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-10">
                                             <div class="form-horizontal">
                                                 <div id="avatar_list">
                                                     <img width="54" height="54" id="avatar_url_54" data-baiduimageplus-ignore="1"
@@ -106,12 +106,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" name="order" placeholder="排序值" value="0"> 排序值
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" name="order" placeholder="排序值">
-                                        </div>
-                                        <div class="col-sm-8 text-right">
+
+                                        <div class="col-sm-12">
                                             <label class="radio-inline">
                                                 <input type="radio" name="type" value="public" checked="checked"> 公开
                                             </label>
@@ -500,6 +501,25 @@
         });
 
     });
+
+    // 刷新板块数量
+    $(document).on('click', '#refreshForumCount', function (event) {
+        if (!event.currentTarget) {
+            return;
+        }
+        var id = event.currentTarget.dataset.id;
+        $.ajax({
+            type: "POST",
+            url: "/admin/forums/refresh/count/" + id
+        }).done(function (result) {
+            if (!result.success) {
+                return ;
+            } else {
+                $('#forum_count_' + id).html(result.topic_count);
+            }
+        });
+    });
+
     function isInsertImageBoardAfterCreate(isInsert) {
         insertImageBoardAfterCreate = isInsert;
     }
