@@ -370,3 +370,23 @@ exports.newAndSaveImage = function (image, callback) {
 
     topic.save(callback);
 };
+
+exports.remove = function (id, callback) {
+    Topic.findOne({_id: id})
+        .populate('board')
+        .exec(function (err, topic) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (!topic) {
+            return callback(new Error('该主题不存在'));
+        }
+
+        topic.deleted = true;
+        let board = topic.board;
+        board.topic_count -= 1;
+        board.save();
+        topic.save(callback);
+    });
+};

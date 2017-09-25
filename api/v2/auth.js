@@ -247,3 +247,26 @@ exports.verifyTwoFactor = function (req, res, next) {
         });
     });
 };
+
+/**
+ * @api {post} /v2/auth/check 检查是否登录
+ * @apiDescription
+ * API检查是否登录接口
+ * @apiName authCheck
+ * @apiGroup auth
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/auth/check
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ */
+exports.check = function (req, res, next) {
+    if (req.session.user || req.user) {
+        return res.status(200).json({success: true});
+    } else {
+        return res.status(401).send({success: false, code: 401, error_msg: '无权限操作, 请确定是否登录或token是否正确. '});
+    }
+};

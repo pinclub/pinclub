@@ -7,13 +7,15 @@ function deletePic(picid) {
     };
     $.ajax({
         type: "DELETE",
-        url: "/api/v2/images/delete",
-        data: data
+        url: "/api/v2/images/" + picid
     }).done(function (response) {
         if(!response.success) {
             return console.error("Error：", response);
         }
         $('#'+picid + '').remove();
+        gridMasonry.imagesLoaded().progress(function () {
+            gridMasonry.masonry('layout');
+        });
     }).error(function(res){
         if (res.status == 401) {
             $('#signin_modal').modal('show');

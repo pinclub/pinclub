@@ -538,17 +538,17 @@ exports.show = function (req, res, next) {
 /**
  *
  * TODO (hhdem) 删除图片
- * @api {delete} /v2/images/:id Get图片
+ * @api {delete} /v2/images/:id 删除
  * @apiDescription
  * Get某图片
  * @apiName deleteImage
  * @apiGroup images
  *
  * @apiUse ApiHeaderType
- * @apiParam {String} id 要获取的图片 id
+ * @apiParam {String} id 要删除的图片 id
  *
  * @apiPermission none
- * @apiSampleRequest /v2/images/delete
+ * @apiSampleRequest /v2/images/:id
  *
  * @apiVersion 2.0.0
  *
@@ -556,5 +556,11 @@ exports.show = function (req, res, next) {
  *     HTTP/1.1 200 OK
  */
 exports.delete = function(req, res, next) {
-    res.send({success: true, data: ''});
+    var topicId = String(req.params.id);
+    TopicProxy.remove(topicId, function (err, result) {
+        if (err) {
+            return next(err);
+        }
+        res.send({success: true});
+    });
 };

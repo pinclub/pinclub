@@ -14,6 +14,7 @@ var router            = express.Router();
 // Auth
 router.post('/auth/signin', authController.signIn);
 router.post('/auth/signin/two_factor', authController.verifyTwoFactor);
+router.post('/auth/check', authController.check);
 
 // 主题
 router.get('/topics', topicController.index);

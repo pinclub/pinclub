@@ -105,9 +105,21 @@ $(document).ready(function () {
 
 function auth() {
     if (!localStorage.jiuyanlouUser) {
-        $('.modal').modal('hide');
-        $('#signin_modal').modal('show');
-        return false;
+
+        $.ajax({
+            type: "POST",
+            url: "/api/v2/auth/check"
+        }).done(function (response) {
+            if (!response.success) {
+                $('.modal').modal('hide');
+                $('#signin_modal').modal('show');
+                return false;
+            }
+        }).error(function(response){
+            $('.modal').modal('hide');
+            $('#signin_modal').modal('show');
+            return false;
+        });
     }
     return true;
 }
