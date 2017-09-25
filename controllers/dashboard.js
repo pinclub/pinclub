@@ -9,6 +9,7 @@ var User        = require('../proxy').User;
 var Node        = require('../proxy').Node;
 var Topic = require('../proxy').Topic;
 var store = require('../common/store');
+var logger = require('../common/logger');
 
 
 // TODO 管理员维护界面 Dashboard, 统计数据的获取
@@ -218,9 +219,16 @@ exports.deleteAllImages = function (req, res, next) {
         if (!!err) {
             return next (err);
         }
+        // test for qn
+        // store.delete('FpUrRAkfWrcB79T2oQgm94LJAGW9', function(err){
+        //     if (err) {
+        //         logger.error(err);
+        //     }
+        // });
         _.forEach(topics, function (topic) {
             store.delete(topic.image, function(){});
             // TODO 删除图片时，删除Model对象
+            topic.remove();
         });
         res.send({success: true, count: topics.length});
     });
