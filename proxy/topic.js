@@ -1,13 +1,11 @@
 var EventProxy = require('eventproxy');
 var models = require('../models');
 var Topic = models.Topic;
-var Forum = require('./forum');
 var User = require('./user');
 var Reply = require('./reply');
-var tools = require('../common/tools');
 var at = require('../common/at');
 var _ = require('lodash');
-var structureHelper = require('../common/structure_helper');
+var store = require('../common/store');
 
 /**
  * 根据主题ID获取主题

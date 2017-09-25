@@ -172,6 +172,7 @@ router.get('/online', onlineM.add, online.index);
 
 // admin dashboard
 router.get('/admin/dashboard', auth.adminRequired, dashboard.dashboard);
+router.get('/admin/dashboard/deleteAllImages', auth.adminRequired, dashboard.deleteAllImages);
 router.get('/admin/tags', auth.adminRequired, dashboard.tags);
 router.get('/admin/boards', auth.adminRequired, dashboard.boards);
 router.post('/admin/boards/:board_id/edit', auth.adminRequired, board.adminEdit);

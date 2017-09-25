@@ -95,3 +95,25 @@ exports.upload = function (file, options, callback) {
             }
         });
 };
+
+/**
+ * 删除图片
+ * @param file
+ * @param callback
+ */
+exports.delete = function (file, callback) {
+    let fileext = path.extname(file);
+    let file_path = path.join(__dirname, '../' + file);
+    let file_path_86 = file_path.replace(fileext, '_86' + fileext);
+    let file_path_430 = file_path.replace(fileext, '_430' + fileext);
+    let file_path_fixed = file_path.replace(fileext, '_fixed' + fileext);
+    if (fs.existsSync(file_path)) {
+        fs.unlinkSync(file_path);
+        fs.unlinkSync(file_path_86);
+        fs.unlinkSync(file_path_430);
+        if (fs.existsSync(file_path_fixed)) { fs.unlinkSync(file_path_fixed); }
+        callback({success: true});
+    } else {
+        callback({success: false, error_msg: 'File does not exists. ['+file_path+']'});
+    }
+};

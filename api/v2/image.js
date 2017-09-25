@@ -224,26 +224,8 @@ exports.like = function (req, res, next) {
             }
             if (doc) {
                 return ep.emit('unlike_topic', topic);
-                //res.json({success: false});
-                //return;
             }
             return ep.emit('like_topic', topic);
-            //TopicLike.newAndSave(currentUser.id, topic._id, function (err) {
-            //    if (err) {
-            //        return next(err);
-            //    }
-            //    res.json({success: true});
-            //});
-            //UserProxy.getUserById(currentUser.id, function (err, user) {
-            //    if (err) {
-            //        return next(err);
-            //    }
-            //    user.like_image_count += 1;
-            //    user.save();
-            //});
-            //
-            //topic.like_count += 1;
-            //topic.save();
         });
 
     });
@@ -537,7 +519,7 @@ exports.show = function (req, res, next) {
 
 /**
  *
- * TODO (hhdem) 删除图片
+ * DONE (hhdem) 删除图片
  * @api {delete} /v2/images/:id 删除
  * @apiDescription
  * Get某图片

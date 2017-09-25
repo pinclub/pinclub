@@ -80,6 +80,19 @@
                 </div>
                 <div class="col-md-4">
                     <div class="list-group">
+                        <a href="javascript:void(0);" class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-9 col-sm-8" style="line-height: 28px;">
+                                    <span>彻底删除已删除图片</span>
+                                    <span id="deleteAllImageResult"></span>
+                                </div>
+                                <div class="col-xs-3 col-sm-4">
+                                    <button class="btn btn-default" id="deleteAllImages">删除图片</button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="list-group">
                         <a href="/admin/forums" class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-10 col-sm-9">
@@ -126,3 +139,8 @@
         </div>
     </div>
 </div>
+
+<%- Loader('/public/javascripts/dashboard/index.min.js')
+.js('/public/javascripts/dashboard/index.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
