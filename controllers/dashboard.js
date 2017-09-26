@@ -9,8 +9,6 @@ var User        = require('../proxy').User;
 var Node        = require('../proxy').Node;
 var Topic = require('../proxy').Topic;
 var store = require('../common/store');
-var logger = require('../common/logger');
-
 
 // TODO 管理员维护界面 Dashboard, 统计数据的获取
 exports.dashboard = function (req, res, next) {
@@ -213,8 +211,13 @@ exports.forumShow = function (req, res, next) {
     });
 };
 
+/**
+ * Physically remove the images that 'deleted == true'
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.deleteAllImages = function (req, res, next) {
-
     Topic.getTopicsByQuery({type: 'image', deleted: true}, {}, function (err, topics) {
         if (!!err) {
             return next (err);
@@ -227,7 +230,7 @@ exports.deleteAllImages = function (req, res, next) {
         // });
         _.forEach(topics, function (topic) {
             store.delete(topic.image, function(){});
-            // TODO 删除图片时，删除Model对象
+            // DONE(hhdem) 删除图片时，删除Model对象
             topic.remove();
         });
         res.send({success: true, count: topics.length});
