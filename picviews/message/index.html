@@ -1,31 +1,44 @@
-<%- partial('../sidebar') %>
-<%- include ../navbar.html %>
-<div id='content'>
-  <div class='panel'>
-    <div class='header'>
-      <ul class='breadcrumb'>
-        <li><a href='/'>主页</a></li>
-        <li class='active'>新消息</li>
-      </ul>
+<style>
+    #sidebar {
+        width: auto;
+    }
+
+    #sidebar .panel .innerTopic {
+        padding: 15px;
+    }
+</style>
+<%- partial('../navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
+<div id="forum_topics" class="wrapper row">
+    <div class="col-md-9">
+        <div class='panel'>
+            <div class='header'>
+                <ul class='breadcrumb'>
+                    <li><a href='/'>主页</a></li>
+                    <li class='active'>新消息</li>
+                </ul>
+            </div>
+            <% if (typeof(hasnot_read_messages) !== 'undefined' && hasnot_read_messages.length > 0) { %>
+            <%- partial('../message/message', { collection: hasnot_read_messages, as: 'message' }) %>
+            <% } else { %>
+            <div class='innerTopic'>
+                <p>无消息</p>
+            </div>
+            <% } %>
+        </div>
+        <div class='panel pd10'>
+            <div class='header'>
+                <span class='col_fade'>过往信息</span>
+            </div>
+            <% if (typeof(has_read_messages) !== 'undefined' && has_read_messages.length > 0) { %>
+            <%- partial('../message/message', { collection: has_read_messages, as: 'message' }) %>
+            <% } else { %>
+            <div class='innerTopic'>
+                <p>无消息</p>
+            </div>
+            <% } %>
+        </div>
     </div>
-    <% if (typeof(hasnot_read_messages) !== 'undefined' && hasnot_read_messages.length > 0) { %>
-    <%- partial('../message/message', { collection: hasnot_read_messages, as: 'message' }) %>
-    <% } else { %>
-    <div class='innerTopic'>
-      <p>无消息</p>
+    <div class="col-md-3">
+        <%- partial('../sidebar') %>
     </div>
-    <% } %>
-  </div>
-  <div class='panel pd10'>
-    <div class='header'>
-      <span class='col_fade'>过往信息</span>
-    </div>
-    <% if (typeof(has_read_messages) !== 'undefined' && has_read_messages.length > 0) { %>
-    <%- partial('../message/message', { collection: has_read_messages, as: 'message' }) %>
-    <% } else { %>
-    <div class='innerTopic'>
-      <p>无消息</p>
-    </div>
-    <% } %>
-  </div>
 </div>
