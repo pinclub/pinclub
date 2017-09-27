@@ -1,17 +1,30 @@
-<%- partial('../sidebar') %>
-<%- include ../navbar.html %>
-<div id='content'>
-    <div class='panel'>
-        <div class='header'>
-            <ul class='breadcrumb'>
-                <li><a href='/'>主页</a></li>
-                <li class='active'><%= title %></li>
-            </ul>
-        </div>
-        <div class='innerTopic topic'>
-            <div class="topic_content">
-                功能开发中........
+
+<style>
+    #sidebar {
+        width: auto;
+    }
+    #sidebar .panel .innerTopic {
+        padding: 15px;
+    }
+</style>
+<%- partial('navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
+<div id="forum_topics" class="wrapper row">
+    <div class="col-md-9">
+        <div class='panel'>
+            <div class='header'>
+                <ul class='breadcrumb'>
+                    <li><a href='/'>主页</a></li>
+                    <li class='active'><%= title %></li>
+                </ul>
+            </div>
+            <div class='innerTopic topic'>
+                <div class="topic_content">
+                    功能开发中........
+                </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-3">
+        <%- partial('../sidebar') %>
     </div>
 </div>

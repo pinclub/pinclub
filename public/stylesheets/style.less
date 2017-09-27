@@ -28,14 +28,15 @@ body {
 #content {
   padding: 0;
   margin-right: 305px;
-  .header {
-    padding: 10px;
-    font-size: 14px;
-    line-height: 120%;
-    text-align: left;
-    border-bottom: 1px solid #e2e2e2;
-    overflow: auto;
-  }
+}
+
+#content .header, .header {
+  padding: 10px;
+  font-size: 14px;
+  line-height: 120%;
+  text-align: left;
+  border-bottom: 1px solid #e2e2e2;
+  overflow: auto;
 }
 
 body::-webkit-scrollbar {display:none}
@@ -2077,4 +2078,10 @@ textarea.editor {
 
 .is_stuck {
   margin-bottom: 100px;
+}
+
+#forum_topics {
+   min-width: 600px;
+   margin: 0 auto;
+   max-width: 1050px;
 }

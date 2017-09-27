@@ -1,166 +1,167 @@
 <%- Loader('/public/stylesheets/_pic_create_modal.min.css')
 .css('/public/stylesheets/_pic_create_modal.less')
 .css('/public/stylesheets/_avatar_upload.less')
+.css('/public/stylesheets/user/setting.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
-<%- include ../navbar.html %>
-<div id='sidebar'>
-    <div class='panel'>
-        <div class='innerTopic '>
-            <div class="form-horizontal">
-                <div id="avatar_list" class='form-group'>
-                    <img width="54" height="54" src="<%= avatarPath(avatar_url, 54) %>" data-baiduimageplus-ignore="1"
-                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
-                    &nbsp;
-                    <img width="34" height="34" src="<%= avatarPath(avatar_url, 34) %>" data-baiduimageplus-ignore="1"
-                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
-                    &nbsp;
-                    <img width="24" height="24" src="<%= avatarPath(avatar_url, 24) %>" data-baiduimageplus-ignore="1"
-                         class="avatar" border="0" align="default" style="vertical-align: bottom;">
+<%- partial('navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
+
+<div id="forum_topics" class="wrapper row">
+    <div class="col-md-9">
+        <div class='panel'>
+            <div class='header'>
+                <ul class='breadcrumb'>
+                    <li><a href='/'>主页</a></li>
+                    <li class='active'>设置</li>
+                </ul>
+            </div>
+            <div class='innerTopic'>
+                <% if(typeof(error) !== 'undefined' && error){ %>
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <strong><%= error %></strong>
                 </div>
-                <div class='form-group '>
-                    <a id='upload_avatar_btn' data-toggle="modal" data-target="#image_upload" class="btn wbtn"><strong>
-                        上传新头像</strong><span></span></a>
+                <% } %>
+                <% if (typeof(success) !== 'undefined' && success) { %>
+                <div class="alert alert-success">
+                    <strong><%= success %></strong>
                 </div>
+                <% } %>
+                <form id='setting_form' class='form-horizontal box' action='/setting' method='post'>
+                    <fieldset readonly>
+                        <div class='form-group'>
+                            <label class='col-sm-2 control-label' for='name'>用户名</label>
+
+                            <div class='col-sm-10'>
+                                <input class='form-control ' id='name' name='name' size='30' type='text' readonly='true'
+                                       value="<%= loginname %>"/>
+                            </div>
+                        </div>
+                        <div class='form-group' style="margin-bottom: 0px;">
+                            <label class='col-sm-2 control-label' for='email'>电子邮件</label>
+
+                            <div class='col-sm-10'>
+                                <input class='form-control ' id='email' name='email' size='30' type='text'
+                                       readonly='true' value="<%= email %>"/>
+
+                                <p>同时决定了 Gravatar 头像</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div class='form-group'>
+                            <label class='col-sm-2 control-label' for='url'>个人网站</label>
+
+                            <div class='col-sm-10'>
+                                <input class='form-control' id='url' name='url' size='30' type='text'
+                                       value="<%= typeof(url) !== 'undefined' ? url : '' %>"/>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='col-sm-2 control-label' for='location'>所在地点</label>
+
+                            <div class='col-sm-10'>
+                                <input class='form-control' id='location' name='location' size='30' type='text'
+                                       value="<%= typeof(location) !== 'undefined' ? location : '' %>"/>
+                            </div>
+                        </div>
+
+                        <div class='form-group'>
+                            <label class='col-sm-2 control-label' for='weibo'>微博</label>
+
+                            <div class='col-sm-10'>
+                                <input class='form-control' id='weibo' name='weibo' size='30' type='text'
+                                       value="<%= typeof(weibo) !== 'undefined' ? weibo : '' %>"
+                                       placeholder="e.g. http://weibo.com/cnodejs"/>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='col-sm-2 control-label' for='github'>GitHub</label>
+
+                            <div class='col-sm-10'>
+                                <input class='form-control' id='github' name='github' size='30' type='text'
+                                       value="<%= typeof(githubUsername) !== 'undefined' ? '@' + githubUsername : '' %>"
+                                       placeholder="@username" readonly="readonly"/>
+                                <p>请通过 GitHub 登陆 CNode 来修改此处</p>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <label class='col-sm-2 control-label' for='signature'>个性签名</label>
+
+                            <div class='col-sm-10'>
+                                <textarea class='form-control' id='signature' name='signature' size='30'><%= typeof(signature) !== 'undefined' ? signature : "" %></textarea>
+                            </div>
+                        </div>
+                        <input type='hidden' id='action' name='action' value='change_setting'/>
+                        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+
+                        <div class='form-group'>
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <input type='submit' class='btn' data-loading-text="保存中.." value='保存设置'/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
         </div>
     </div>
-    <div class='panel pd10'>
-        <div class='innerTopic'>
-            <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
-                <div class='form-group'>
-                    <label class='control-label' for='old_pass'>当前密码</label>
 
-                    <div class='controls'>
-                        <input class='form-control' type='password' id='old_pass' name='old_pass' size='30'/>
+    <div class="col-md-3">
+        <div class='panel'>
+            <div class='innerTopic '>
+                <div class="box">
+                    <div id="avatar_list" class='form-group'>
+                        <img width="54" height="54" src="<%= avatarPath(avatar_url, 54) %>" data-baiduimageplus-ignore="1"
+                             class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                        &nbsp;
+                        <img width="34" height="34" src="<%= avatarPath(avatar_url, 34) %>" data-baiduimageplus-ignore="1"
+                             class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                        &nbsp;
+                        <img width="24" height="24" src="<%= avatarPath(avatar_url, 24) %>" data-baiduimageplus-ignore="1"
+                             class="avatar" border="0" align="default" style="vertical-align: bottom;">
+                    </div>
+                    <div>
+                        <a id='upload_avatar_btn' data-toggle="modal" data-target="#image_upload" class="btn wbtn"><strong>
+                            上传新头像</strong><span></span></a>
                     </div>
                 </div>
-                <div class='form-group'>
-                    <label class='control-label' for='new_pass'>新密码</label>
-
-                    <div class='controls'>
-                        <input class='form-control' type='password' id='new_pass' name='new_pass' size='30'/>
-                    </div>
-                </div>
-                <input type='hidden' id='action' name='action' value='change_password'/>
-                <input type='hidden' name='_csrf' value='<%= csrf %>'/>
-
-                <div class='form-group '>
-                    <input type='submit' class='btn' data-loading-text="更改中.." value='更改密码'/>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class='panel pd10'>
-        <div class='innerTopic'>
-            <div class="form-horizontal">
-            <div class='form-group '>
-                <a id='two_factor_btn' data-toggle="modal" data-target="#two_factor" class="btn wbtn"><strong class="toggle_two_factor_name">
-                    <%if (!is_two_factor) {%>开启<% } else {%>关闭<%}%>双因子验证</strong><span></span></a>
-            </div>
             </div>
         </div>
-    </div>
-</div>
-<div id='content'>
-    <div class='panel'>
-        <div class='header'>
-            <ul class='breadcrumb'>
-                <li><a href='/'>主页</a></li>
-                <li class='active'>设置</li>
-            </ul>
-        </div>
-        <div class='innerTopic'>
-            <% if(typeof(error) !== 'undefined' && error){ %>
-            <div class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <strong><%= error %></strong>
-            </div>
-            <% } %>
-            <% if (typeof(success) !== 'undefined' && success) { %>
-            <div class="alert alert-success">
-                <strong><%= success %></strong>
-            </div>
-            <% } %>
-            <form id='setting_form' class='form-horizontal' action='/setting' method='post'>
-                <fieldset readonly>
+        <div class='panel pd10'>
+            <div class='innerTopic'>
+                <form id='change_pass_form'  class="box" action='/setting' method='post'>
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='name'>用户名</label>
+                        <label class='control-label' for='old_pass'>当前密码</label>
 
-                        <div class='col-sm-10'>
-                            <input class='form-control ' id='name' name='name' size='30' type='text' readonly='true'
-                                   value="<%= loginname %>"/>
+                        <div class='controls'>
+                            <input class='form-control' type='password' id='old_pass' name='old_pass' size='30'/>
                         </div>
                     </div>
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='email'>电子邮件</label>
+                        <label class='control-label' for='new_pass'>新密码</label>
 
-                        <div class='col-sm-10'>
-                            <input class='form-control ' id='email' name='email' size='30' type='text'
-                                   readonly='true' value="<%= email %>"/>
-
-                            <p>同时决定了 Gravatar 头像</p>
+                        <div class='controls'>
+                            <input class='form-control' type='password' id='new_pass' name='new_pass' size='30'/>
                         </div>
                     </div>
-                </fieldset>
-                <fieldset>
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='url'>个人网站</label>
-
-                        <div class='col-sm-10'>
-                            <input class='form-control' id='url' name='url' size='30' type='text'
-                                   value="<%= typeof(url) !== 'undefined' ? url : '' %>"/>
-                        </div>
-                    </div>
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='location'>所在地点</label>
-
-                        <div class='col-sm-10'>
-                            <input class='form-control' id='location' name='location' size='30' type='text'
-                                   value="<%= typeof(location) !== 'undefined' ? location : '' %>"/>
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='weibo'>微博</label>
-
-                        <div class='col-sm-10'>
-                            <input class='form-control' id='weibo' name='weibo' size='30' type='text'
-                                   value="<%= typeof(weibo) !== 'undefined' ? weibo : '' %>"
-                                   placeholder="e.g. http://weibo.com/cnodejs"/>
-                        </div>
-                    </div>
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='github'>GitHub</label>
-
-                        <div class='col-sm-10'>
-                            <input class='form-control' id='github' name='github' size='30' type='text'
-                                   value="<%= typeof(githubUsername) !== 'undefined' ? '@' + githubUsername : '' %>"
-                                   placeholder="@username" readonly="readonly"/>
-                            <p>请通过 GitHub 登陆 CNode 来修改此处</p>
-                        </div>
-                    </div>
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='signature'>个性签名</label>
-
-                        <div class='col-sm-10'>
-                            <textarea class='form-control' id='signature' name='signature' size='30'><%= typeof(signature) !== 'undefined' ? signature : "" %></textarea>
-                        </div>
-                    </div>
-                    <input type='hidden' id='action' name='action' value='change_setting'/>
+                    <input type='hidden' id='action' name='action' value='change_password'/>
                     <input type='hidden' name='_csrf' value='<%= csrf %>'/>
 
-                    <div class='form-group'>
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <input type='submit' class='btn' data-loading-text="保存中.." value='保存设置'/>
-                        </div>
+                    <div>
+                        <input type='submit' class='btn wbtn' data-loading-text="更改中.." value='更改密码'/>
                     </div>
-                </fieldset>
-            </form>
+                </form>
+            </div>
+        </div>
+        <div class='panel pd10'>
+            <div class='innerTopic'>
+                <div class="box">
+                    <a id='two_factor_btn' data-toggle="modal" data-target="#two_factor" class="btn wbtn"><strong class="toggle_two_factor_name">
+                        <%if (!is_two_factor) {%>开启<% } else {%>关闭<%}%>双因子验证</strong><span></span></a>
+                </div>
+            </div>
         </div>
     </div>
-
-
 </div>
 
 <div class="modal fade" id="image_upload" role="dialog" aria-hidden="true" aria-labelledby="avatarModalLabel">

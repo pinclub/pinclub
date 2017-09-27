@@ -1,6 +1,6 @@
-<%- partial('../editor_sidebar') %>
-<%- partial('navbar',  {style:'min-width: 600px;max-width: 1100px;'} ) %>
-<div id='content'>
+<%- partial('navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
+<div id="forum_topics" class="wrapper row">
+    <div class=" box col-md-9">
     <div class='panel'>
         <div class='header'>
             <ol class='breadcrumb'>
@@ -85,8 +85,11 @@
         </div>
         <% } %>
     </div>
-</div>
+    </div>
 
+<div class="col-md-3">
+    <%- partial('../editor_sidebar') %>
+</div>
 <!-- markdown editor -->
 <%- partial('../includes/editor') %>
 <script>
@@ -123,3 +126,5 @@
         // END 选择招聘版块时，给出提示
     })();
 </script>
+
+</div>

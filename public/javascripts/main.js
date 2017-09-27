@@ -120,8 +120,9 @@ function auth() {
             $('#signin_modal').modal('show');
             return false;
         });
+    } else {
+        return true;
     }
-    return true;
 }
 
 function signout() {

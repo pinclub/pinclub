@@ -1,185 +1,191 @@
+<%- Loader('/public/stylesheets/topic/index.min.css')
+.css('/public/stylesheets/topic/index.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
 <% if (topic.forum && topic.forum.css_text) { %>
 <style>
     <%= topic.forum.css_text %>
 </style>
 <% } %>
-<%- partial('navbar') %>
-<div id='sidebar'>
-    <div class='panel'>
-        <div id="loginDiv" class="grid-item grid-item-nb">
-        <%- partial('../user/card', { object: current_user, as: 'user' }) %>
-        </div>
-    </div>
-
-    <% if (!current_user || !current_user.isAdvanced) { %>
-    <%- partial('../_ads') %>
-    <% } %>
-
-    <div class='panel pd10'>
-        <div class='header'>
-            <span class='col_fade'>作者其它话题</span>
-        </div>
-        <div>
-            <% if (typeof(author_other_topics) === 'undefined' || author_other_topics.length > 0) { %>
-            <div class='unstyled'>
-                <%- partial('../topic/small', { collection: author_other_topics, as: 'topic' }) %>
-            </div>
-            <% } else { %>
-            <p class="inner">无</p>
-            <% } %>
-        </div>
-    </div>
-
-    <div class='panel pd10'>
-        <div class='header'>
-            <span class='col_fade'>无人回复的话题</span>
-        </div>
-        <div>
-            <% if (typeof(no_reply_topics) !== 'undefined' && no_reply_topics.length > 0) { %>
-            <div class='unstyled'>
-                <%- partial('../topic/small', { collection: no_reply_topics, as: 'topic' }) %>
-            </div>
-            <% } else { %>
-            <p class="inner">无</p>
-            <% } %>
-        </div>
-    </div>
-
-    <div class='panel pd10'>
-        <%- partial('../static/image_ad_fix.html') %>
-    </div>
-</div>
-
-<div id='content'>
-    <div class='panel'>
-        <div class='header topic_header'>
-            <div class="pull-right">
-                <a class="user_avatar" href="/user/<%= topic.author.loginname %>">
-                    <img src="<%= avatarPath(topic.author.avatar_url, 54) %>"
-                         title="<%= topic.author.loginname %>"
-                    />
-                </a>
-            </div>
-            <% if (topic.forum) { %>
-                <a href="/forums/<%= topic.forum.id %>">
-                    <span> 来自 <%= topic.forum.title %></span>
-                </a>
-            <%}%>
-            <div class="clearfix" style="height: 5px;"></div>
-            <h1 class="topic_full_title"><%= topic.title %></h1>
-            <small>
-                <a class="user_avatar" href="/user/<%= topic.author.loginname %>">
-                    <%= topic.author.loginname %>
-                </a>
-                &nbsp;·&nbsp;发布于 <%= topic.create_at_ago() %>&nbsp;·&nbsp; <%= topic.visit_count %> 次浏览
-                <% if (topic.create_at_ago() != topic.update_at_ago()) { %>
-                &nbsp;·&nbsp;最后一次编辑是 <%= topic.update_at_ago() %>
-                <% } %>
-            </small>
-        </div>
-
-        <div class="cell">
-            <%- markdown(topic.linkedContent) %>
-        </div>
-
-        <div class="topic_buttons ">
-                <% if (current_user) { %>
-                <a href="/topic/<%= topic.id%>/<%= is_collect ? 'de_collect' : 'collect' %>" class="tb collect_btn" ><%= is_collect ? '取消收藏' : '收藏' %></a>
-                <% } %>
-                <% if (current_user && current_user.is_admin) { %>
-                <a href='/topic/<%= topic._id %>/top' class="tb" data-method="post">
-                    <% if (topic.top) { %>
-                    <i class="fa fa-lg fa-star-o" title='取消置顶'></i>
-                    <% } else { %>
-                    <i class="fa fa-lg fa-star" title='置顶'/></i>
+<%- partial('navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
+<div id="forum_topics" class="wrapper row">
+    <div id='content' class=" box col-md-9">
+        <div class='panel'>
+            <div class='header topic_header'>
+                <div class="pull-right">
+                    <a class="user_avatar" href="/user/<%= topic.author.loginname %>">
+                        <img src="<%= avatarPath(topic.author.avatar_url, 54) %>"
+                             title="<%= topic.author.loginname %>"
+                        />
+                    </a>
+                </div>
+                <% if (topic.forum) { %>
+                    <a href="/forums/<%= topic.forum.id %>">
+                        <span> 来自 <%= topic.forum.title %></span>
+                    </a>
+                <%}%>
+                <div class="clearfix" style="height: 5px;"></div>
+                <h1 class="topic_full_title"><%= topic.title %></h1>
+                <small>
+                    <a class="user_avatar" href="/user/<%= topic.author.loginname %>">
+                        <%= topic.author.loginname %>
+                    </a>
+                    &nbsp;·&nbsp;发布于 <%= topic.create_at_ago() %>&nbsp;·&nbsp; <%= topic.visit_count %> 次浏览
+                    <% if (topic.create_at_ago() != topic.update_at_ago()) { %>
+                    &nbsp;·&nbsp;最后一次编辑是 <%= topic.update_at_ago() %>
                     <% } %>
-                </a>
+                </small>
+            </div>
 
+            <div class="cell">
+                <%- markdown(topic.linkedContent) %>
+            </div>
 
-                <a href='/topic/<%= topic._id %>/good' class="tb" data-method="post">
-                    <% if (topic.good) { %>
-                    <i class="fa fa-lg fa-heart-o" title="取消精华"></i>
-                    <% } else { %>
-                    <i class="fa fa-lg fa-heart" title="加精华"></i>
+            <div class="topic_buttons ">
+                    <% if (current_user) { %>
+                    <a href="/topic/<%= topic.id%>/<%= is_collect ? 'de_collect' : 'collect' %>" class="tb collect_btn" ><%= is_collect ? '取消收藏' : '收藏' %></a>
                     <% } %>
-                </a>
+                    <% if (current_user && current_user.is_admin) { %>
+                    <a href='/topic/<%= topic._id %>/top' class="tb" data-method="post">
+                        <% if (topic.top) { %>
+                        <i class="fa fa-lg fa-star-o" title='取消置顶'></i>
+                        <% } else { %>
+                        <i class="fa fa-lg fa-star" title='置顶'/></i>
+                        <% } %>
+                    </a>
 
-                <a href='/topic/<%= topic._id %>/lock' class="tb" data-method="post">
-                    <% if (topic.lock) { %>
-                    <i class="fa fa-lg fa-unlock" title='取消锁定'></i>
+
+                    <a href='/topic/<%= topic._id %>/good' class="tb" data-method="post">
+                        <% if (topic.good) { %>
+                        <i class="fa fa-lg fa-heart-o" title="取消精华"></i>
+                        <% } else { %>
+                        <i class="fa fa-lg fa-heart" title="加精华"></i>
+                        <% } %>
+                    </a>
+
+                    <a href='/topic/<%= topic._id %>/lock' class="tb" data-method="post">
+                        <% if (topic.lock) { %>
+                        <i class="fa fa-lg fa-unlock" title='取消锁定'></i>
+                        <% } else { %>
+                        <i class="fa fa-lg fa-lock" title='锁定（不可再回复）'/></i>
+                        <% } %>
+                    </a>
+
+
+                    <a href='/topic/<%= topic._id %>/edit' class="tb">
+                        <i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
+                    <a href='javascript:;'
+                       data-id="<%= topic._id %>"
+                       class='delete_topic_btn tb'>
+                        <i class="fa fa-lg fa-trash" title='删除'></i></a>
                     <% } else { %>
-                    <i class="fa fa-lg fa-lock" title='锁定（不可再回复）'/></i>
+                    <% if (current_user && current_user._id.equals(topic.author)) { %>
+                    <a href='/topic/<%= topic._id %>/edit' class="tb">
+                        <i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
+                    <a href='javascript:;'
+                       data-id="<%= topic._id %>"
+                       class='delete_topic_btn tb'>
+                        <i class="fa fa-lg fa-trash" title='删除'></i></a>
                     <% } %>
-                </a>
+                    <% } %>
 
+                    <a href='' onclick="return false;" class="tb">被浏览 <%= topic.visit_count %> 次</a>
+                    <% if (topic.replies && topic.replies.length > 0) { %>
+                    <a href='' onclick="return false;" class="tb">被回复 <%= topic.replies.length %> 次</a>
+                    <% } %>
 
-                <a href='/topic/<%= topic._id %>/edit' class="tb">
-                    <i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
-                <a href='javascript:;'
-                   data-id="<%= topic._id %>"
-                   class='delete_topic_btn tb'>
-                    <i class="fa fa-lg fa-trash" title='删除'></i></a>
-                <% } else { %>
-                <% if (current_user && current_user._id.equals(topic.author)) { %>
-                <a href='/topic/<%= topic._id %>/edit' class="tb">
-                    <i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
-                <a href='javascript:;'
-                   data-id="<%= topic._id %>"
-                   class='delete_topic_btn tb'>
-                    <i class="fa fa-lg fa-trash" title='删除'></i></a>
-                <% } %>
-                <% } %>
-
-                <a href='' onclick="return false;" class="tb">被浏览 <%= topic.visit_count %> 次</a>
-                <% if (topic.replies && topic.replies.length > 0) { %>
-                <a href='' onclick="return false;" class="tb">被回复 <%= topic.replies.length %> 次</a>
-                <% } %>
+            </div>
 
         </div>
 
-    </div>
-
-    <% if (topic.replies && topic.replies.length > 0) { %>
-    <div class='panel pd10'>
-        <div class='cell'>
-            <span class='col_fade'><%= topic.replies.length %> 回复&nbsp;·&nbsp;直到 <%= topic.last_reply_at_age() %></span>
+        <% if (topic.replies && topic.replies.length > 0) { %>
+        <div class='panel pd10'>
+            <div class='cell'>
+                <span class='col_fade'><%= topic.replies.length %> 回复&nbsp;·&nbsp;直到 <%= topic.last_reply_at_age() %></span>
+            </div>
+            <%- partial('../reply/reply', topic.replies) %>
         </div>
-        <%- partial('../reply/reply', topic.replies) %>
-    </div>
-    <% } else { %>
-    <div class="box transparent pd10">
-        <div class="cell" style="text-align: center">
-            <span style="color: rgba(0, 0, 0, 0.25);">目前尚无回复</span>
+        <% } else { %>
+        <div class="box transparent pd10">
+            <div class="cell" style="text-align: center">
+                <span style="color: rgba(0, 0, 0, 0.25);">目前尚无回复</span>
+            </div>
         </div>
-    </div>
-    <% } %>
-    <% if (current_user && typeof(topic) !== 'undefined') { %>
-    <div class='panel pd10'>
-        <div class='header'>
-            <span class='col_fade'>添加回复</span>
-        </div>
-        <div class='innerTopic reply'>
-            <form id='reply_form' action='/<%= topic._id %>/reply' method='post'>
+        <% } %>
+        <% if (current_user && typeof(topic) !== 'undefined') { %>
+        <div class='panel pd10'>
+            <div class='header'>
+                <span class='col_fade'>添加回复</span>
+            </div>
+            <div class='innerTopic reply'>
+                <form id='reply_form' action='/<%= topic._id %>/reply' method='post'>
 
-                <div class='markdown_editor in_editor'>
-                    <div class='markdown_in_editor'>
-                        <textarea class='editor' name='r_content' rows='8'></textarea>
+                    <div class='markdown_editor in_editor'>
+                        <div class='markdown_in_editor'>
+                            <textarea class='editor' name='r_content' rows='8'></textarea>
 
-                        <div class='editor_buttons '>
-                            <button type="button" class='btn' id="preview_topic_content">
-                                <li class="fa fa-eye"></li>&nbsp;预览</button>
-                            <button type="submit" class='btn' data-loading-text="回复中.." <%= topic.lock ? 'disabled="disabled"' :'' %>>
-                                <li class="fa fa-paper-plane"></li>&nbsp;回复<%= topic.lock ? '(此主题已锁定)' : ''%></button>
+                            <div class='editor_buttons '>
+                                <button type="button" class='btn' id="preview_topic_content">
+                                    <li class="fa fa-eye"></li>&nbsp;预览</button>
+                                <button type="submit" class='btn' data-loading-text="回复中.." <%= topic.lock ? 'disabled="disabled"' :'' %>>
+                                    <li class="fa fa-paper-plane"></li>&nbsp;回复<%= topic.lock ? '(此主题已锁定)' : ''%></button>
+                            </div>
                         </div>
+
                     </div>
 
-                </div>
+                    <input type='hidden' name='_csrf' id="_csrf" value='<%= csrf %>'/>
+                </form>
+            </div>
+        </div>
+        <% } %>
+    </div>
 
-                <input type='hidden' name='_csrf' id="_csrf" value='<%= csrf %>'/>
-            </form>
+    <div id='sidebar' class="col-md-3">
+        <div class='panel'>
+            <div id="loginDiv" class="grid-item grid-item-nb">
+                <%- partial('../user/card', { object: current_user, as: 'user', showPicCount: false }) %>
+            </div>
+        </div>
+
+        <% if (!current_user || !current_user.isAdvanced) { %>
+        <%- partial('../_ads') %>
+        <% } %>
+
+        <div class='panel pd10'>
+            <div class='header'>
+                <span class='col_fade'>作者其它话题</span>
+            </div>
+            <div>
+                <% if (typeof(author_other_topics) === 'undefined' || author_other_topics.length > 0) { %>
+                <div class='unstyled'>
+                    <%- partial('../topic/small', { collection: author_other_topics, as: 'topic' }) %>
+                </div>
+                <% } else { %>
+                <p class="inner">无</p>
+                <% } %>
+            </div>
+        </div>
+
+        <div class='panel pd10'>
+            <div class='header'>
+                <span class='col_fade'>无人回复的话题</span>
+            </div>
+            <div>
+                <% if (typeof(no_reply_topics) !== 'undefined' && no_reply_topics.length > 0) { %>
+                <div class='unstyled'>
+                    <%- partial('../topic/small', { collection: no_reply_topics, as: 'topic' }) %>
+                </div>
+                <% } else { %>
+                <p class="inner">无</p>
+                <% } %>
+            </div>
+        </div>
+
+        <div class='panel pd10'>
+            <%- partial('../static/image_ad_fix.html') %>
         </div>
     </div>
-    <% } %>
 </div>
 
 <div class="replies_history">

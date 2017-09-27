@@ -1,6 +1,14 @@
-<%- partial('../sidebar') %>
-<%- include ../navbar.html %>
-<div id='content'>
+<style>
+    #sidebar {
+        width: auto;
+    }
+    #sidebar .panel .innerTopic {
+        padding: 15px;
+    }
+</style>
+<%- partial('navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
+<div id="forum_topics" class="wrapper row">
+    <div class="col-md-9">
   <div class='panel'>
     <div class='header'>
       <ul class='breadcrumb'>
@@ -167,4 +175,9 @@ Pinclub is released under the MIT License. Have at it.
       </div>
     </div>
   </div>
+    </div>
+
+    <div class="col-md-3">
+        <%- partial('../sidebar') %>
+    </div>
 </div>

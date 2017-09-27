@@ -6,7 +6,7 @@
 
   <div class='panel'>
     <% if (current_user) { %>
-      <%- partial('user/card',{ object: current_user, as: 'user' }) %>
+      <%- partial('user/card',{ object: current_user, as: 'user' , showPicCount: false}) %>
     <% } else { %>
     <div class='innerTopic'>
       <p><%= config.description %></p>
@@ -18,7 +18,7 @@
         <a href='/signup'>注册</a>
         , 也可以
         <a href="/auth/github">
-          <span class="span-info">
+          <span class="btn">
             通过 GitHub 登录
           </span>
         </a>
