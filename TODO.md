@@ -8,10 +8,11 @@
 | v2/board.js | 266 | [@hhdem](https://github.com/hhdem) ~~关注列表~~
 | v2/image.js | 116 | [@hhdem](https://github.com/hhdem) ~~此处需要优化, 不要每次都获得全部喜欢的图片列表, 改为根据返回的图片列表, 查询是否like~~
 | v2/image.js | 172 | [@hhdem](https://github.com/hhdem) ~~考虑如何把 hamming 距离改成 SIFT 算法或 pHash 算法, 最终改了 gHash, 依然需要优化~~
-| v2/image.js | 304 | [@hhdem](https://github.com/hhdem) ~~修改为每次GET操作都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象~~
-| v2/image.js | 352 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
-| v2/image.js | 399 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
-| v2/image.js | 437 | [@hhdem](https://github.com/hhdem) ~~增加Board信息的返回,以及统计信息~~
+| v2/image.js | 286 | [@hhdem](https://github.com/hhdem) ~~修改为每次GET操作都生成新的topic对象, 但是图片地址不改变, 目前是添加了一个 TopicBoard 的关系对象~~
+| v2/image.js | 334 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
+| v2/image.js | 381 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
+| v2/image.js | 419 | [@hhdem](https://github.com/hhdem) ~~增加Board信息的返回,以及统计信息~~
+| v2/image.js | 522 | [@hhdem](https://github.com/hhdem) ~~删除图片~~
 | counter.js | 170 | [@hhdem](https://github.com/hhdem) ~~增加 err 的错误校验, 返回对应的错误信息~~
 | store_local.js | 55 | [@hhdem](https://github.com/hhdem) ~~上传未结束就读取文件生成hash, 导致报找不到文件错, 原有的file.on('end') 改为 file.pipe().on('close')方式, 真正在写结束后调用回掉函数, 此处需要注意如果不需要上传后对图片做分析可以不用等待直接用原有的方法~~
 | store_local.js | 63 | [@hhdem](https://github.com/hhdem) ~~上传图片时裁剪生成 86 像素宽的缩略图, 存储到upload下~~
@@ -19,16 +20,17 @@
 | board.js | 163 |  ~~用户Board列表页创建Board信息~~
 | board.js | 212 |  ~~用户Board列表页修改Board信息~~
 | dashboard.js | 155 | [@hhdem](https://github.com/hhdem) ~~所有Forum列表~~
-| forum.js | 4 | [@hhdem](https://github.com/hhdem) ~~Forum信息添加和修改~~
-| forum.js | 92 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
-| image.js | 242 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
-| image.js | 243 | [@hhdem](https://github.com/hhdem) ~~上传图片支持 7牛云, 增加对应的配置~~
-| image.js | 244 | [@hhdem](https://github.com/hhdem) ~~更改hash参数生成方式为 ghash~~
-| image.js | 245 | [@hhdem](https://github.com/hhdem) ~~上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取~~
-| image.js | 284 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
-| image.js | 373 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
-| image.js | 496 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
-| image.js | 594 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
+| dashboard.js | 233 | [@hhdem](https://github.com/hhdem) ~~删除图片时，删除Model对象~~
+| forum.js | 5 | [@hhdem](https://github.com/hhdem) ~~Forum信息添加和修改~~
+| forum.js | 95 | [@hhdem](https://github.com/hhdem) ~~Forum信息查看~~
+| image.js | 243 | [@hhdem](https://github.com/hhdem) ~~不对val进行inspect~~
+| image.js | 244 | [@hhdem](https://github.com/hhdem) ~~上传图片支持 7牛云, 增加对应的配置~~
+| image.js | 245 | [@hhdem](https://github.com/hhdem) ~~更改hash参数生成方式为 ghash~~
+| image.js | 246 | [@hhdem](https://github.com/hhdem) ~~上传完图片后, 异步返回结果, 而不是等待 hash值 和 colors的获取~~
+| image.js | 285 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
+| image.js | 374 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
+| image.js | 497 | [@hhdem](https://github.com/hhdem) ~~上传图片时与Board进行关联绑定, 目前Get图片已经做了关联, 上传图片还未做~~
+| image.js | 595 | [@hhdem](https://github.com/hhdem) ~~自动旋转图片方向, 此处代码优化性能, 挪到 store_local 中~~
 | node.js | 4 | [@hhdem](https://github.com/hhdem) ~~管理员创建节点~~
 | node.js | 59 | [@hhdem](https://github.com/hhdem) ~~查看节点信息~~
 | topic.js | 31 | [@hhdem](https://github.com/hhdem) ~~在 Topic 模型中增加 board 关联~~
@@ -44,10 +46,10 @@
 | index.html | 11 | [@hhdem](https://github.com/hhdem) ~~首页中板块切换修改为ajax请求~~
 | index.html | 54 | [@hhdem](https://github.com/hhdem) ~~用户信息显示的样式调整, 参考花瓣网~~
 | index.html | 58 | [@hhdem](https://github.com/hhdem) ~~用户统计信息获取~~
-| board/topics.html | 78 | [@hhdem](https://github.com/hhdem) ~~修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果~~
 | dashboard/boards.html | 104 |  ~~管理员Board列表，点击修改弹出修改模态框并可修改Board信息~~
 | dashboard/forums.html | 1 | [@hhdem](https://github.com/hhdem) ~~管理员面板管理页面~~
 | dashboard/nodes.html | 1 | [@hhdem](https://github.com/hhdem) ~~管理员面板管理页面~~
+| board/topics.html | 78 | [@hhdem](https://github.com/hhdem) ~~修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果~~
 | topic/_pic_box.html | 1 | [@hhdem](https://github.com/hhdem) ~~点击图片Box, 弹出浏览图片的modal, 查看图片详情~~
 | topic/_pic_box.html | 2 | [@hhdem](https://github.com/hhdem) ~~Get 图片功能按钮实现~~
 | topic/_pic_box.html | 3 | [@hhdem](https://github.com/hhdem) ~~喜欢图片功能按钮实现~~
@@ -64,12 +66,11 @@
 | user/index.html | 87 | [@hhdem](https://github.com/hhdem) ~~用户信息页面中板块切换修改为ajax请求~~
 | _pic_preview_modal.less | 2 | [@hhdem](https://github.com/hhdem) ~~目前只有点击右上角的Close才能关闭 查看 窗口, 需要点击白色遮罩层也要关闭 查看 窗口~~
 | pics.less | 779 | [@hhdem](https://github.com/hhdem) ~~目前只有点击右上角的Close才能关闭 查看 窗口, 需要点击白色遮罩层也要关闭 查看 窗口~~
-| style.less | 63 | [@hhdem](https://github.com/hhdem) ~~文章详情查看的时候底色没了~~
+| style.less | 64 | [@hhdem](https://github.com/hhdem) ~~文章详情查看的时候底色没了~~
 
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| v2/image.js | 540 | [@hhdem](https://github.com/hhdem) 删除图片
 | v2/topic.js | 251 |  创建 topic 时可以选择管理员维护的 area，在列表和详细信息查看中加入 area 标签显示
 | v2/topic.js | 252 |  创建 topic 时可以发布到不同的 team 中，在列表和详细信息查看中加入 team 的标签显示
 | v2/topic.js | 253 |  创建 topic 时可以关联已发布的图片，或Board
@@ -84,8 +85,8 @@
 | dashboard.js | 73 |  管理员维护界面 board 列表
 | dashboard.js | 97 |  管理员维护界面 用户 列表
 | dashboard.js | 122 |  管理员节点管理界面
-| forum.js | 132 |  Forum信息删除
-| image.js | 306 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
+| forum.js | 137 |  Forum信息删除
+| image.js | 307 | [@hhdem](https://github.com/hhdem) 图片 hash 和 colors 的生成顺序需要优化, 前台不依赖于后台返回的 hash 和 colors, 而是自己生成
 | team.js | 1 |  v2 小组列表
 | team.js | 6 |  v2 用户已加入小组列表
 | team.js | 11 |  v2 创建小组
@@ -103,8 +104,6 @@
 | controllers/image.test.js | 119 |  增加 Image 图片上传测试用例: 上传后 hash 值是否正确
 | index.html | 59 | [@hhdem](https://github.com/hhdem) 点击统计信息进入用户面板页面
 | index.html | 96 |  Signin with wechat and QQ account
-| board/_board_create_search.html | 6 |  Tag添加
-| board/index.html | 49 |  用户修改Board信息
 | dashboard/boards.html | 1 |  管理员的Board列表页功能
 | dashboard/boards.html | 78 |  管理员Board列表，搜索功能
 | dashboard/boards.html | 89 |  管理员Board列表，点击删除Board可以删除选定Board
@@ -115,6 +114,8 @@
 | dashboard/users.html | 81 |  管理员用户列表，点击添加用户弹出新增模态框，创建用户
 | dashboard/users.html | 82 |  管理员用户列表，点击删除用户可以删除选定用户
 | dashboard/users.html | 99 |  管理员用户列表，点击修改弹出修改模态框并可修改用户信息
+| board/_board_create_search.html | 6 |  Tag添加
+| board/index.html | 49 |  用户修改Board信息
 | topic/_pic_preview_modal.html | 80 |  关注board按钮实现
-| user/card.html | 43 |  Signin with wechat and QQ account
+| user/card.html | 47 |  Signin with wechat and QQ account
 | user/index.html | 3 |  我的页面中增加 Board 管理

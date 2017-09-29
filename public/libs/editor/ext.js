@@ -170,10 +170,14 @@
                                     '<div class="alert alert-error hide"></div>',
                                 '</div>',
                             '</div>',
-                            '<div class="tab-pane fade in" role="tabpanel" id="collapseSelect">',
-                                '<div id="selectList" class="board_grid"></div>',
+                            '<div class="board-pins tab-pane fade in" role="tabpanel" id="collapseSelect">',
+                                '<div style="padding-bottom: 10px;">',
+                                    '<input name="q" id="query" class="form-control" placeholder="搜索条件"/>',
+                                '</div>',
+                                '<div id="selectList" class="board_grid">',
                                     '<div class="grid-sizer"></div>',
                                 '</div>',
+                                '<div id="pic-page-marker" style="height: 32px; color: darkgray;text-align: center;">显示最多24张图片</div>',
                                 '<div class="clearfix"></div>',
                             '</div>',
                         '</div>',
@@ -182,36 +186,55 @@
             '</div>'
         ].join('')).appendTo($body);
 
+        var gridBoardImagesMasonry = $('.board_grid').masonry({
+            // options...
+            itemSelector: '.item',
+            columnWidth: 86,
+            gutter: 2
+        });
+
+        // $('#pic-page-marker').on('lazyshow', function () {
+        //     loadPicList(++pic_page);
+        // }).lazyLoadXT({visibleOnly: false, scrollContainer: $('#pic-page-marker')});
+
         this.$win.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            $('a[data-toggle="tab"]').removeClass('active');
-            $(e.target).addClass('active');
             var selectId = $(e.target).attr('id');
+            if (!$(e.target).hasClass('active')) {
+                $('a[data-toggle="tab"]').removeClass('active');
+                $(e.target).addClass('active');
+                loadPicList('');
+            }
         });
 
-        $.ajax({
-            url: "/api/v2/images?type=image&limit=5&page=0"
-        }).done(function (response) {
-            var gridBoardImagesMasonry = $('.board_grid').masonry({
-                // options...
-                itemSelector: '.item',
-                columnWidth: 86,
-                gutter: 2
+        function loadPicList(query) {
+            $('#selectList').children('.item').remove();
+            $.ajax({
+                url: "/api/v2/images?type=image&limit=24&page=1&q=" + query
+            }).done(function (response) {
+                var itemLength = response.data.length;
+                response.data.forEach(function (item) {
+                    var itemHtml =
+                        '<a class="item" data-id="' + item.id + '" data-title="' + item.title + '" data-src="' + item.image + '">' +
+                        '<img src="'+ item.image_86 +'" title="'+ item.title +'" width="86"/>' +
+                        '<div class="cover"></div>' +
+                        '</a>';
+                    var jpicelements = $(itemHtml);
+                    gridBoardImagesMasonry.append(jpicelements)
+                        .masonry('appended', jpicelements);
+                });
+                gridBoardImagesMasonry.imagesLoaded().progress(function () {
+                    gridBoardImagesMasonry.masonry('layout');
+                });
+                // if (itemLength >= 5) {
+                //     gridBoardImagesMasonry.masonry('layout');
+                //     $(window).lazyLoadXT();
+                //     $('#pic-page-marker').lazyLoadXT({visibleOnly: false, checkDuplicates: false, forceLoad: true});
+                // } else {
+                //     gridBoardImagesMasonry.masonry('layout');
+                //     $("#pic-page-marker").remove();
+                // }
             });
-            response.data.forEach(function (item) {
-                var itemHtml =
-                    '<a>' +
-                    '<img src="'+ item.image_86 +'" title="'+ item.title +'" width="86"/>' +
-                    '<div class="cover"></div>' +
-                    '</a>';
-                var jpicelements = $(itemHtml);
-                gridBoardImagesMasonry.append(jpicelements)
-                    .masonry('appended', jpicelements);
-            });
-            gridBoardImagesMasonry.imagesLoaded().progress(function () {
-                gridBoardImagesMasonry.masonry('layout');
-            });
-        });
-
+        }
 
 
         this.$upload = this.$win.find('.upload-img').css({
@@ -298,6 +321,27 @@
         this.uploader.on('uploadError', function(){
             self.removeFile();
             self.showError('服务器走神了，上传失败');
+        });
+
+        this.$win.on('click', '.item', function(event){
+            var dataset = event.currentTarget.dataset;
+            let id = dataset.id;
+            let src = dataset.src;
+            let title = dataset.title;
+            self.$win.modal('hide');
+            var cm = self.editor.codemirror;
+            var stat = getState(cm);
+            _replaceSelection(cm, stat.image, '!['+ title +']('+ src +')');
+        });
+
+        $('#query').change(function(event){
+            console.info(event);
+        });
+
+        $('#query').on('input propertychange', function() {
+            var val = $(this).val();
+            console.info(val);
+            loadPicList(val);
         });
     };
 

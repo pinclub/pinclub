@@ -1,3 +1,34 @@
+<style>
+    .item {
+        margin-bottom: 2px;
+        position: relative;
+    }
+    .board-pins {
+        margin-bottom: 10px;
+        height: 360px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .item img {
+        position: relative;
+    }
+    .item .cover {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+    .item:hover .cover {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+    }
+    .grid-sizer {
+        width: 236px;
+    }
+</style>
 <%- Loader('/public/editor.min.js')
 .js('/public/libs/editor/editor.js')
 .js('/public/libs/webuploader/webuploader.withoutimage.js')

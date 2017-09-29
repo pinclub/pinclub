@@ -23,6 +23,7 @@ var validator = require('validator');
  *
  * @apiParam {Number} [page] 页数
  * @apiParam {Number} [limit] 每一页的主题数量
+ * @apiParam {String} [q] 查询条件
  *
  * @apiPermission none
  * @apiSampleRequest /v2/images
@@ -73,6 +74,9 @@ exports.index = function (req, res, next) {
     var query = {};
     query.deleted = false;
     query.type = type;
+    if (!!req.query.q) {
+        query.title = new RegExp(req.query.q);
+    }
     var options = {skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at'};
 
     var ep = new EventProxy();
