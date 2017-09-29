@@ -177,7 +177,7 @@
                                 '<div id="selectList" class="board_grid">',
                                     '<div class="grid-sizer"></div>',
                                 '</div>',
-                                '<div id="pic-page-marker" style="height: 32px; color: darkgray;text-align: center;">显示最多24张图片</div>',
+                                '<div id="pic-page-marker" style="height: 32px; color: darkgray;text-align: center;">查询结果最多显示24张图片</div>',
                                 '<div class="clearfix"></div>',
                             '</div>',
                         '</div>',
@@ -189,7 +189,7 @@
         var gridBoardImagesMasonry = $('.board_grid').masonry({
             // options...
             itemSelector: '.item',
-            columnWidth: 86,
+            columnWidth: 90,
             gutter: 2
         });
 
@@ -215,8 +215,8 @@
                 response.data.forEach(function (item) {
                     var itemHtml =
                         '<a class="item" data-id="' + item.id + '" data-title="' + item.title + '" data-src="' + item.image + '">' +
-                        '<img src="'+ item.image_86 +'" title="'+ item.title +'" width="86"/>' +
-                        '<div class="cover"></div>' +
+                        '<img src="'+ item.image_86 +'" title="'+ item.title +'" width="90"/>' +
+                        '<div class="cover" alt="' + item.title + '" title="' + item.title + '"></div>' +
                         '</a>';
                     var jpicelements = $(itemHtml);
                     gridBoardImagesMasonry.append(jpicelements)
