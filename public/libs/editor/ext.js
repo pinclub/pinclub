@@ -325,9 +325,9 @@
 
         this.$win.on('click', '.item', function(event){
             var dataset = event.currentTarget.dataset;
-            let id = dataset.id;
-            let src = dataset.src;
-            let title = dataset.title;
+            var id = dataset.id;
+            var src = dataset.src;
+            var title = dataset.title;
             self.$win.modal('hide');
             var cm = self.editor.codemirror;
             var stat = getState(cm);
