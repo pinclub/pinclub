@@ -321,6 +321,36 @@ function collectList(req, res, next) {
     }));
 }
 
+/**
+ *
+ * DONE (hhdem) 删除图片
+ * @api {delete} /v2/boards/:id 删除
+ * @apiDescription
+ * 删除board
+ * @apiName deleteBoard
+ * @apiGroup board
+ *
+ * @apiUse ApiHeaderType
+ * @apiParam {String} id 要删除的board id
+ *
+ * @apiPermission none
+ * @apiSampleRequest /v2/boards/:id
+ *
+ * @apiVersion 2.0.0
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
+exports.delete = function(req, res, next) {
+    var boardId = String(req.params.id);
+    BoardProxy.remove(boardId, function (err, result) {
+        if (err) {
+            return next(err);
+        }
+        res.send({success: true});
+    });
+};
+
 exports.collectList = collectList;
 exports.index = index;
 exports.create = create;

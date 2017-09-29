@@ -181,3 +181,27 @@ exports.newAndSave = function (title, type, creatorId, callback) {
     board.user_id = creatorId;
     board.save(callback);
 };
+
+exports.remove = function (id, callback) {
+    Board.findOne({_id: id})
+        .populate('user_id')
+        .exec(function (err, board) {
+            if (err) {
+                return callback(err);
+            }
+
+            if (!board) {
+                return callback(new Error('该Board不存在'));
+            }
+            let user = board.user_id;
+            Board.remove({_id: id}, function (err, result) {
+                if(err){
+                    return callback(err);
+                }else {
+                    user.board_count -= 1;
+                    user.save(callback);
+                }
+            });
+
+        });
+};

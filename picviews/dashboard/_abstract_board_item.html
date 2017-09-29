@@ -8,5 +8,6 @@
     <td><%= board.create_at_ago() %></td>
     <td>
         <button id="modify_board" data-id="<%= board._id %>" data-loginname="<%= board.loginname %>" data-title="<%= board.title %>" data-type="<%= board.type %>" class="btn btn-sm btn-link">修改</button>
+        <button id="delete_board" data-id="<%= board._id %>" class="btn btn-sm btn-link">删除</button>
     </td>
 </tr>

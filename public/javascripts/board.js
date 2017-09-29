@@ -1,6 +1,6 @@
 
 // 绑定Board 查询事件
-$(document).on('keyup', '.pin-create .right-part .search-input', function (event) {
+$('.pin-create .right-part .search-input').unbind("keyup").on('keyup', function (event) {
 
     if (!event.currentTarget) {
         return;
@@ -10,7 +10,7 @@ $(document).on('keyup', '.pin-create .right-part .search-input', function (event
 });
 
 // 绑定添加Board按钮
-$(document).on('click', '.pin-create .right-part .createboard', function (event) {
+$('.pin-create .right-part #createboard').unbind("click").on('click', function (event) {
     if (!auth()) {
         return;
     }
@@ -19,11 +19,12 @@ $(document).on('click', '.pin-create .right-part .createboard', function (event)
     }
     $(this).parent().prev().prev().css({"height":"220px"});
     $(this).hide();
+    // console.info(event.currentTarget);
     createBoard (event.currentTarget.dataset.text);
 });
 
 // 绑定修改Board事件
-$(document).on('click', '#modify_board', function (event) {
+$('#modify_board').unbind("click").on('click', function (event) {
     if (!auth()) {
         return;
     }
@@ -43,7 +44,7 @@ $(document).on('click', '#modify_board', function (event) {
 });
 
 // 绑定新建Board事件
-$(document).on('click', '.add-board', function (event) {
+$('.add-board').unbind("click").on('click', function (event) {
     if (!auth()) {
         return;
     }

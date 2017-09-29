@@ -14,3 +14,25 @@ $(document).on('click', '#modify_board', function (event) {
     }
     modal.modal('show');
 });
+
+// 绑定删除Board事件
+$(document).on('click', '#delete_board', function (event) {
+    if (!event.currentTarget) {
+        return;
+    }
+    var data = event.currentTarget;
+    var id = data.dataset.id;
+    if (!id) {
+        return;
+    }
+
+    $.ajax({
+        type: "DELETE",
+        url: "/api/v2/boards/" + data.dataset.id
+    }).done(function (response) {
+        if(!response.success) {
+            return console.error("Error：", response);
+        }
+        window.location.href="/admin/boards";
+    });
+});
