@@ -9,11 +9,11 @@
             <div class="img">
                 <img src="<%= user.avatar_url%>" data-baiduimageplus-ignore="1" class="current-avatar">
             </div>
-            <div class="counts clearfix"><a href="/asyul061/followers/" class="followers">
-                <div class="num">16134</div>
+            <div class="counts clearfix"><a href="/<%= user.loginname %>/followers/" class="followers">
+                <div class="num">0</div>
                 <div class="sub">粉丝</div>
-            </a><a href="/asyul061/following/" class="follows">
-                <div class="num">151</div>
+            </a><a href="/<%= user.loginname %>/following/" class="follows">
+                <div class="num">0</div>
                 <div class="sub">关注</div>
             </a></div>
         </div>
@@ -62,11 +62,10 @@
         </div>
         <div title="举报用户" class="report-user"></div>
     </div>
-    <div class="tabs"><a href="/asyul061/" class="tab active">72画板</a><a href="/asyul061/pins/" class="tab ">26560采集</a><a
-            href="/asyul061/likes/" class="tab ">2120喜欢</a><a href="/asyul061/muse_boards/" class="tab ">2原创画板</a><a
-            href="/asyul061/tags/" rel="nofollow" class="tab ">520标签</a>
-        <form id="people_search_item" action="/asyul061/pins/" class="searching-unit" data-regestered="regestered">
-            <input value="" name="q" placeholder="搜索TA的采集" autocomplete="off"><a onclick="return false;" class="go"></a>
+    <div class="tabs"><a href="#" class="tab active"><%= user.board_count %> Board </a><a href="#" class="tab "><%= user.image_count + user.get_image_count %> 图片</a><a
+            href="#" class="tab "><%= user.like_image_count %> 喜欢</a>
+        <form id="people_search_item" action="#" class="searching-unit" data-regestered="regestered">
+            <input value="" name="q" placeholder="搜索TA的图片" autocomplete="off"><a onclick="return false;" class="go"></a>
         </form>
         <div class="search-hint"></div>
     </div>
