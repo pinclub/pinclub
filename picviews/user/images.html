@@ -1,0 +1,121 @@
+<%- Loader('/public/stylesheets/pics.min.css')
+.css('/public/stylesheets/pics.less')
+.css('/public/stylesheets/users.less')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+
+<%- include ../navbar.html %>
+
+<%- partial('../user/user_card') %>
+
+<div id="pic_list" class="grid row" style="margin: 16px auto 0;">
+    <div class="grid-sizer"></div>
+    <% for(var i = 0; i < images.length; i++) {
+    var item = images[i];
+    %>
+
+    <div class="grid-item" id="<%= item.id %>">
+        <% if (is_creator) { %>
+        <div class="actions">
+            <div class="right">
+                <a data-id="<%= item.id %>" title="删除" href="javascript:void(0);"
+                   class="delete btn-with-icon btn btn14 delete-btn "><i class="fa fa-trash"></i><span
+                        class="text">Del</span></a>
+            </div>
+        </div>
+        <% } else { %>
+        <div class="actions">
+            <div class="right">
+                <a data-id="<%= item.id %>" title="喜欢" href="javascript:void(0);"
+                   class="like btn-with-icon btn btn14 like-btn<% if (item.liked) { %> unlike<% } %>"><i
+                        class="heart"></i><span class="text"> 2</span></a>
+            </div>
+            <div class="left">
+                <a href="#<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>"
+                   data-src="<%= item.image %>"
+                   class="btn btn14 wbtn get-pic-btn<% if (is_creator) { %> hide<% } %>"><span
+                        class="text">Get</span></a>
+            </div>
+        </div>
+        <% }%>
+        <a href="#<%= item.id %>" id="pic_<%= item.id %>" data-id="<%= item.id %>" data-name="<%= item.title %>"
+           data-src="<% if (!!item.image_fixed) {%><%= item.image_fixed %><% } else { %><%= item.image %><%}%>"
+           class="preview-image preview_image_btn">
+            <img src="<%if (!!item.image_430) {%><%= item.image_430%><% } else { %><%= item.image %> <% }%>"
+                 title="<%= item.title%>" alt="<%= item.title%>"/>
+            <div class="cover"></div>
+        </a>
+        <p class="stats less">
+            <span title="Get" class="repin"><i></i><%= item.geted_count?item.geted_count:0%></span>
+            <span title="Like" class="like"><i></i><%= item.like_count?item.like_count:0%></span>
+            <!--DONE (hhdem) 修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果-->
+            <span class="color-stack">
+                <% for(var j = 0; j < item.image_colors.length; j++) { %>
+                    <span class="color-item index<%= j %>" title="<%= item.image_colors[j]%>"
+                          style="background-color: <%= item.image_colors[j]%>;">
+                        <i style="background: none;margin: 0;"></i>
+                    </span>
+                <% }%>
+            </span>
+            <a href="javascript:void(0);" data-id="<%= item.id %>" class="more-similar-btn">
+                More
+            </a>
+
+        </p>
+        <div class="convo attribution clearfix">
+            <a href="#" title="hhdem" rel="nofollow" class="img x">
+                <img src="<%= item.author.avatar_url?item.author.avatar_url:item.author.avatar%>"
+                     data-baiduimageplus-ignore="1" class="avt">
+            </a>
+            <div class="text">
+                <div class="inner">
+                    <div class="line">
+                        <a href="/user/<%= item.author.loginname%>" rel="" class="author x"><%=
+                            item.author.loginname%></a>&nbsp;Get到
+                    </div>
+                    <% if (item.board) { %>
+                    <div class="line"><a href="/boards/<%= item.board.id || item.board._id%>" rel="" class="x"><%=
+                        item.board.title%></a></div>
+                    <% } %>
+                    <a title="评论" class="replyButton"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+    <div id="pic-page-marker"></div>
+</div>
+
+<%- Loader('/public/javascripts/boards.min.js')
+.js('/public/libs/masonry.pkgd.js')
+.js('/public/libs/imagesloaded.pkgd.min.js')
+.js('/public/javascripts/pics_like.js')
+.js('/public/javascripts/pics_delete.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+
+<script>
+
+    var gridMasonry = $('.grid').masonry({
+            // options...
+            itemSelector: '.grid-item',
+            columnWidth: '.grid-sizer',
+            gutter: 10,
+            horizontalOrder: true,
+        <% if (images.length > 6) { %>
+        fitWidth: true
+        <% } %>
+    });
+    $(document).ready(function () {
+        gridMasonry.imagesLoaded().progress(function () {
+            gridMasonry.masonry('layout');
+        });
+    });
+
+</script>
+
+<!-- Get 图片的modal层-->
+<%- partial('../topic/_pic_get_modal', {insertImage: true}) %>
+
+<!-- Preview 的 Modal 层-->
+<%- partial('../topic/_pic_preview_modal') %>

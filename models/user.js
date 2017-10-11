@@ -16,6 +16,7 @@ var UserSchema = new Schema({
     profile: {type: String},
     weibo: {type: String},
     avatar: {type: String},
+    gender: {type: String, default: 'male', enum: ['male', 'female', 'genderless', 'bigender']}, // 男性，女性，无性别，双性别
 
     // github
     githubId: {type: String},

@@ -80,7 +80,7 @@ router.post('/user/:name/star', auth.adminRequired, user.toggleStar); // 把某�
 router.post('/user/:name/cancel_star', auth.adminRequired, user.toggleStar);  // 取消某用户的达人身份
 router.post('/user/:name/block', auth.adminRequired, user.block);  // 禁言某用户
 router.post('/user/:name/delete_all', auth.adminRequired, user.deleteAll);  // 删除某用户所有发言
-router.get('/user/:name/get', auth.userRequired, user.get);  // 删除某用户所有发言
+router.get('/user/:name/get', auth.userRequired, user.listGetImages);  // 删除某用户所有发言
 router.get('/user/:name/board', auth.userRequired, user.board);  // 删除某用户所有发言
 router.get('/user/:name/score', auth.userRequired, user.score);  // 删除某用户所有发言
 router.post('/user/:name/two_factor', auth.userRequired, user.toggleTwoFactor); // 开启和关闭用户双因子认证
@@ -177,6 +177,7 @@ router.get('/admin/tags', auth.adminRequired, dashboard.tags);
 router.get('/admin/boards', auth.adminRequired, dashboard.boards);
 router.post('/admin/boards/:board_id/edit', auth.adminRequired, board.adminEdit);
 router.get('/admin/users', auth.adminRequired, dashboard.users);
+router.post('/admin/users/refresh/count/:id', auth.adminRequired, user.refreshCount);
 // router.post('/admin/users', auth.adminRequired, dashboard.users);
 router.get('/admin/nodes', auth.adminRequired, dashboard.nodes);
 router.post('/admin/nodes', auth.adminRequired, node.create);
@@ -184,6 +185,7 @@ router.get('/admin/nodes/:id', auth.adminRequired, node.show);
 router.get('/admin/forums', auth.adminRequired, dashboard.forums);
 router.post('/admin/forums', auth.adminRequired, forum.create);
 router.get('/admin/forums/:id', auth.adminRequired, dashboard.forumShow);
+router.delete('/admin/forums/:id', auth.adminRequired, forum.delete);
 router.post('/admin/forums/refresh/count/:id', auth.adminRequired, forum.refreshCount);
 
 if (!config.debug) { // 这个兼容破坏了不少测试

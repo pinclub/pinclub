@@ -72,3 +72,23 @@ $(document).on('click', '#star_user', function (event) {
         modal.modal('show');
     });
 });
+
+// 绑定刷新数据事件
+$(document).on('click', '#refreshCount', function (event) {
+    if (!event.currentTarget) {
+        return;
+    }
+    var id = event.currentTarget.dataset.id;
+    $.ajax({
+        type: "POST",
+        url: "/admin/users/refresh/count/" + id
+    }).done(function (result) {
+        if (!result.success) {
+            return ;
+        } else {
+            $('#board_count_' + id).html(result.board_count);
+            $('#topic_count_' + id).html(result.topic_count);
+            $('#image_count_' + id).html(result.image_count);
+        }
+    });
+});

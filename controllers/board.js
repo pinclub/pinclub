@@ -10,9 +10,9 @@ exports.index = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     var query = {};
-    if (!req.session.user.is_admin) {
-        query = {user_id: req.session.user};
-    }
+    // if (!req.session.user.is_admin) {
+        query = {user_id: req.session.user._id};
+    // }
     Board.getBoardsByQuery(query, {}, function (err, boards) {
         _.forEach(boards, function(board) {
             Topic.getImagesByQuery({
@@ -26,14 +26,15 @@ exports.index = function (req, res, next) {
         });
         ep.after('topic', boards.length, function () {
             res.render('board/index', {
-                boards: boards
+                boards: boards,
+                user: req.session.user
             });
         });
     });
 
 };
 
-// TODO 用户Board信息查看, 显示Board中的图片列表
+// DONE (hhdem) 用户Board信息查看, 显示Board中的图片列表
 exports.show = function (req, res, next) {
     req.checkParams({
         'board_id': {
@@ -209,7 +210,7 @@ exports.create = function (req, res, next) {
     });
 };
 
-// DONE 用户Board列表页修改Board信息
+// DONE(hhdem) 用户Board列表页修改Board信息
 exports.edit = function (req, res, next) {
     update(req, res, function(err) {
         if (err) {
@@ -222,7 +223,7 @@ exports.edit = function (req, res, next) {
     });
 };
 
-// TODO 管理员修改 Board 信息
+// DONE(hhdem) 管理员修改 Board 信息
 exports.adminEdit = function (req, res, next) {
     update(req, res, function(err) {
         if (err) {

@@ -47,6 +47,24 @@
                                 <p>同时决定了 Gravatar 头像</p>
                             </div>
                         </div>
+                        <div class='form-group'>
+                            <label class='col-sm-2 control-label' for='email'>性别</label>
+
+                            <div class='col-sm-10'>
+                                <label class="radio-inline">
+                                    <input type="radio" name="gender" value="male" <% if (gender && gender=='male') { %>checked="checked"<% } %>> 男性
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="gender" value="female" <% if (gender && gender=='female') { %>checked="checked"<% } %>> 女性
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="gender" value="genderless" <% if (gender && gender=='genderless') { %>checked="checked"<% } %>> 无性别
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="gender" value="bigender" <% if (gender && gender=='bigender') { %>checked="checked"<% } %>> 双性别
+                                </label>
+                            </div>
+                        </div>
                     </fieldset>
                     <fieldset>
                         <div class='form-group'>
@@ -82,7 +100,7 @@
                                 <input class='form-control' id='github' name='github' size='30' type='text'
                                        value="<%= typeof(githubUsername) !== 'undefined' ? '@' + githubUsername : '' %>"
                                        placeholder="@username" readonly="readonly"/>
-                                <p>请通过 GitHub 登陆 CNode 来修改此处</p>
+                                <p>请通过 GitHub 登陆 Jiuyanlou 来修改此处</p>
                             </div>
                         </div>
                         <div class='form-group'>

@@ -1,0 +1,515 @@
+#user_card {
+  background: #fff;
+  margin-top: 60px;
+  position: relative;
+  box-shadow: 0 0 4px rgba(0,0,0,.2);
+  width: 1466px;
+  margin-left: 15px;
+}
+
+#user_card .inner {
+  height: 170px;
+  background: #fff;
+  position: relative;
+  padding-left: 180px;
+  margin-right: 236px;
+  border-right: 1px solid #EDEDED;
+}
+
+#user_card .inner.without-side {
+  margin-right: 0;
+  border-right: 0
+}
+
+#user_card .maozi {
+  width: 150px;
+  height: 100px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(0,0,0,.2);
+  position: absolute;
+  left: 15px;
+  top: -40px;
+}
+
+#user_card .avatar-unit {
+  background: #fff;
+  border-radius: 4px;
+  position: absolute;
+  left: 20px;
+  top: -35px;
+  width: 140px
+}
+
+#user_card .avatar-unit .img {
+  position: relative;
+  height: 140px
+}
+
+#user_card .avatar-unit .img:hover .change-avatar {
+  display: block
+}
+
+#user_card .avatar-unit .img .current-avatar {
+  max-height: 140px;
+  max-width: 140px
+}
+
+#user_card .avatar-unit .change-avatar {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  width: 140px;
+  text-align: center
+}
+
+#user_card .avatar-unit .load {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -8px;
+  margin-left: -8px
+}
+
+#user_card .avatar-unit .counts {
+  background: #fcfcfc;
+  text-align: center
+}
+
+#user_card .avatar-unit .counts .followers {
+  display: block;
+  float: left;
+  width: 70px;
+  height: 40px;
+  padding-top: 10px;
+  border-right: 1px solid #EDEDED;
+  text-decoration: none
+}
+
+#user_card .avatar-unit .counts .follows {
+  display: block;
+  height: 40px;
+  padding-top: 10px;
+  text-decoration: none
+}
+
+#user_card .avatar-unit .counts .num {
+  font-size: 16px;
+  font-weight: 700;
+  color: #444;
+  line-height: 1;
+  margin-bottom: 5px
+}
+
+#user_card .avatar-unit .counts .sub {
+  font-size: 12px;
+  line-height: 1;
+  color: #999
+}
+
+#user_card .avatar-unit .counts a:hover div {
+  color: #C90000
+}
+
+#user_card .head-line {
+  margin: 20px 0 10px;
+  line-height: 1;
+  position: relative
+}
+
+#user_card .head-line .name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #444;
+  display: inline-block;
+  margin-right: 10px
+}
+
+#user_card .head-line .medal {
+  display: inline-block;
+  position: relative;
+  margin-right: 6px
+}
+
+#user_card .head-line .v-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  margin-right: 6px
+}
+
+#user_card .head-line .v-icon.unverified {
+  display: none;
+  width: 88px;
+  margin-left: 5px;
+  margin-right: 0;
+}
+
+#user_card:hover .head-line .v-icon.unverified {
+  display: inline-block
+}
+
+#user_card:hover .head-line .v-icon.unverified:hover {
+  background-position: 0 0
+}
+
+#user_card .head-line .medal-info {
+  position: fixed;
+  display: none;
+  padding: 10px 15px;
+  background-color: #fff;
+  font-size: 12px;
+  color: #444;
+  background-clip: padding-box;
+  border: 1px rgba(0,0,0,.07);
+  box-shadow: 0 1px 3px rgba(0,0,0,.3)
+}
+
+#user_card .head-line .medal-info .arrow {
+  position: absolute;
+  width: 16px;
+  height: 8px;
+  bottom: -8px;
+  right: 0;
+  right: 50%;
+  margin-right: -2px;
+  background: url(../../images/profile_arrow.png) no-repeat
+}
+
+#user_card .head-line .medal-info .arrow-top {
+  position: absolute;
+  width: 16px;
+  height: 8px;
+  top: -8px;
+  right: 0;
+  right: 50%;
+  margin-right: -2px;
+  background: url(../../images/profile_arrow_top.png) no-repeat
+}
+
+#user_card .head-line .medal-info .medal-header {
+  font-size: 12px;
+  line-height: 18px;
+  color: #999;
+  margin-bottom: 8px
+}
+
+#user_card .head-line .medal-info .medal-header .icon {
+  width: 16px;
+  height: 18px;
+  margin-right: 4px;
+  display: inline-block;
+  background: url(../../images/icon_v_info.png) no-repeat
+}
+
+#user_card .head-line .muse.medal-info {
+  width: 300px;
+  font-size: 16px;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: #777;
+  z-index: 2
+}
+
+#user_card .head-line .muse.medal-info .content {
+  margin-top: 10px;
+  border-top: 1px solid #ededed;
+  font-size: 12px;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  word-break: break-all
+}
+
+#user_card .head-line .muse.medal-info .cc {
+  padding-top: 10px;
+  margin-bottom: 10px
+}
+
+#user_card .head-line .muse.medal-info .cc .label {
+  display: inline-block;
+  margin-right: 8px;
+  color: #777
+}
+
+#user_card .head-line .muse.medal-info .content .desc {
+  color: #444
+}
+
+#user_card .head-line .medal-info .title {
+  vertical-align: top
+}
+
+#user_card .head-line .medal-info .content {
+  width: auto;
+  max-width: 220px;
+  max-height: 45px;
+  word-break: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 1.25
+}
+
+#user_card .introduction {
+  font-size: 12px;
+  line-height: 12px;
+  color: #999;
+  margin-bottom: 8px
+}
+
+#user_card .introduction li {
+  list-style: none;
+  display: inline-block;
+  margin-right: 10px;
+  max-width: 190px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 12px;
+}
+
+#user_card .introduction li em {
+  font-style: normal
+}
+
+#user_card .introduction li i {
+  display: inline-block;
+  background: url(../../images/user_info_icons.svg) no-repeat;
+  width: 12px;
+  height: 12px;
+  margin: 0 6px -2px 0
+}
+
+.no-svg #user_card .introduction li i {
+  background-image: url(../../images/user_info_icons.png)
+}
+
+#user_card .introduction li i#intro_sex_man {
+  background-position: 0 0
+}
+
+#user_card .introduction li i#intro_sex_woman {
+  background-position: 0 -29px
+}
+
+#user_card .introduction li i#intro_location {
+  background-position: 0 -60px
+}
+
+#user_card .introduction li i#intro_horoscope {
+  background-position: 0 -90px
+}
+
+#user_card .introduction li i#intro_job {
+  background-position: 0 -120px
+}
+
+#user_card .about {
+  color: #777;
+  line-height: 1.5;
+  word-wrap: break-word;
+  height: 42px;
+  overflow: hidden;
+  padding-right: 20px;
+  margin-bottom: 10px
+}
+
+#user_card .action-buttons {
+  position: absolute;
+  right: 20px;
+  top: 20px
+}
+
+#user_card .action-buttons .btn {
+  margin-left: 10px
+}
+
+#user_card .report-user {
+  width: 20px;
+  height: 20px;
+  background: url(../../images/icon_report.png?new.png) 2px 2px no-repeat;
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  cursor: pointer;
+  display: none
+}
+
+#user_card .report-user:hover {
+  background-position: 2px -28px
+}
+
+#user_card .report-user:hover {
+  background-position: 2px -58px
+}
+
+#user_card .inner:hover .report-user {
+  display: block
+}
+
+#user_card .bindings a {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: url(../../images/profile_social.svg) 0 0 no-repeat;
+  margin-right: 10px
+}
+
+.no-svg #user_card .bindings a {
+  background-image: url(../../images/profile_social.png)
+}
+
+#user_card .bindings a.weibo:hover {
+  background-position: -30px 0
+}
+
+#user_card .bindings a.renren {
+  background-position: 0 -30px
+}
+
+#user_card .bindings a.renren:hover {
+  background-position: -30px -30px
+}
+
+#user_card .bindings a.tqq {
+  background-position: 0 -60px
+}
+
+#user_card .bindings a.tqq:hover {
+  background-position: -30px -60px
+}
+
+#user_card .bindings a.douban {
+  background-position: 0 -90px
+}
+
+#user_card .bindings a.douban:hover {
+  background-position: -30px -90px
+}
+
+#user_card .bindings a.link {
+  background-position: 0 -120px
+}
+
+#user_card .bindings a.link:hover {
+  background-position: -30px -120px
+}
+
+#user_card .tabs {
+  background: #FAFAFA;
+  border-top: 1px solid #EDEDED;
+  position: relative
+}
+
+#user_card .tabs .tab {
+  font-size: 14px;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 20px;
+  color: #777;
+  border-right: 1px solid #EDEDED;
+  display: inline-block;
+  text-decoration: none
+}
+
+#user_card .tabs .tab:hover {
+  color: #9A0000
+}
+
+#user_card .tabs .active {
+  background: #fff;
+  color: #444;
+  font-weight: 700
+}
+
+#user_card .tabs .sorting-buttons {
+  width: 400px;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  margin-left: -200px
+}
+
+#user_card .tabs .sorting-buttons .rbtn {
+  margin-right: 10px
+}
+
+#user_card .side {
+  width: 196px;
+  padding: 20px 20px 0;
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+#user_card .side h4 {
+  color: #999;
+  margin-bottom: 10px
+}
+
+#user_card .side .item {
+  background: #FAFAFA;
+  line-height: 30px;
+  height: 30px;
+  color: #777;
+  display: block;
+  padding-left: 40px;
+  position: relative;
+  margin-bottom: 10px;
+  overflow: hidden;
+  white-space: nowrap
+}
+
+#user_card .side .item img {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 0;
+  top: 0
+}
+
+#user_card .side .item .v-icon {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin: 0 0 -4px 4px
+}
+
+#people_search_item {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -17px;
+  float: left;
+}
+
+#people_search_item input {
+  width: 183px;
+  background: #fff;
+  border-color: #ececec;
+}
+
+.searching-unit input {
+  width: 100%;
+  height: 32px;
+  padding: 0 6px 0 12px;
+  font-size: 14px;
+  color: #bbb;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+}
+
+.searching-unit .go {
+  display: block;
+  width: 32px;
+  height: 32px;
+  background: url(../../images/menu_sprite.svg?20150302) 5px -93px no-repeat;
+  position: absolute;
+  right: 0;
+  top: 1px;
+  cursor: pointer;
+}

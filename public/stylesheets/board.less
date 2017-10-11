@@ -1,12 +1,17 @@
+.board_list {
+  margin: 0 auto;
+}
+
 .grid-item{
-  position: static;
   background-color: white;
-  display: inline-block;
   width: 236px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   margin-bottom: 10px;
+  float: left;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .grid-item .over h3 {
@@ -131,15 +136,17 @@
   text-align: center
 }
 
+.grid-sizer {
+  width: 236px;
+}
+
 .wbtn {
   width: 100%;
 }
 
-#waterfall .add-board {
+.add-board {
   position: relative;
   float: left;
-  left: auto;
-  top: auto;
   width: 236px;
   height: 349px;
   background: #f6f5f5;
@@ -149,13 +156,13 @@
   cursor: pointer;
 }
 
-#waterfall .add-board .inner {
+.add-board .inner {
   margin: 10px;
   height: 330px;
   border: 2px dashed #dedede;
 }
 
-#waterfall .add-board .inner i {
+.add-board .inner i {
   display: block;
   width: 48px;
   height: 48px;
@@ -163,28 +170,28 @@
   margin: 128px auto 10px;
 }
 
-#waterfall .add-board .inner span {
+.add-board .inner span {
   display: block;
   color: #777;
   text-align: center;
 }
 
-#waterfall .add-board:hover {
+.add-board:hover {
   background: #fff
 }
 
-#waterfall .add-board:hover .inner {
+.add-board:hover .inner {
   border-color: #d4d4d4
 }
 
-#waterfall .add-board:active .inner {
+.add-board:active .inner {
   border-color: #bbb
 }
 
-#waterfall .add-board:hover .inner i {
+.add-board:hover .inner i {
   background-position: 0 -80px
 }
 
-#waterfall .add-board:active .inner i {
+.add-board:active .inner i {
   background-position: 0 -160px
 }

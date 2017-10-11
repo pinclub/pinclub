@@ -190,7 +190,8 @@ exports.setting = function (req, res, next) {
             weibo: data.weibo,
             accessToken: data.accessToken,
             avatar_url: data.avatar_url,
-            is_two_factor: data.is_two_factor
+            is_two_factor: data.is_two_factor,
+            gender: data.gender
         };
         if (isSuccess) {
             data2.success = msg;
@@ -207,12 +208,14 @@ exports.setting = function (req, res, next) {
         var location = validator.trim(req.body.location);
         var weibo = validator.trim(req.body.weibo);
         var signature = validator.trim(req.body.signature);
+        var gender = validator.trim(req.body.gender);
 
         User.getUserById(req.session.user._id, ep.done(function (user) {
             user.url = url;
             user.location = location;
             user.signature = signature;
             user.weibo = weibo;
+            user.gender = gender;
             user.save(function (err) {
                 if (err) {
                     return next(err);
@@ -514,10 +517,44 @@ exports.deleteAll = function (req, res, next) {
 };
 
 // TODO 点击首页Get数量，进入用户Get的图片列表页面
-exports.get = function (req, res, next) {
-    res.render('static/function_building', {
-        title: 'Get 图片列表'
-    });
+exports.listGetImages = function (req, res, next) {
+    // res.render('static/function_building', {
+    //     title: 'Get 图片列表'
+    // });
+    var page = Number(req.query.page) || 1;
+    var limit = 99999; //config.list_topic_count;
+    var loginname = req.params.name;
+    var ep = new EventProxy();
+    ep.fail(next);
+
+    let isCreator = false;
+
+    User.getUserByLoginName(loginname, ep.done(function (user) {
+        var query = {author: user._id};
+        var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
+
+        Topic.getImagesByQuery(query, opt, ep.done('images', function (images) {
+            return images;
+        }));
+
+        Topic.getCountByQuery(query, ep.done('pages', function (count) {
+            var pages = Math.ceil(count / limit);
+            return pages;
+        }));
+
+        if (!!req.session.user){
+            isCreator = (req.session.user.id == user.id);
+        }
+        ep.assign('images', 'pages', function (images, pages) {
+            res.render('user/images', {
+                user: user,
+                images: images,
+                current_page: page,
+                pages: pages,
+                is_creator: isCreator
+            });
+        });
+    }));
 };
 
 // TODO 点击首页Board数量，进入用户 Board 列表页面
@@ -531,5 +568,66 @@ exports.board = function (req, res, next) {
 exports.score = function (req, res, next) {
     res.render('static/function_building', {
         title: '积分明细页面'
+    });
+};
+
+/**
+ * 刷新用户统计数量
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.refreshCount = function (req, res, next) {
+    req.checkParams({
+        'id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: '用户ID不能为空'
+            },
+            isMongoId: {errorMessage: 'id 需为 mongoId 对象'}
+        }
+    });
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+        var id = req.params.id;
+        var ep = new EventProxy();
+        ep.fail(next);
+
+        Board.getCountByQuery({user_id: id}, ep.done('board_count'));
+        Topic.getCountByQuery({author: id, type: 'text', deleted: false}, ep.done('topic_count'));
+        Topic.getCountByQuery({author: id, type: 'image', deleted: false}, ep.done('image_count'));
+
+        ep.all('board_count', 'topic_count', 'image_count',
+            function (board_count, topic_count, image_count) {
+                User.getUserById(id, function (err, user) {
+                    if (!!err) {
+                        return next (err);
+                    }
+                    let changed = false;
+                    if (user.board_count != board_count) {
+                        user.board_count = board_count;
+                        changed = true;
+                        req.session.user.board_count = board_count;
+                    }
+                    if (user.topic_count != topic_count) {
+                        user.topic_count = topic_count;
+                        changed = true;
+                        req.session.user.topic_count = topic_count;
+                    }
+                    if (user.image_count != image_count) {
+                        user.image_count = image_count;
+                        changed = true;
+                        req.session.user.image_count = image_count;
+                    }
+                    if (changed) {user.save();}
+                    res.send({success: true, board_count: board_count, topic_count: topic_count, image_count: image_count});
+                });
+            });
     });
 };

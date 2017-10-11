@@ -136,9 +136,7 @@ exports.show = function (req, res, next) {
 
 // TODO Forum信息删除
 exports.delete = function (req, res, next) {
-    res.render('static/function_building', {
-        title: 'Forum信息删除'
-    });
+    res.send({success: true});
 };
 
 /**

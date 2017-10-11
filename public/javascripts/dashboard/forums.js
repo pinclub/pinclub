@@ -49,6 +49,20 @@ $(document).on('click', '#modify_forum', function (event) {
     });
 });
 
+// 绑定删除Forum事件
+$(document).on('click', '#delete_forum', function (event) {
+    if (!event.currentTarget) {
+        return;
+    }
+    $.ajax({
+        type: "DELETE",
+        url: "/admin/forums/" + event.currentTarget.dataset.id
+    }).done(function (response) {
+        console.log(response);
+
+    });
+});
+
 $('#create_forum_modal').on('hidden.bs.modal', function (e) {
     var modal = $(this);
     modal.find('input[name=id]').val('');

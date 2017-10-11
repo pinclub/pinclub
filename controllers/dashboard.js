@@ -10,7 +10,7 @@ var Node        = require('../proxy').Node;
 var Topic = require('../proxy').Topic;
 var store = require('../common/store');
 
-// TODO 管理员维护界面 Dashboard, 统计数据的获取
+// DONE(hhdem) 管理员维护界面 Dashboard, 统计数据的获取
 exports.dashboard = function (req, res, next) {
     async.parallel({
         mongodb: function (callback) {
@@ -70,7 +70,7 @@ exports.tags = function (req, res, next) {
 
 };
 
-// TODO 管理员维护界面 board 列表
+// DONE(hhdem) 管理员维护界面 board 列表
 exports.boards = function (req, res, next) {
     var page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;
@@ -94,7 +94,7 @@ exports.boards = function (req, res, next) {
     });
 };
 
-// TODO 管理员维护界面 用户 列表
+// DONE(hhdem) 管理员维护界面 用户 列表
 exports.users = function (req, res, next) {
     var page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;
@@ -119,7 +119,7 @@ exports.users = function (req, res, next) {
 
 };
 
-// TODO 管理员节点管理界面
+// DONE(hhdem) 管理员节点管理界面
 exports.nodes = function (req, res, next) {
     var page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;

@@ -7,6 +7,7 @@
     <td><%= forum.create_at_ago %></td>
     <td>
         <button id="modify_forum" data-id="<%= forum._id %>" class="btn btn-link">修改</button>
+        <button id="delete_forum" data-id="<%= forum._id %>" class="btn">删除</button>
         <a href="/admin/forums?pid=<%= forum._id %>" class="btn btn-default">子板块</a>
         <a id="refreshForumCount" data-id="<%= forum._id %>"  href="javascript:void(0);" class="btn btn-default">刷新数据</a>
     </td>
