@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="12px" height="132px" viewBox="0 0 12 132" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.0.3 (7891) - http://www.bohemiancoding.com/sketch -->
+    <title>user_info_icons</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="all" sketch:type="MSArtboardGroup" transform="translate(-463.000000, -128.000000)" fill="#CCCCCC">
+            <g id="Group" sketch:type="MSLayerGroup" transform="translate(463.000000, 129.000000)">
+                <path d="M9,121 C9,120.448 8.553,120 8,120 L3,120 C2.448,120 2,120.448 2,121 L2,122 L0,122 L0,126 L11,126 L11,122 L9,122 L9,121 Z M3,121 L8,121 L8,122 L3,122 L3,121 Z M0,130 L11,130 L11,127 L0,127 L0,130 Z M5,124 L6,124 L6,125 L5,125 L5,124 Z" id="Path" sketch:type="MSShapeGroup"></path>
+                <path d="M5.5,60 C3.567,60 2,61.567 2,63.5 C2,64.153 2.191,64.758 2.503,65.281 L2.463,65.281 L5.5,71 L8.538,65.281 L8.498,65.281 C8.81,64.758 9,64.153 9,63.5 C9,61.567 7.433,60 5.5,60 Z M5.5,65 C4.672,65 4,64.328 4,63.5 C4,62.672 4.672,62 5.5,62 C6.329,62 7,62.672 7,63.5 C7,64.328 6.329,65 5.5,65 Z" id="Path" sketch:type="MSShapeGroup"></path>
+                <path d="M2.843,3.278 L3.559,3.993 C3.213,4.585 3,5.265 3,6 C3,8.209 4.791,10 7,10 C9.21,10 11,8.209 11,6 C11,3.791 9.21,2 7,2 C6.3,2 5.651,2.196 5.078,2.513 L4.343,1.778 L6,0.121 L6,0 L1,0 L1,5 L1.122,5 L2.843,3.278 Z M7,4 C8.105,4 9,4.895 9,6 C9,7.105 8.105,8 7,8 C5.896,8 5,7.105 5,6 C5,4.895 5.896,4 7,4 Z" id="Path" sketch:type="MSShapeGroup"></path>
+                <path d="M5,38 L3,38 L3,37 L5,37 L5,36 L7,36 L7,37 L9,37 L9,38 L7,38 L7,39 L5,39 L5,38 Z M6,36 C8.209139,36 10,34.209139 10,32 C10,29.790861 8.209139,28 6,28 C3.790861,28 2,29.790861 2,32 C2,34.209139 3.790861,36 6,36 Z M6,34 C7.1045695,34 8,33.1045695 8,32 C8,30.8954305 7.1045695,30 6,30 C4.8954305,30 4,30.8954305 4,32 C4,33.1045695 4.8954305,34 6,34 Z" id="Oval-36" sketch:type="MSShapeGroup"></path>
+                <path d="M7.66666667,91 L6,88 L4.33333333,91 L1,91 L2.66666667,94 L1,97 L4.33333333,97 L6,100 L7.66666667,97 L11,97 L9.33333333,94 L11,91 L7.66666667,91 Z" id="Triangle-1" sketch:type="MSShapeGroup"></path>
+            </g>
+        </g>
+    </g>
+</svg>
