@@ -44,6 +44,16 @@
                         <span class='big collect-topic-count'><%= user.collect_image_count %></span>个图片收藏
                     </li>
                     <%}%>
+                    <% if (user.image_count || user.get_image_count) {%>
+                    <li>
+                        <span class='big collect-topic-count'><a href="/user/<%= user.loginname %>/get"><%= user.image_count + user.get_image_count %></a></span> 图片
+                    </li>
+                    <%}%>
+                    <% if (user.board_count) {%>
+                    <li>
+                        <span class='big collect-topic-count'><a href="/user/<%= user.loginname %>/boards"><%= user.board_count %></a></span> Board
+                    </li>
+                    <%}%>
                     <% if (user.url) { %>
                     <li>
                         <i class="fa fa-lg fa-fw fa-home"></i>

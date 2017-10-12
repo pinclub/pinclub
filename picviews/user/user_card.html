@@ -2,7 +2,7 @@
 .css('/public/stylesheets/user/card.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
-<div id="user_card" class="row">
+<div id="user_card">
     <div class="maozi"></div>
     <div class="inner clearfix without-side">
         <div class="avatar-unit">
@@ -62,8 +62,11 @@
         </div>
         <div title="举报用户" class="report-user"></div>
     </div>
-    <div class="tabs"><a href="#" class="tab active"><%= user.board_count %> Board </a><a href="#" class="tab "><%= user.image_count + user.get_image_count %> 图片</a><a
-            href="#" class="tab "><%= user.like_image_count %> 喜欢</a>
+    <div class="tabs">
+
+        <a href="<% if (!!active && active=='board') { %>#<% } else { %>/user/<%= user.loginname %>/boards<% } %>" class="tab <% if (!!active && active=='board') { %>active<% } %>"><%= user.board_count %> Board </a>
+        <a href="<% if (!!active && active=='image') { %>#<% } else { %>/user/<%= user.loginname %>/get<% } %>" class="tab <% if (!!active && active=='image') { %>active<% } %>"><%= user.image_count + user.get_image_count %> 图片</a>
+        <a href="#" class="tab "><%= user.like_image_count %> 喜欢</a>
         <form id="people_search_item" action="#" class="searching-unit" data-regestered="regestered">
             <input value="" name="q" placeholder="搜索TA的图片" autocomplete="off"><a onclick="return false;" class="go"></a>
         </form>

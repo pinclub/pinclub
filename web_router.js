@@ -80,8 +80,8 @@ router.post('/user/:name/star', auth.adminRequired, user.toggleStar); // 把某�
 router.post('/user/:name/cancel_star', auth.adminRequired, user.toggleStar);  // 取消某用户的达人身份
 router.post('/user/:name/block', auth.adminRequired, user.block);  // 禁言某用户
 router.post('/user/:name/delete_all', auth.adminRequired, user.deleteAll);  // 删除某用户所有发言
-router.get('/user/:name/get', auth.userRequired, user.listGetImages);  // 删除某用户所有发言
-router.get('/user/:name/board', auth.userRequired, user.board);  // 删除某用户所有发言
+router.get('/user/:name/get', onlineM.add, user.listGetImages);  // 获取某用户所有Get图片列表
+router.get('/user/:name/boards', onlineM.add, auth.userRequired, board.index);  // 获取某用户所有Board列表
 router.get('/user/:name/score', auth.userRequired, user.score);  // 删除某用户所有发言
 router.post('/user/:name/two_factor', auth.userRequired, user.toggleTwoFactor); // 开启和关闭用户双因子认证
 

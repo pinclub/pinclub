@@ -9,29 +9,48 @@ var EventProxy = require('eventproxy');
 exports.index = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
-    var query = {};
-    // if (!req.session.user.is_admin) {
-        query = {user_id: req.session.user._id};
-    // }
-    Board.getBoardsByQuery(query, {}, function (err, boards) {
-        _.forEach(boards, function(board) {
-            Topic.getImagesByQuery({
-                board: board.id
-            }, {
-                limit: 4
-            }, function (err, topics) {
-                board.topics = topics;
-                ep.emit('topic');
+
+    ep.on('user', function (user) {
+        var query = {user_id: req.session.user._id};
+        let u = req.session.user;
+        let isOwner = false;
+        if (!!user) {
+            query.user_id = user._id;
+            u = user;
+            if (user.id == req.session.user.id) {
+                isOwner = true;
+            }
+        } else {
+            isOwner = true;
+        }
+        Board.getBoardsByQuery(query, {}, function (err, boards) {
+            _.forEach(boards, function(board) {
+                Topic.getImagesByQuery({
+                    board: board.id
+                }, {
+                    limit: 4
+                }, function (err, topics) {
+                    board.topics = topics;
+                    ep.emit('topic');
+                });
             });
-        });
-        ep.after('topic', boards.length, function () {
-            res.render('board/index', {
-                boards: boards,
-                user: req.session.user
+            ep.after('topic', boards.length, function () {
+                res.render('board/index', {
+                    boards: boards,
+                    user: u,
+                    isOwner: isOwner
+                });
             });
         });
     });
 
+
+    var loginname = req.params.name;
+    if (!!loginname) {
+        User.getUserByLoginName(loginname, ep.done('user'));
+    } else {
+        ep.emit('user', null);
+    }
 };
 
 // DONE (hhdem) 用户Board信息查看, 显示Board中的图片列表

@@ -75,6 +75,11 @@
         <p class="stats less">
             <span title="Get" class="repin"><i></i><%= item.geted_count?item.geted_count:0%></span>
             <span title="Like" class="like"><i></i><%= item.like_count?item.like_count:0%></span>
+            <span>
+                <a href="javascript:void(0);" data-id="<%= item.id %>" class="more-similar-btn">
+                    <span class="fa fa-circle"></span>
+                </a>
+            </span>
             <!--DONE (hhdem) 修改颜色显示样式为，github中的消息头像样式，伸缩覆盖的效果-->
             <span class="color-stack">
                 <% for(var j = 0; j < item.image_colors.length; j++) { %>
@@ -84,10 +89,6 @@
                     </span>
                 <% }%>
             </span>
-            <a href="javascript:void(0);" data-id="<%= item.id %>" class="more-similar-btn">
-                More
-            </a>
-
         </p>
         <div class="convo attribution clearfix">
             <a href="#" title="hhdem" rel="nofollow" class="img x">
