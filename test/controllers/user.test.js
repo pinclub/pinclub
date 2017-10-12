@@ -88,6 +88,7 @@ describe('test/controllers/user.test.js', function () {
         signature: '仍然很懒',
         name: support.normalUser.loginname,
         email: support.normalUser.email,
+          gender: support.normalUser.gender
       };
     });
 
