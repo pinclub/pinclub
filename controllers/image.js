@@ -419,17 +419,25 @@ exports.create = function (req, res, next) {
 
     // 去掉 ? 后面的参数 可解决微信公众号里图片抓取的问题
     let mediaUrl = req.query.media;
-    if (!!mediaUrl.indexOf('?')) {
+    if (mediaUrl.indexOf('http://mmbiz.qpic.cn') >= 0 && !!mediaUrl.indexOf('?')) {
         let ms = _.split(mediaUrl, '?', 2);
         mediaUrl = ms[0];
     }
 
-    request({
+    request.get({
         url: mediaUrl,
-        encoding: null
+        encoding: null,
+        headers: {
+            'User-Agent': 'request'
+        }
     }, function(error, response, buffer) {
         if (error) {
-            return next(error);
+            if (error.code == 'ECONNRESET') {
+                res.render('image/_can_not_get_image', {});
+                return;
+            } else {
+                return next(error);
+            }
         }
 
         var type = imageinfo(buffer);
@@ -521,12 +529,20 @@ exports.createFromChrome = function (req, res, next) {
         });
 
         // 获得文件类型
-        request({
+        request.get({
             url: req.body.media,
-            encoding: null
+            encoding: null,
+            headers: {
+                'User-Agent': 'request'
+            }
         }, function (error, response, buffer) {
             if (error) {
-                return next(error);
+                if (error.code == 'ECONNRESET') {
+                    res.render('image/_can_not_get_image', {});
+                    return;
+                } else {
+                    return next(error);
+                }
             }
             var type = imageinfo(buffer);
             var filename = topicImage.title = req.body.desc;
