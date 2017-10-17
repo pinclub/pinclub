@@ -39,7 +39,7 @@
     <div class='innerTopic'>
       <% if (no_reply_topics.length > 0) { %>
       <ul class="unstyled">
-        <%- partial('topic/small', { collection: no_reply_topics, as: 'topic' }) %>
+        <%- partial('topic/small', { collection: no_reply_topics, as: 'topic', width: '180' }) %>
       </ul>
       <% } else { %>
       <p>无</p>
