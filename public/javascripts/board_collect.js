@@ -28,14 +28,15 @@ function followBoard(boardid) {
 
 // 关注 Board
 $(document).on('click', 'button.follow-board', function (event) {
-    console.info('follow board');
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget.dataset.id) {
-        return;
-    }
-    console.log(event.currentTarget.dataset.id);
-    followBoard (event.currentTarget.dataset.id);
+    var datas = event.currentTarget.dataset;
+    auth(function(result) {
+        if (!result) {
+            return;
+        }
+        if (!datas.id) {
+            return;
+        }
+        followBoard(datas.id);
+    });
 });
 

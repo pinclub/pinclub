@@ -11,50 +11,58 @@ $('.pin-create .right-part .search-input').unbind("keyup").on('keyup', function 
 
 // 绑定添加Board按钮
 $('.pin-create .right-part #createboard').unbind("click").on('click', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget) {
-        return;
-    }
-    $(this).parent().prev().prev().css({"height":"220px"});
-    $(this).hide();
-    // console.info(event.currentTarget);
-    createBoard (event.currentTarget.dataset.text);
+    var datas = event.currentTarget.dataset;
+    auth(function(result){
+        if (!result) {
+            return;
+        }
+        if (!event.currentTarget) {
+            return;
+        }
+        $(this).parent().prev().prev().css({"height":"220px"});
+        $(this).hide();
+        // console.info(event.currentTarget);
+        createBoard (datas.text);
+
+    });
 });
 
 // 绑定修改Board事件
 $('#modify_board').unbind("click").on('click', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget) {
-        return;
-    }
-    var data = event.currentTarget;
-    var modal = $('#modify_board_modal');
-    modal.find('form').prop('action', '/boards/'+data.dataset.id+'/edit');
-    modal.find('input[name=title]').val(data.dataset.title);
-    if (data.dataset.type == 'private') {
-        modal.find('input[name=type][value="private"]').prop("checked", true);
-    } else {
-        modal.find('input[name=type][value="public"]').prop("checked", true);
-    }
-    modal.modal('show');
+    var datas = event.currentTarget.dataset;
+    auth(function(result){
+        if (!result) {
+            return;
+        }
+        if (!datas) {
+            return;
+        }
+        var modal = $('#modify_board_modal');
+        modal.find('form').prop('action', '/boards/'+datas.id+'/edit');
+        modal.find('input[name=title]').val(datas.title);
+        if (datas.type == 'private') {
+            modal.find('input[name=type][value="private"]').prop("checked", true);
+        } else {
+            modal.find('input[name=type][value="public"]').prop("checked", true);
+        }
+        modal.modal('show');
+    });
 });
 
 // 绑定新建Board事件
 $('.add-board').unbind("click").on('click', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget) {
-        return;
-    }
-    var data = event.currentTarget;
-    var modal = $('#modify_board_modal');
-    modal.find('form').prop('action', '/boards');
-    modal.modal('show');
+    var datas = event.currentTarget.dataset;
+    auth(function(result){
+        if (!result) {
+            return;
+        }
+        if (!datas) {
+            return;
+        }
+        var modal = $('#modify_board_modal');
+        modal.find('form').prop('action', '/boards');
+        modal.modal('show');
+    });
 });
 
 function selectBoard (selectedElem) {

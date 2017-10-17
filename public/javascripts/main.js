@@ -103,8 +103,8 @@ $(document).ready(function () {
     });
 });
 
-function auth() {
-    if (!localStorage.jiuyanlouUser) {
+function auth(callback) {
+    if (localStorage.jiuyanlouUser) {
 
         $.ajax({
             type: "POST",
@@ -113,15 +113,17 @@ function auth() {
             if (!response.success) {
                 $('.modal').modal('hide');
                 $('#signin_modal').modal('show');
-                return false;
+                callback(false);
+            } else {
+                callback(true);
             }
         }).error(function(response){
             $('.modal').modal('hide');
             $('#signin_modal').modal('show');
-            return false;
+            callback(false);
         });
     } else {
-        return true;
+        callback(true);
     }
 }
 

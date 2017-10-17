@@ -1,13 +1,15 @@
 // 绑定like按钮的点击事件
 $(document).on('click', '.like-btn', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget.dataset.id) {
-        return;
-    }
-    console.log(event.currentTarget.dataset.id);
-    likePic (event.currentTarget.dataset.id);
+    var datas = event.currentTarget.dataset;
+    auth(function(result) {
+        if (!result) {
+            return;
+        }
+        if (!datas.id) {
+            return;
+        }
+        likePic(datas.id);
+    });
 });
 
 function likePic(picid) {

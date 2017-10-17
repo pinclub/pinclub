@@ -1,6 +1,8 @@
 $(document).on('click', '#createTopic', function (event) {
-    if (!auth()) {
-        return;
-    }
-    window.location.href="/topic/create";
+    auth(function(result) {
+        if (!result) {
+            return;
+        }
+        window.location.href = "/topic/create";
+    });
 });

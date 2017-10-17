@@ -25,11 +25,14 @@ function deletePic(picid) {
 
 // 绑定删除按钮的点击事件
 $(document).on('click', '.delete-btn', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget.dataset.id) {
-        return;
-    }
-    deletePic (event.currentTarget.dataset.id);
+    var datas = event.currentTarget.dataset;
+    auth(function(result) {
+        if (!result) {
+            return;
+        }
+        if (!datas.id) {
+            return;
+        }
+        deletePic(datas.id);
+    });
 });

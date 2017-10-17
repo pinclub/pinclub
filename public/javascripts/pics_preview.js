@@ -90,17 +90,17 @@ $(document).on('click', '.preview_image_btn', function(event){
 
 // 点击 Get 图片到自己的 Board, 弹出 Modal 层
 $(document).on('click', '#preview_modal_rpin_btn', function (event) {
-    if (!auth()) {
-        return;
-    }
-    if (!event.currentTarget.dataset.id || !event.currentTarget.dataset.src) {
-        return;
-    }
-    console.log(event.currentTarget.dataset.id);
-    console.log(event.currentTarget.dataset.src);
-    getImageObject.topic_id = event.currentTarget.dataset.id;
-    $('#get-preview-image-desc').val('');
-    $('#get-preview-image').html('<img src="'+event.currentTarget.dataset.src+'">');
-    $('#get_image_modal').modal('show');
-
+    var datas = event.currentTarget.dataset;
+    auth(function(result) {
+        if (!result) {
+            return;
+        }
+        if (!datas.id || !datas.src) {
+            return;
+        }
+        getImageObject.topic_id = datas.id;
+        $('#get-preview-image-desc').val('');
+        $('#get-preview-image').html('<img src="' + datas.src + '">');
+        $('#get_image_modal').modal('show');
+    });
 });
