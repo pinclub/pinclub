@@ -126,10 +126,10 @@
 
             var cm = self.editor.codemirror;
             var stat = getState(cm);
-            _replaceSelection(cm, stat.link, '!['+ title +']('+ link +')');
+            _replaceSelection(cm, stat.link, '['+ title +']('+ link +')');
 
             $el.find('[name=title]').val('');
-            $el.find('[name=link]').val('http://');
+            $el.find('[name=link]').val('');
 
             return false;
         });
