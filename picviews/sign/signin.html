@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="tab-content">
-        <div class='panel tab-pane fade <% if (page === 'signin') {%>in active<%}%>' role="tabpanel" id="collapseSignin">
+        <div class='panel tab-pane fade <% if (page === 'signin') {%>in active<%}%>' role="tabpanel" id="collapseSignin" style="padding-top: 5px;">
             <div class='innerTopic'>
                 <% if(page === 'signin' && typeof(error) !== 'undefined' && error){ %>
                 <div class="alert alert-danger fade in" role="alert">
@@ -64,7 +64,7 @@
                 </form>
             </div>
         </div>
-        <div class="panel tab-pane fade <% if (page === 'signup') {%>in active<%}%>" id="collapseSignup" role="tabpanel">
+        <div class="panel tab-pane fade <% if (page === 'signup') {%>in active<%}%>" id="collapseSignup" role="tabpanel" style="padding-top: 5px;">
             <div class='innerTopic'>
                 <% if (page === 'signup' && typeof(error) !== 'undefined' && error) { %>
                     <div class="alert alert-danger fade in" role="alert">

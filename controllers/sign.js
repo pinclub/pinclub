@@ -36,12 +36,13 @@ exports.signup = function (req, res, next) {
         ep.emit('prop_err', '信息不完整。');
         return;
     }
-    if (loginname.length < 5) {
+    var loginNameLength = getByteLen(loginname);
+    if (loginNameLength < 5) {
         ep.emit('prop_err', '用户名至少需要5个字符。');
         return;
     }
     if (!tools.validateId(loginname)) {
-        return ep.emit('prop_err', '用户名不合法。');
+        return ep.emit('prop_err', '用户名请用英文字母或数字');
     }
     if (!validator.isEmail(email)) {
         return ep.emit('prop_err', '邮箱不合法。');
@@ -361,3 +362,16 @@ exports.updatePass = function (req, res, next) {
     }));
 };
 
+function getByteLen(val) {
+    var len = 0;
+    for (var i = 0; i < val.length; i++) {
+        var a = val.charAt(i);
+        if (a.match(/[^\x00-\xff]/ig) != null) {
+            len += 2;
+        }
+        else {
+            len += 1;
+        }
+    }
+    return len;
+}

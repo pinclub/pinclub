@@ -1,3 +1,8 @@
+<%- Loader('/public/stylesheets/topic/edit.min.css')
+.css('/public/libs/select2/css/select2.css')
+.css('/public/libs/bootstrap-select2/select2-bootstrap.css')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
 <%- partial('navbar',  {style:'min-width: 600px;max-width: 1050px;'} ) %>
 <div id="forum_topics" class="wrapper row">
     <div class=" box col-md-9">
@@ -30,10 +35,11 @@
                 <form id='create_topic_form' action='/topic/create' method='post'>
                     <% } %>
                     <fieldset>
+
                         <div class="form-group">
+
                             <div class="controls">
-                                <select name="forum" id="tab-value" class="form-control">
-                                    <option value="">请选择所属板块</option>
+                                <select name="forum" class="form-control js-data-example-ajax ">
                                     <%
                                     var tabValue = '';
                                     if (typeof(tab) !== 'undefined') {
@@ -42,10 +48,9 @@
                                     forums.forEach(function (forum) {
                                     var value = forum._id;
                                     var text = forum.title;
+                                    var path_name = forum.path_name;
                                     %>
-                                    <option value="<%=value%>"
-                                    <%= tabValue == value ? 'selected': '' %>><%=text%></option>
-
+                                    <option value='<%=value%>' <%= tabValue == value ? 'selected': '' %>><%=text%> / <%= path_name%></option>
                                     <%});%>
                                 </select>
                                 <span id="topic_create_warn"></span>
@@ -92,7 +97,15 @@
 </div>
 <!-- markdown editor -->
 <%- partial('../includes/editor') %>
+
+    <%- Loader('/public/javascripts/topic/edit.min.js')
+    .js('/public/libs/select2/js/select2.full.js')
+    .done(assets, config.site_static_host, config.mini_assets)
+    %>
+
 <script>
+    $.fn.select2.defaults.set( "theme", "bootstrap" );
+
     (function () {
         var editor = new Editor();
         editor.render($('.editor')[0]);
@@ -124,6 +137,11 @@
             $('#topic_create_warn').html(warnMsg);
         });
         // END 选择招聘版块时，给出提示
+
+
+        $(".js-data-example-ajax").select2({
+        });
+
     })();
 </script>
 

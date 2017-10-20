@@ -79,7 +79,7 @@
                        class='delete_topic_btn tb'>
                         <i class="fa fa-lg fa-trash" title='删除'></i></a>
                     <% } else { %>
-                    <% if (current_user && current_user._id.equals(topic.author)) { %>
+                    <% if (current_user && current_user._id.equals(topic.author._id)) { %>
                     <a href='/topic/<%= topic._id %>/edit' class="tb">
                         <i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
                     <a href='javascript:;'
