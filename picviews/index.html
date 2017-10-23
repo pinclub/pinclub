@@ -1,4 +1,4 @@
-<%- Loader('/public/stylesheets/pics.min.css')
+<%- Loader('/public/stylesheets/index.min.css')
 .css('/public/stylesheets/pics.less')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
@@ -115,9 +115,7 @@ config: picConfig
 }) %>
 <% } %>
 <!-- scripts -->
-<%- Loader('/public/javascripts/layout.min.js')
-.js('/public/libs/jquery.sticky-kit.min.js')
-.js('/public/javascripts/sticky.js')
+<%- Loader('/public/javascripts/index.min.js')
 .js('/public/javascripts/topic/index.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>

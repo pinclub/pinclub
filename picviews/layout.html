@@ -23,7 +23,7 @@
     <% } %>
 
     <!-- style -->
-    <%- Loader('/public/stylesheets/index.min.css')
+    <%- Loader('/public/stylesheets/layout.min.css')
     .css('/public/libs/bootstrap3/css/bootstrap.css')
     .css('/public/stylesheets/common.css')
     .css('/public/stylesheets/style.less')
@@ -41,6 +41,8 @@
     <%- Loader('/public/javascripts/layout.min.js')
     .js('/public/libs/jquery-2.1.0.js')
     .js('/public/libs/lodash.min.js')
+    .js('/public/libs/jquery.sticky-kit.js')
+    .js('/public/javascripts/sticky.js')
     .js('/public/libs/jquery-ujs.js')
     .js('/public/libs/bootstrap3/js/bootstrap.js')
     .js('/public/libs/jquery.caret.js')
@@ -48,7 +50,6 @@
     .js('/public/libs/jquery.lazyloadxt.js')
     .js('/public/libs/jquery.nicescroll.js')
     .js('/public/libs/jquery.tmpl.min.js')
-    .js('/public/libs/jquery.sticky-kit.min.js')
     .js('/public/libs/markdownit.js')
     .js('/public/libs/code-prettify/prettify.js')
     .js('/public/libs/qrcode.js')
