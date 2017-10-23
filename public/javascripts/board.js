@@ -28,7 +28,7 @@ $('.pin-create .right-part #createboard').unbind("click").on('click', function (
 });
 
 // 绑定修改Board事件
-$('#modify_board').unbind("click").on('click', function (event) {
+$('.modify_board').unbind("click").on('click', function (event) {
     var datas = event.currentTarget.dataset;
     auth(function(result){
         if (!result) {
@@ -61,6 +61,23 @@ $('.add-board').unbind("click").on('click', function (event) {
         }
         var modal = $('#modify_board_modal');
         modal.find('form').prop('action', '/boards');
+        modal.modal('show');
+    });
+});
+
+// 绑定修改Board事件
+$('.delete_board').unbind("click").on('click', function (event) {
+    var datas = event.currentTarget.dataset;
+    auth(function(result){
+        if (!result) {
+            return;
+        }
+        if (!datas) {
+            return;
+        }
+        var modal = $('#delete_board_modal');
+        modal.find('form').prop('action', '/boards/'+datas.id+'/delete');
+        modal.find('.board-name').html(datas.title);
         modal.modal('show');
     });
 });

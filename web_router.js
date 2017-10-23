@@ -132,6 +132,7 @@ router.get('/boards', onlineM.add, auth.userSigninRequired, board.index);
 router.post('/boards', auth.userSigninRequired, board.create);
 router.get('/boards/:board_id', onlineM.add, board.show);
 router.post('/boards/:board_id/edit', auth.userSigninRequired, board.edit);
+router.post('/boards/:board_id/delete', auth.userSigninRequired, board.delete);
 router.post('/board/collect', auth.userRequired, board.collect); // 关注某Board
 router.post('/board/de_collect', auth.userRequired, board.collect); // 取消关注Board
 
@@ -176,6 +177,7 @@ router.get('/admin/dashboard/deleteAllImages', auth.adminRequired, dashboard.del
 router.get('/admin/tags', auth.adminRequired, dashboard.tags);
 router.get('/admin/boards', auth.adminRequired, dashboard.boards);
 router.post('/admin/boards/:board_id/edit', auth.adminRequired, board.adminEdit);
+router.post('/admin/boards/refresh/count/:id', auth.adminRequired, board.refreshCount);
 router.get('/admin/users', auth.adminRequired, dashboard.users);
 router.post('/admin/users/refresh/count/:id', auth.adminRequired, user.refreshCount);
 // router.post('/admin/users', auth.adminRequired, dashboard.users);

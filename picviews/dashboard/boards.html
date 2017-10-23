@@ -170,6 +170,24 @@
             });
         }
     });
+
+    // 刷新板块数量
+    $(document).on('click', '#refreshBoardCount', function (event) {
+        if (!event.currentTarget) {
+            return;
+        }
+        var id = event.currentTarget.dataset.id;
+        $.ajax({
+            type: "POST",
+            url: "/admin/boards/refresh/count/" + id
+        }).done(function (result) {
+            if (!result.success) {
+                return ;
+            } else {
+                $('#board_count_' + id).html(result.topic_count);
+            }
+        });
+    });
 </script>
 <%- Loader('/public/javascripts/dashboard/boards.min.js')
 .js('/public/libs/select2/js/select2.full.js')

@@ -2,12 +2,13 @@
     <td><input type="checkbox"></td>
     <td><%= board.title %></td>
     <td><%= board.creator.loginname %></td>
-    <td><%= board.topic_count %></td>
+    <td id="board_count_<%= board._id %>"><%= board.topic_count %></td>
     <td><%= board.collect_count %></td>
     <td><%= board.type %></td>
     <td><%= board.create_at_ago() %></td>
     <td>
         <button id="modify_board" data-id="<%= board._id %>" data-loginname="<%= board.loginname %>" data-title="<%= board.title %>" data-type="<%= board.type %>" class="btn btn-sm btn-link">修改</button>
         <button id="delete_board" data-id="<%= board._id %>" class="btn btn-sm btn-link">删除</button>
+        <a id="refreshBoardCount" data-id="<%= board._id %>"  href="javascript:void(0);" class="btn btn-default">刷新数据</a>
     </td>
 </tr>

@@ -11,7 +11,8 @@ var BoardSchema = new Schema({
     topic_count: {type: Number, default: 0},
     collect_count: {type: Number, default: 0},
     cover: {type: String}, // 封面
-    content: {type: String}
+    content: {type: String},
+    deleted: {type: Boolean, default: false}
 });
 
 BoardSchema.plugin(BaseModel);

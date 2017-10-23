@@ -11,7 +11,7 @@ exports.index = function (req, res, next) {
     ep.fail(next);
 
     ep.on('user', function (user) {
-        var query = {user_id: req.session.user._id};
+        var query = {user_id: req.session.user._id, deleted: {$ne: true}};
         let u = req.session.user;
         let isOwner = false;
         if (!!user) {
@@ -173,10 +173,41 @@ function update (req, res, cb) {
     });
 }
 
-// TODO 用户Board信息删除
+// DONE (hhdem) 用户Board信息删除
 exports.delete = function (req, res, next) {
-    res.render('static/function_building', {
-        title: 'Board信息删除'
+    req.checkParams({
+        'board_id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'id 不能为空'
+            }
+        }
+    });
+
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+
+        Board.getBoard(req.params.board_id, function (err, board) {
+            if (err) {
+                return next(err);
+            }
+
+            board.deleted = true;
+            board.save();
+            User.getUserById(board.user_id, function (err, user) {
+                user.score -= 5;
+                user.board_count -= 1;
+                user.save();
+                req.session.user = req.user = user;
+                return res.redirect('/boards');
+            });
+        });
     });
 };
 
@@ -320,6 +351,49 @@ exports.collect = function (req, res, next) {
                 board.collect_count += 1;
                 board.save();
             }
+        });
+    });
+};
+
+/**
+ * 刷新画板主题数量
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.refreshCount = function (req, res, next) {
+    req.checkParams({
+        'id': {
+            notEmpty: {
+                options: [true],
+                errorMessage: 'Board名称不能为空'
+            },
+            isMongoId: {errorMessage: 'id 需为 mongoId 对象'}
+        }
+    });
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                err_message: '参数验证失败',
+                err: result.useFirstErrorOnly().mapped()
+            }).end();
+        }
+        var id = req.params.id;
+        Topic.getCountByQuery({board: id, type:'image', deleted: false}, function (err, count) {
+            if (!!err) {
+                return next (err);
+            }
+            Board.getBoard(id, function (err, board) {
+                if (!!err) {
+                    return next (err);
+                }
+                if (board.topic_count != count) {
+                    board.topic_count = count;
+                    board.save();
+                }
+                res.send({success: true, topic_count: count});
+            });
         });
     });
 };
