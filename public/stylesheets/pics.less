@@ -2034,6 +2034,23 @@ a.img img {
   height: 100%;
 }
 
+.grid-item a.longer {
+  display: block;
+  position: relative;
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.grid-item .stop {
+  display: block;
+  position: absolute;
+  width: 236px;
+  height: 12px;
+  left: 0;
+  bottom: 0;
+  background: url(../images/long_image_shadow.png) repeat-x 4px top;
+}
+
 @media (max-width: 960px) {
   #preview_modal {
     padding: 40px 0;

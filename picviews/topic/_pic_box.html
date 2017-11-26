@@ -12,8 +12,9 @@
             <a href="#${item.id}" data-id="${item.id}" data-name="${item.title}" data-src="${item.image}" class="btn btn14 wbtn get-pic-btn"><span class="text">Get</span></a>
         </div>
     </div>
-    <a href="#${item.id}" id="pic_${item.id}" data-id="${item.id}" data-name="${item.title}" data-src="{{if !!item.image_fixed}}${item.image_fixed}{{else}}${item.image}{{/if}}" class="preview-image preview_image_btn">
+    <a href="#${item.id}" id="pic_${item.id}" data-id="${item.id}" data-name="${item.title}" data-src="{{if !!item.image_fixed}}${item.image_fixed}{{else}}${item.image}{{/if}}" class="preview-image preview_image_btn longer">
         <img src="{{if !!item.image_430}}${item.image_430}{{else}}${item.image}{{/if}}" title="${item.title}" alt="${item.title}"/>
+        <!--<span style="display: block" class="stop"></span>-->
         <div class="cover"></div>
     </a>
     <p class="stats less">
