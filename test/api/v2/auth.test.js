@@ -76,7 +76,7 @@ describe('test/api/v2/auth.test.js', function () {
                 .end(function (err, res) {
                     should.not.exists(err);
                     res.body.success.should.false();
-                    res.body.err_message.should.equal('调用登录接口失败');
+                    res.body.err_message.should.equal('没有激活, 无法通过api登录');
                     res.text.should.containEql('没有激活, 无法通过api登录');
                     done();
                 });
@@ -105,7 +105,7 @@ describe('test/api/v2/auth.test.js', function () {
                 .end(function (err, res) {
                     should.not.exists(err);
                     res.body.success.should.false();
-                    res.body.err_message.should.equal('调用登录接口失败');
+                    res.body.err_message.should.equal('用户不存在或密码不匹配');
                     done();
                 });
         });

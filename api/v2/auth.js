@@ -103,7 +103,7 @@ exports.signIn = function (req, res, next) {
             var passhash = user.pass;
             tools.bcompare(password, passhash, ep.done(function (bool) {
                 if (!bool) {
-                    return ep.emit('login_error');
+                    return ep.emit('login_error', '用户不存在或密码不匹配');
                 }
                 if (!user.active) {
                     // DONE (hhdem) 提醒激活不然无法继续进行下一步操作
