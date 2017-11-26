@@ -59,7 +59,7 @@ exports.signIn = function (req, res, next) {
             return res.status(400).json({success: false, err_message: '参数验证失败', err: result.useFirstErrorOnly().mapped()}).end();
         }
         ep.on('login_error', function (login_error) {
-            return res.status(403).json({success: false, err_message: '调用登录接口失败', err: login_error}).end();
+            return res.status(403).json({success: false, err_message: login_error, err: login_error}).end();
         });
 
         ep.on('login_success', function (user) {
@@ -98,7 +98,7 @@ exports.signIn = function (req, res, next) {
                 return next(err);
             }
             if (!user) {
-                return ep.emit('login_error');
+                return ep.emit('login_error', '用户不存在或密码不匹配');
             }
             var passhash = user.pass;
             tools.bcompare(password, passhash, ep.done(function (bool) {

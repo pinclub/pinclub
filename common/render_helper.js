@@ -92,19 +92,28 @@ exports.avatarPath = function (avatar, size, type) {
         return avatar;
     }
     let file_path = '';
-    if (type == 'local') {
-        let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
-        let path = avatar.substring(0, avatar.lastIndexOf('.'));
-        file_path = path + '_' + size + '.' + extname;
+    if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
+        file_path = avatar + '_' + size;
+    } else if (avatar.indexOf('githubusercontent.com') > -1) {
+        file_path = avatar;
     } else {
-        if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
-            file_path = avatar + '_' + size;
-        } else {
-            let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
-            let path = avatar.substring(0, avatar.lastIndexOf('.'));
-            file_path = path + '_' + size + '.' + extname;
-        }
+        var extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+        var path = avatar.substring(0, avatar.lastIndexOf('.'));
+        file_path = path + '_' + size + '.' + extname;
     }
+    // if (type == 'local') {
+    //     let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+    //     let path = avatar.substring(0, avatar.lastIndexOf('.'));
+    //     file_path = path + '_' + size + '.' + extname;
+    // } else {
+    //     if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
+    //         file_path = avatar + '_' + size;
+    //     } else {
+    //         let extname = avatar.substring(avatar.lastIndexOf('.') + 1);
+    //         let path = avatar.substring(0, avatar.lastIndexOf('.'));
+    //         file_path = path + '_' + size + '.' + extname;
+    //     }
+    // }
 
     return file_path;
 };
