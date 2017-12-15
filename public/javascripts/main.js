@@ -150,7 +150,7 @@ function avatarPath(avatar, size) {
     // FIXME: can not find pic if photo uploaded to 7niu
     if (avatar.indexOf('images.shiyix.org') > -1) {
         file_path = avatar + '_' + size;
-    } else if (avatar.indexOf('githubusercontent.com') > -1) {
+    } else if (avatar.indexOf('githubusercontent.com') > -1 || avatar.indexOf('gravatar.com') > -1) {
         file_path = avatar;
     } else {
         var extname = avatar.substring(avatar.lastIndexOf('.') + 1);

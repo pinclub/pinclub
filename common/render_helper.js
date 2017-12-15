@@ -94,7 +94,7 @@ exports.avatarPath = function (avatar, size, type) {
     let file_path = '';
     if (config.qn_access && config.qn_access.secretKey !== 'your secret key') {
         file_path = avatar + '_' + size;
-    } else if (avatar.indexOf('githubusercontent.com') > -1) {
+    } else if (avatar.indexOf('githubusercontent.com') > -1 || avatar.indexOf('gravatar.com') > -1) {
         file_path = avatar;
     } else {
         var extname = avatar.substring(avatar.lastIndexOf('.') + 1);
