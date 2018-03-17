@@ -39,7 +39,7 @@
     "memory-cache": "0.1.4",
     "method-override": "2.3.5",
     "mobile-agent": "0.0.8",
-    "moment": "2.15.2",
+    "moment": "2.19.3",
     "mongoose": "4.4.9",
     "mongoose-deep-populate": "^3.0.0",
     "multiline": "1.0.2",
